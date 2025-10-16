@@ -1,24 +1,19 @@
 //
-//  LoginPage.swift
+//  SignUpPage.swift
 //  iosproject
 //
-//  Created by Daniel Levi on 10/15/25.
+//  Created by Daniel Levi on 10/16/25.
 //
 
 import UIKit
 
-class LoginPage: UIViewController {
+class SignUpPage: UIViewController {
 
-    @IBOutlet weak var userIDTextField: UITextField!
-    @IBOutlet weak var passwordTextField: UITextField!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
     }
-    
-    
     
 
     /*
