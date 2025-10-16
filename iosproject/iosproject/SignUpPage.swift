@@ -25,15 +25,17 @@ class SignUpPage: UIViewController {
     
     
     @IBAction func signupPressed(_ sender: Any) {
-        if passwordField.text != passwordConfirmField.text {
-            showError(title: "Bad Password", message: "Passwords do not match.")
+        if userIDField.text?.isEmpty == true {
+            showError(title: "Bad email", message: "Email cannot be empty.")
             return
         }
         if passwordField.text?.isEmpty == true {
             showError(title: "Bad Password", message: "Password cannot be empty.")
+            return
         }
-        if userIDField.text?.isEmpty == true {
-            showError(title: "Bad email", message: "Email cannot be empty.")
+        if passwordField.text != passwordConfirmField.text {
+            showError(title: "Bad Password", message: "Passwords do not match.")
+            return
         }
         Auth.auth().createUser(withEmail: userIDField.text!, password: passwordField.text!) {
             (authResult, error) in
