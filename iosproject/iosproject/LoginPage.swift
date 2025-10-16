@@ -15,12 +15,6 @@ class LoginPage: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // this try catch is to sign out as Firebase keeps the auth even if app rebuilds
-        do {
-            try Auth.auth().signOut()
-        } catch _ as NSError {
-            print("No signin deteced.")
-        }
         print("START")
         Auth.auth().addStateDidChangeListener() {
             (auth, user) in
