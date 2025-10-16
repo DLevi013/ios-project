@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class LoginPage: UIViewController {
 
@@ -14,12 +15,47 @@ class LoginPage: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        // this try catch is to sign out as Firebase keeps the auth even if app rebuilds
+        do {
+            try Auth.auth().signOut()
+        } catch _ as NSError {
+            print("No signin deteced.")
+        }
+        print("START")
+        Auth.auth().addStateDidChangeListener() {
+            (auth, user) in
+            if user != nil {
+                print("USER " + user!.uid)
+                self.performSegue(withIdentifier: "loginSegue", sender: nil)
+                self.userIDTextField.text = ""
+                self.passwordTextField.text = ""
+            }
+        }
         // Do any additional setup after loading the view.
     }
     
+    @IBAction func loginPressed(_ sender: Any) {
+        if userIDTextField.text?.isEmpty == true {
+            showError(title: "Bad email", message: "Email cannot be empty.")
+            return
+        }
+        if passwordTextField.text?.isEmpty == true {
+            showError(title: "Bad Password", message: "Password cannot be empty.")
+            return
+        }
+        Auth.auth().signIn(withEmail: userIDTextField.text!, password: passwordTextField.text!) {
+            (authResult, error) in
+            if let error = error as NSError? {
+                self.showError(title: "login error", message: error.localizedDescription)
+            }
+        }
+    }
     
-    
+    private func showError(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
 
     /*
     // MARK: - Navigation

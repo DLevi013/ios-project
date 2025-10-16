@@ -43,7 +43,12 @@ class SignUpPage: UIViewController {
                 self.showError(title: "Error", message: error?.localizedDescription ?? "Easter Egg unlocked.")
             } else if (authResult != nil) {
                 print(authResult!)
-                self.showError(title:"Account created", message: "Account created successfully.")
+                let alert = UIAlertController(title: "Login successful", message: "Login success", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                    self!.performSegue(withIdentifier: "signupToLogin", sender: nil)
+                }
+                alert.addAction(okAction)
+                self.present(alert, animated: true, completion: nil)
             }
         }
         

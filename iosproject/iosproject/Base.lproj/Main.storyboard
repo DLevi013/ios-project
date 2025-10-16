@@ -4,6 +4,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -71,6 +72,9 @@
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Login"/>
+                                <connections>
+                                    <action selector="loginPressed:" destination="eEQ-TE-gdZ" eventType="touchUpInside" id="4gY-th-gzf"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="0cn-yS-UM2"/>
@@ -79,12 +83,13 @@
                     <connections>
                         <outlet property="passwordTextField" destination="xzb-ws-b34" id="vM9-Y4-oti"/>
                         <outlet property="userIDTextField" destination="Gtb-Gc-jBH" id="jrh-b0-G7I"/>
+                        <segue destination="2UK-ZX-qwt" kind="presentation" identifier="loginSegue" modalPresentationStyle="fullScreen" id="CZZ-4E-J0d"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ujc-4A-txx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="iGm-K3-3AO" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="916.79389312977094" y="117.60563380281691"/>
+            <point key="canvasLocation" x="604" y="87"/>
         </scene>
         <!--Sign Up Page-->
         <scene sceneID="gWv-t2-vN7">
@@ -173,14 +178,56 @@
                         <outlet property="passwordConfirmField" destination="vlN-hl-xBL" id="bgV-A9-FjI"/>
                         <outlet property="passwordField" destination="iPz-a2-Pz2" id="sJt-8b-iLJ"/>
                         <outlet property="userIDField" destination="btg-bt-grv" id="jWZ-kC-HaS"/>
+                        <segue destination="2UK-ZX-qwt" kind="presentation" identifier="signupToLogin" modalPresentationStyle="fullScreen" id="XGg-gL-kGa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zei-mc-GiM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1646.5648854961833" y="117.60563380281691"/>
         </scene>
+        <!--User Feed Page-->
+        <scene sceneID="TYW-9v-jsW">
+            <objects>
+                <viewController id="35p-X3-f1o" customClass="UserFeedPage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="NMh-9N-WwQ">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="rUa-IP-sTy"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="REJ-05-xoE"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8GZ-te-EXA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1843.5114503816794" y="991.54929577464793"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Rsk-9J-to8">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="2UK-ZX-qwt" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="gVq-eS-Rh0"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="a2E-0H-w0d">
+                        <rect key="frame" x="0.0" y="59" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="35p-X3-f1o" kind="relationship" relationship="rootViewController" id="GnD-cu-FHC"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Cwn-tX-CCd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="916.79389312977094" y="991.54929577464793"/>
+        </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="XGg-gL-kGa"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <image name="foocation logo" width="1028" height="638"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>
