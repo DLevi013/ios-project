@@ -31,6 +31,9 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="useridField:" destination="iGm-K3-3AO" eventType="editingDidEnd" id="Gdk-LI-GDl"/>
+                                </connections>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xzb-ws-b34">
                                 <rect key="frame" x="128" y="416" width="231" height="34"/>
@@ -79,13 +82,14 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ujc-4A-txx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="iGm-K3-3AO" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="916.79389312977094" y="117.60563380281691"/>
         </scene>
-        <!--View Controller-->
+        <!--Sign Up Page-->
         <scene sceneID="gWv-t2-vN7">
             <objects>
-                <viewController id="eAN-jk-3ys" sceneMemberID="viewController">
+                <viewController id="eAN-jk-3ys" customClass="SignUpPage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="P4N-h7-56k">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -94,8 +98,8 @@
                                 <rect key="frame" x="38" y="85" width="325" height="206"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="User ID:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pRX-pG-5tB">
-                                <rect key="frame" x="53" y="354" width="62" height="20"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Email:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pRX-pG-5tB">
+                                <rect key="frame" x="53" y="354" width="47" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -139,6 +143,9 @@
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Sign Up!"/>
+                                <connections>
+                                    <action selector="signupPressed:" destination="eAN-jk-3ys" eventType="touchUpInside" id="cjk-Hg-US8"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HaD-Xi-xdf">
                                 <rect key="frame" x="165" y="638" width="70" height="35"/>
@@ -162,15 +169,17 @@
                         <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     </view>
                     <navigationItem key="navigationItem" id="JgT-Ql-CcZ"/>
+                    <connections>
+                        <outlet property="passwordConfirmField" destination="vlN-hl-xBL" id="bgV-A9-FjI"/>
+                        <outlet property="passwordField" destination="iPz-a2-Pz2" id="sJt-8b-iLJ"/>
+                        <outlet property="userIDField" destination="btg-bt-grv" id="jWZ-kC-HaS"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zei-mc-GiM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1646.5648854961833" y="117.60563380281691"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="4Pq-lG-NrF"/>
-    </inferredMetricsTieBreakers>
     <resources>
         <image name="foocation logo" width="1028" height="638"/>
     </resources>
