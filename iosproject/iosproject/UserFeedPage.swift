@@ -16,15 +16,17 @@ class UserFeedPage: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-    @IBAction func logoutButton(_ sender: Any) {
-        do {
-            try Auth.auth().signOut()
-            self.performSegue(withIdentifier: "logoutSegue", sender: nil)
-        } catch _ as NSError {
-            print("No signin deteced.")
-        }
-    }
     
+    
+//    @IBAction func logoutButton(_ sender: Any) {
+//        do {
+//            try Auth.auth().signOut()
+//            self.performSegue(withIdentifier: "logoutSegue", sender: nil)
+//        } catch _ as NSError {
+//            print("No signin deteced.")
+//        }
+//    }
+//    
     /*
     // MARK: - Navigation
 
