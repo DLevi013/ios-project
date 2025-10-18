@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eEQ-TE-gdZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24128" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eEQ-TE-gdZ">
     <device id="retina6_3" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
         <capability name="Map view configurations" minToolsVersion="14.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -186,7 +186,7 @@
             </objects>
             <point key="canvasLocation" x="1646.5648854961833" y="117.60563380281691"/>
         </scene>
-        <!--Item-->
+        <!--View Controller-->
         <scene sceneID="hyr-Ty-RUa">
             <objects>
                 <viewController id="oXN-jg-vFE" sceneMemberID="viewController">
@@ -199,12 +199,13 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x6i-cd-I50">
-                                        <rect key="frame" x="360" y="59" width="107" height="35"/>
+                                        <rect key="frame" x="440" y="59" width="50" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="PlusButton"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="plus.circle" catalog="system"/>
                                         <connections>
-                                            <segue destination="7Y2-4b-ByA" kind="presentation" identifier="AddPostSegue" modalPresentationStyle="fullScreen" id="Dg8-T7-dec"/>
+                                            <segue destination="7Y2-4b-ByA" kind="presentation" identifier="HomeAddPostSegue" modalPresentationStyle="fullScreen" id="Dg8-T7-dec"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -214,13 +215,13 @@
                         <viewLayoutGuide key="safeArea" id="Vub-5H-Idz"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" selectedImage="house" catalog="system" id="gMI-0k-OnV"/>
+                    <tabBarItem key="tabBarItem" title="" image="house" catalog="system" selectedImage="house" id="gMI-0k-OnV"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ddM-Mr-DZ9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1844.7761194029849" y="792.90617848970248"/>
         </scene>
-        <!--Item-->
+        <!--Settings Page-->
         <scene sceneID="dNf-3o-g5R">
             <objects>
                 <viewController id="iF1-R9-xMt" customClass="SettingsPage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
@@ -235,17 +236,34 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yAW-Q7-Plz">
+                                <rect key="frame" x="-75" y="0.0" width="553" height="102"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="roI-PR-Dgz">
+                                        <rect key="frame" x="427" y="59" width="50" height="35"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="plus.circle" catalog="system"/>
+                                        <connections>
+                                            <segue destination="7Y2-4b-ByA" kind="presentation" identifier="SettingsAddPostSegue" modalPresentationStyle="fullScreen" id="3M1-JZ-sx3"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="r64-qm-xjw"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" selectedImage="gear" catalog="system" id="XOn-Jf-Ftz"/>
+                    <tabBarItem key="tabBarItem" title="" image="gear" catalog="system" selectedImage="gear" id="XOn-Jf-Ftz"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mqj-w4-59j" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1119" y="1563"/>
+            <point key="canvasLocation" x="1117.9104477611941" y="1562.4713958810069"/>
         </scene>
-        <!--Item-->
+        <!--Profile Page-->
         <scene sceneID="bp5-Py-p45">
             <objects>
                 <viewController id="AZC-Xx-jcF" customClass="ProfilePage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
@@ -260,11 +278,28 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lrv-uh-CBa">
+                                <rect key="frame" x="-75" y="0.0" width="553" height="102"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="82A-Gn-oWs">
+                                        <rect key="frame" x="425" y="59" width="50" height="35"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="plus.circle" catalog="system"/>
+                                        <connections>
+                                            <segue destination="7Y2-4b-ByA" kind="presentation" identifier="ProfileAddPostSegue" modalPresentationStyle="fullScreen" id="dZC-Gb-wSO"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Blh-KC-ZaE"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" selectedImage="person" catalog="system" id="nn4-ac-5TI"/>
+                    <tabBarItem key="tabBarItem" title="" image="person" catalog="system" selectedImage="person" id="nn4-ac-5TI"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ksn-NO-dUu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -279,19 +314,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dz1-5P-aEG">
-                                <rect key="frame" x="81" y="183" width="240" height="273"/>
+                                <rect key="frame" x="81" y="206" width="240" height="273"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <standardMapConfiguration key="preferredConfiguration"/>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4cK-kq-fLi">
-                                <rect key="frame" x="318" y="94" width="62" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Filter"/>
-                                <connections>
-                                    <action selector="filterPressed:" destination="Mf7-pK-mys" eventType="touchUpInside" id="WVW-Mc-fuW"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3YL-eU-0sA">
                                 <rect key="frame" x="36" y="485" width="35" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -311,17 +337,44 @@
                                 </connections>
                             </button>
                             <searchBar contentMode="redraw" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qM8-S4-pDV">
-                                <rect key="frame" x="16" y="94" width="285" height="44"/>
+                                <rect key="frame" x="16" y="117" width="285" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
                                     <outlet property="delegate" destination="Mf7-pK-mys" id="iuC-85-vC1"/>
                                 </connections>
                             </searchBar>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vlB-vG-51R">
+                                <rect key="frame" x="-75" y="0.0" width="553" height="102"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tpL-pm-Tpy">
+                                        <rect key="frame" x="425" y="59" width="50" height="35"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="plus.circle" catalog="system"/>
+                                        <connections>
+                                            <segue destination="7Y2-4b-ByA" kind="presentation" identifier="DiscoverAddPostSegue" modalPresentationStyle="fullScreen" id="6GE-aQ-DkX"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4cK-kq-fLi">
+                                <rect key="frame" x="324" y="122" width="62" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Filter"/>
+                                <connections>
+                                    <action selector="filterPressed:" destination="Mf7-pK-mys" eventType="touchUpInside" id="WVW-Mc-fuW"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Of2-Vs-gAE"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="" image="mappin.and.ellipse" catalog="system" selectedImage="mappin.and.ellipse" id="2YT-eQ-ls5"/>
                     <connections>
                         <outlet property="mapView" destination="Dz1-5P-aEG" id="1E8-pW-v5n"/>
                         <outlet property="searchField" destination="qM8-S4-pDV" id="EMT-Ga-795"/>
@@ -329,7 +382,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qzs-Da-XVi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2711.9402985074626" y="1539.8169336384437"/>
+            <point key="canvasLocation" x="191" y="1498"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="c3c-WA-FHU">
@@ -408,6 +461,7 @@
                     <connections>
                         <segue destination="oXN-jg-vFE" kind="relationship" relationship="viewControllers" id="5lx-bN-bo8"/>
                         <segue destination="AZC-Xx-jcF" kind="relationship" relationship="viewControllers" id="OmV-5X-INh"/>
+                        <segue destination="Mf7-pK-mys" kind="relationship" relationship="viewControllers" id="swg-nk-JWB"/>
                         <segue destination="iF1-R9-xMt" kind="relationship" relationship="viewControllers" id="pbs-ew-Nkf"/>
                     </connections>
                 </tabBarController>
@@ -417,14 +471,16 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="4Pq-lG-NrF"/>
         <segue reference="aHc-b1-hBj"/>
+        <segue reference="6GE-aQ-DkX"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="foocation logo" width="1028" height="638"/>
         <image name="gear" catalog="system" width="128" height="122"/>
         <image name="house" catalog="system" width="128" height="104"/>
+        <image name="mappin.and.ellipse" catalog="system" width="110" height="128"/>
         <image name="person" catalog="system" width="128" height="121"/>
+        <image name="plus.circle" catalog="system" width="128" height="123"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
