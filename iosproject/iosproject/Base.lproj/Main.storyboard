@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24128" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eEQ-TE-gdZ">
-    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <device id="retina6_3" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -12,7 +13,7 @@
             <objects>
                 <viewController storyboardIdentifier="LoginPage" id="eEQ-TE-gdZ" customClass="LoginPage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="qtL-R3-e6y">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="foocation logo" translatesAutoresizingMaskIntoConstraints="NO" id="hJK-Oz-giE">
@@ -73,7 +74,7 @@
                                 <buttonConfiguration key="configuration" style="filled" title="Login"/>
                                 <connections>
                                     <action selector="loginPressed:" destination="eEQ-TE-gdZ" eventType="touchUpInside" id="4gY-th-gzf"/>
-                                    <segue destination="oXN-jg-vFE" kind="presentation" identifier="loginSegue" modalPresentationStyle="fullScreen" id="aHc-b1-hBj"/>
+                                    <segue destination="kfs-fF-rSt" kind="presentation" identifier="loginSegue" modalPresentationStyle="fullScreen" id="aHc-b1-hBj"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -95,7 +96,7 @@
             <objects>
                 <viewController id="eAN-jk-3ys" customClass="SignUpPage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="P4N-h7-56k">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="foocation logo" translatesAutoresizingMaskIntoConstraints="NO" id="Ibo-tK-OM0">
@@ -149,7 +150,7 @@
                                 <buttonConfiguration key="configuration" style="filled" title="Sign Up!"/>
                                 <connections>
                                     <action selector="signupPressed:" destination="eAN-jk-3ys" eventType="touchUpInside" id="cjk-Hg-US8"/>
-                                    <segue destination="oXN-jg-vFE" kind="presentation" identifier="signupToLogin" modalPresentationStyle="fullScreen" id="VH1-4q-7sw"/>
+                                    <segue destination="kfs-fF-rSt" kind="presentation" identifier="signupToLogin" modalPresentationStyle="fullScreen" id="VH1-4q-7sw"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HaD-Xi-xdf">
@@ -184,38 +185,96 @@
             </objects>
             <point key="canvasLocation" x="1646.5648854961833" y="117.60563380281691"/>
         </scene>
-        <!--View Controller-->
+        <!--Item-->
         <scene sceneID="hyr-Ty-RUa">
             <objects>
                 <viewController id="oXN-jg-vFE" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DWM-ck-5uI">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x6i-cd-I50">
-                                <rect key="frame" x="264" y="59" width="107" height="35"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iGC-0o-RuK">
+                                <rect key="frame" x="-87" y="0.0" width="553" height="102"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="PlusButton"/>
-                                <connections>
-                                    <segue destination="7Y2-4b-ByA" kind="presentation" identifier="AddPostSegue" modalPresentationStyle="fullScreen" id="Dg8-T7-dec"/>
-                                </connections>
-                            </button>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x6i-cd-I50">
+                                        <rect key="frame" x="360" y="59" width="107" height="35"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="PlusButton"/>
+                                        <connections>
+                                            <segue destination="7Y2-4b-ByA" kind="presentation" identifier="AddPostSegue" modalPresentationStyle="fullScreen" id="Dg8-T7-dec"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Vub-5H-Idz"/>
-                        <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Item" selectedImage="house" catalog="system" id="gMI-0k-OnV"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ddM-Mr-DZ9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="925.95419847328242" y="792.95774647887333"/>
+            <point key="canvasLocation" x="1844.7761194029849" y="792.90617848970248"/>
+        </scene>
+        <!--Item-->
+        <scene sceneID="dNf-3o-g5R">
+            <objects>
+                <viewController id="iF1-R9-xMt" customClass="SettingsPage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="s4y-C6-Yon">
+                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="settings page" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xYi-dP-vcP">
+                                <rect key="frame" x="157" y="227" width="104" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="r64-qm-xjw"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item" selectedImage="gear" catalog="system" id="XOn-Jf-Ftz"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mqj-w4-59j" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1119" y="1563"/>
+        </scene>
+        <!--Item-->
+        <scene sceneID="bp5-Py-p45">
+            <objects>
+                <viewController id="AZC-Xx-jcF" customClass="ProfilePage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="RH5-0f-bx0">
+                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="profile page" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H82-UR-Chq">
+                                <rect key="frame" x="147" y="153" width="91" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Blh-KC-ZaE"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item" selectedImage="person" catalog="system" id="nn4-ac-5TI"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ksn-NO-dUu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1818" y="1466"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="c3c-WA-FHU">
             <objects>
                 <viewController id="7Y2-4b-ByA" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="g3O-md-bFw">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AWN-uj-ong">
@@ -262,7 +321,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Back"/>
                                 <connections>
-                                    <segue destination="oXN-jg-vFE" kind="presentation" identifier="backToFeedFromAddPost" modalPresentationStyle="fullScreen" id="5qL-vd-dKm"/>
+                                    <segue destination="kfs-fF-rSt" kind="presentation" identifier="backToFeedFromAddPost" modalPresentationStyle="fullScreen" id="5qL-vd-dKm"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -272,13 +331,38 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ita-lM-fgI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1829.7709923664122" y="805.63380281690149"/>
+            <point key="canvasLocation" x="2747.7611940298507" y="805.26315789473676"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="KGl-hj-nhc">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="kfs-fF-rSt" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="kxx-Xq-m5M">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="oXN-jg-vFE" kind="relationship" relationship="viewControllers" id="5lx-bN-bo8"/>
+                        <segue destination="AZC-Xx-jcF" kind="relationship" relationship="viewControllers" id="OmV-5X-INh"/>
+                        <segue destination="iF1-R9-xMt" kind="relationship" relationship="viewControllers" id="pbs-ew-Nkf"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="owM-dZ-GYN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="925.37313432835811" y="792.90617848970248"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="5qL-vd-dKm"/>
+        <segue reference="VH1-4q-7sw"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="foocation logo" width="1028" height="638"/>
+        <image name="gear" catalog="system" width="128" height="122"/>
+        <image name="house" catalog="system" width="128" height="104"/>
+        <image name="person" catalog="system" width="128" height="121"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

@@ -1,33 +1,21 @@
 //
-//  UserFeedPage.swift
+//  SettingsPage.swift
 //  iosproject
 //
-//  Created by Ian Tran on 10/16/25.
+//  Created by Daniel Levi on 10/17/25.
 //
 
 import UIKit
-import FirebaseAuth
 
-class UserFeedPage: UIViewController {
+class SettingsPage: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading
-        
+        // Do any additional setup after loading the view.
     }
     
-    
-    
-//    @IBAction func logoutButton(_ sender: Any) {
-//        do {
-//            try Auth.auth().signOut()
-//            self.performSegue(withIdentifier: "logoutSegue", sender: nil)
-//        } catch _ as NSError {
-//            print("No signin deteced.")
-//        }
-//    }
-//    
+
     /*
     // MARK: - Navigation
 
