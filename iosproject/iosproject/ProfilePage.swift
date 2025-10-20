@@ -13,7 +13,6 @@ import MapKit
 
 class Post: UICollectionViewCell {
     @IBOutlet weak var singlePost: UIImageView!
-    
 }
 
 
@@ -21,7 +20,7 @@ class Post: UICollectionViewCell {
 class ProfilePage: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UITableViewDelegate, UITableViewDataSource {
     
     
-    var posts: [UIImage] = [UIImage(named: "foocation logo")!, UIImage(named: "houseLogo")!]
+    var posts: [UIImage] = [UIImage(named: "gsWithSoup")!, UIImage(named: "halfEaten")!,UIImage(named: "parisChoco")!,UIImage(named: "parisMatcha")!]
     
     @IBOutlet weak var optionsBar: UISegmentedControl!
     
@@ -45,21 +44,19 @@ class ProfilePage: UIViewController, UICollectionViewDataSource, UICollectionVie
         friendsList.dataSource = self
         friendsList.delegate = self
         let layout = UICollectionViewFlowLayout()
-            let itemWidth = (gridOfPosts.bounds.width - 20) / 3
-            layout.itemSize = CGSize(width: itemWidth - 5, height: itemWidth - 5)
-            layout.minimumInteritemSpacing = 5
-            layout.minimumLineSpacing = 5
-            layout.sectionInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
-        gridOfPosts.collectionViewLayout = layout
-        optionsBar.selectedSegmentIndex = 0
+                layout.minimumInteritemSpacing = 0 // No horizontal spacing
+                layout.minimumLineSpacing = 0 // No vertical spacing
+                layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0) // No padding
+                gridOfPosts.collectionViewLayout = layout
+                optionsBar.selectedSegmentIndex = 0
 
         // Do any additional setup after loading the view.
-        mapView.isHidden = true // Hide map initially
-                // Set a default map region (e.g., Austin, TX as an example)
-                let initialLocation = CLLocationCoordinate2D(latitude: 30.2862, longitude: -97.7394) // Austin, TX
+        mapView.isHidden = true
+                let initialLocation = CLLocationCoordinate2D(latitude: 30.2862, longitude: -97.7394)
                 let region = MKCoordinateRegion(center: initialLocation, latitudinalMeters: 1000, longitudinalMeters: 1000)
                 mapView.setRegion(region, animated: false)
         friendsList.isHidden = true
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -73,8 +70,10 @@ class ProfilePage: UIViewController, UICollectionViewDataSource, UICollectionVie
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (collectionView.bounds.width - 20) / 3 - 5
-        return CGSize(width: width, height: width)
+        let numberOfColumns: CGFloat = 3.0
+                let totalSpacing: CGFloat = 0.0
+                let width = (collectionView.bounds.width - totalSpacing) / numberOfColumns
+                return CGSize(width: width, height: width) 
     }
     
     
