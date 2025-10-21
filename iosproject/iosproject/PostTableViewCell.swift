@@ -8,10 +8,18 @@
 import UIKit
 
 class PostTableViewCell: UITableViewCell {
-
+  
+    @IBOutlet weak var usernameLabel: UILabel!
+    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var likeCountLabel: UILabel!
+    @IBOutlet weak var commentCountLabel: UILabel!
+    @IBOutlet weak var postImageView: UIImageView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        postImageView.contentMode = .scaleAspectFill
+        postImageView.clipsToBounds = true
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
