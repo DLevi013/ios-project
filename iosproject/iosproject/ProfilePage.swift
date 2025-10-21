@@ -10,6 +10,11 @@ import UIKit
 
 import UIKit
 import MapKit
+import Firebase
+import FirebaseFirestore
+import FirebaseAuth
+import FirebaseDatabase
+
 
 class Post: UICollectionViewCell {
     @IBOutlet weak var singlePost: UIImageView!
@@ -18,6 +23,11 @@ class Post: UICollectionViewCell {
 
 
 class ProfilePage: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UITableViewDelegate, UITableViewDataSource {
+    
+    @IBOutlet weak var userNameField: UILabel!
+    
+    @IBOutlet weak var bioField: UILabel!
+    
     
     
     var posts: [UIImage] = [UIImage(named: "gsWithSoup")!, UIImage(named: "halfEaten")!,UIImage(named: "parisChoco")!,UIImage(named: "parisMatcha")!]
@@ -35,9 +45,20 @@ class ProfilePage: UIViewController, UICollectionViewDataSource, UICollectionVie
     
     public var tempFriends = ["Isaac", "Ian", "Austin"]
     
+    var selectedPostImage: UIImage?
+    var selectedPostIndex: Int = 0
+    
+
+    
+    
  
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        let db = Firestore.firestore()
+        let curUser = Auth.auth().currentUser!.uid
+        var ref : DatabaseReference!
         
         gridOfPosts.dataSource = self
         gridOfPosts.delegate = self
@@ -59,6 +80,10 @@ class ProfilePage: UIViewController, UICollectionViewDataSource, UICollectionVie
         
     }
     
+    
+    
+    
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return posts.count
     }
@@ -75,6 +100,25 @@ class ProfilePage: UIViewController, UICollectionViewDataSource, UICollectionVie
                 let width = (collectionView.bounds.width - totalSpacing) / numberOfColumns
                 return CGSize(width: width, height: width) 
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        
+        self.selectedPostImage = posts[indexPath.row]
+            self.selectedPostIndex = indexPath.row
+        performSegue(withIdentifier: "profileToPost", sender: self)
+        
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "profileToPost", let vc = segue.destination as? PostPage {
+            vc.selectedPostImage = selectedPostImage.self
+            vc.selectedPostIndex = selectedPostIndex.self
+            vc.userID = "DANIEL"
+        }
+    }
+    
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
