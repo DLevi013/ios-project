@@ -381,10 +381,10 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BWM-kn-KGU">
-                                <rect key="frame" x="205" y="276" width="180" height="35"/>
+                                <rect key="frame" x="276" y="276" width="40" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="profile_temp_button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="chevron.right" catalog="system"/>
                                 <connections>
                                     <segue destination="AZC-Xx-jcF" kind="presentation" identifier="settingsToProfileSegue" modalPresentationStyle="fullScreen" id="OMm-Br-J1h"/>
                                 </connections>
@@ -858,11 +858,12 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="rQ7-d2-Vqe"/>
-        <segue reference="dZC-Gb-wSO"/>
+        <segue reference="3M1-JZ-sx3"/>
         <segue reference="OMm-Br-J1h"/>
         <segue reference="PAo-2q-nIS"/>
     </inferredMetricsTieBreakers>
     <resources>
+        <image name="chevron.right" catalog="system" width="97" height="128"/>
         <image name="foocation logo" width="1028" height="638"/>
         <image name="gear" catalog="system" width="128" height="122"/>
         <image name="heart" catalog="system" width="128" height="107"/>
