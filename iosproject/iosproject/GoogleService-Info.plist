@@ -26,5 +26,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:222403494231:ios:fe379b6a469f6b6a5f3e12</string>
+	<key>DATABASE_URL</key>
+	<string>https://ios-foodcation-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>
