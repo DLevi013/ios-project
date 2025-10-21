@@ -460,7 +460,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="UserName" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H82-UR-Chq">
-                                <rect key="frame" x="165" y="131" width="81" height="21"/>
+                                <rect key="frame" x="165" y="131" width="172" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -483,8 +483,8 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Desciption" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kfd-hM-cjS">
-                                <rect key="frame" x="165" y="160" width="82" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Desciption" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kfd-hM-cjS">
+                                <rect key="frame" x="165" y="160" width="172" height="65"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -593,7 +593,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ksn-NO-dUu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="401" y="1654"/>
+            <point key="canvasLocation" x="400" y="1653.7757437070936"/>
         </scene>
         <!--Post Page-->
         <scene sceneID="bsF-4b-LiH">
@@ -858,7 +858,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="rQ7-d2-Vqe"/>
-        <segue reference="Dg8-T7-dec"/>
+        <segue reference="dZC-Gb-wSO"/>
         <segue reference="OMm-Br-J1h"/>
         <segue reference="PAo-2q-nIS"/>
     </inferredMetricsTieBreakers>

@@ -59,6 +59,15 @@ class ProfilePage: UIViewController, UICollectionViewDataSource, UICollectionVie
         let db = Firestore.firestore()
         let curUser = Auth.auth().currentUser!.uid
         var ref : DatabaseReference!
+        ref = Database.database().reference().child("users").child(curUser)
+        ref.observeSingleEvent(of: .value) { snapshot in
+            if let username = snapshot.childSnapshot(forPath: "userName").value as? String {
+                self.userNameField.text = username
+            }
+            if let bio = snapshot.childSnapshot(forPath: "bio").value as? String {
+                self.bioField.text = bio
+            }
+        }
         
         gridOfPosts.dataSource = self
         gridOfPosts.delegate = self

@@ -18,7 +18,7 @@ class SignUpPage: UIViewController {
     
     @IBOutlet weak var passwordConfirmField: UITextField!
     
-//    let ref = Database.database().reference()
+    let ref = Database.database().reference()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +46,9 @@ class SignUpPage: UIViewController {
                     self.showError(title: "Error", message: error?.localizedDescription ?? "Easter Egg unlocked.")
                 } else if (authResult != nil) {
                     print(authResult!)
+                    let userData = ["username": self.userNameField.text!]
+                    self.ref.child("users").child(authResult!.user.uid).setValue(userData)
+                    
                     let alert = UIAlertController(title: "Login successful", message: "Login success", preferredStyle: .alert)
                     let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
                         self!.performSegue(withIdentifier: "signupToLogin", sender: nil)
