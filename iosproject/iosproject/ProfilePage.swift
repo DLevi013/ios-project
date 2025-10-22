@@ -7,8 +7,6 @@
 
 import UIKit
 
-
-import UIKit
 import MapKit
 import Firebase
 import FirebaseFirestore
@@ -44,6 +42,10 @@ class ProfilePage: UIViewController, UICollectionViewDataSource, UICollectionVie
     let textCellIdentifier = "CellView"
     
     public var tempFriends = ["Isaac", "Ian", "Austin"]
+    
+    var chosenFriend: String?
+    var chosenFriendIndex = 0
+    
     
     var selectedPostImage: UIImage?
     var selectedPostIndex: Int = 0
@@ -87,6 +89,7 @@ class ProfilePage: UIViewController, UICollectionViewDataSource, UICollectionVie
                 mapView.setRegion(region, animated: false)
         friendsList.isHidden = true
         
+        
     }
     
     
@@ -126,6 +129,11 @@ class ProfilePage: UIViewController, UICollectionViewDataSource, UICollectionVie
             vc.selectedPostIndex = selectedPostIndex.self
             vc.userID = "DANIEL"
         }
+        if segue.identifier == "toOtherProfile", let vc = segue.destination as? OtherProfilePage {
+            vc.otherUserNameText = "THIS IS THE TEMP PAGE FOR THE OTHER PROFILES"
+        }
+        
+    
     }
     
     
@@ -141,6 +149,16 @@ class ProfilePage: UIViewController, UICollectionViewDataSource, UICollectionVie
         cell.contentConfiguration = content
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("Row selected: \(indexPath.row)")
+        tableView.deselectRow(at: indexPath, animated: true)
+        chosenFriend = tempFriends[indexPath.row]
+        chosenFriendIndex = indexPath.row
+        performSegue(withIdentifier: "toOtherProfile", sender: self)
+    
+    }
+    
   
     
     @IBAction func choosingTab(_ sender: UISegmentedControl) {

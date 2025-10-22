@@ -451,6 +451,34 @@
             </objects>
             <point key="canvasLocation" x="3188" y="1654"/>
         </scene>
+        <!--Other Profile Page-->
+        <scene sceneID="QdW-Py-iRy">
+            <objects>
+                <viewController id="gBh-e3-1bW" customClass="OtherProfilePage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="nvO-A0-pAE">
+                        <rect key="frame" x="0.0" y="0.0" width="402" height="802"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="DO NOT DELETE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nGr-YE-VrW">
+                                <rect key="frame" x="0.0" y="200" width="386" height="482"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="oa6-gO-RpA"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="LEZ-fi-w9O"/>
+                    <connections>
+                        <outlet property="otherUserName" destination="nGr-YE-VrW" id="bGO-qe-aCc"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eEt-JS-xMd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-394.02985074626861" y="1592.6773455377572"/>
+        </scene>
         <!--Profile Page-->
         <scene sceneID="bp5-Py-p45">
             <objects>
@@ -589,11 +617,12 @@
                         <outlet property="optionsBar" destination="8hi-Ww-79D" id="CKL-Yv-Lf7"/>
                         <outlet property="userNameField" destination="H82-UR-Chq" id="GYm-8Q-L7z"/>
                         <segue destination="diZ-9n-Pv5" kind="show" identifier="profileToPost" id="GaF-N1-Ow1"/>
+                        <segue destination="gBh-e3-1bW" kind="show" identifier="toOtherProfile" id="Bic-WB-kOL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ksn-NO-dUu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="400" y="1653.7757437070936"/>
+            <point key="canvasLocation" x="358" y="1633"/>
         </scene>
         <!--Post Page-->
         <scene sceneID="bsF-4b-LiH">
@@ -858,7 +887,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="rQ7-d2-Vqe"/>
-        <segue reference="3M1-JZ-sx3"/>
+        <segue reference="dZC-Gb-wSO"/>
         <segue reference="OMm-Br-J1h"/>
         <segue reference="PAo-2q-nIS"/>
     </inferredMetricsTieBreakers>
