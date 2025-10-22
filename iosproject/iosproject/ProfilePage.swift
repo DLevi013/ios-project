@@ -42,6 +42,8 @@ class ProfilePage: UIViewController, UICollectionViewDataSource, UICollectionVie
     let textCellIdentifier = "CellView"
     
     public var tempFriends = ["Isaac", "Ian", "Austin"]
+    public var friendUIDs: [String] = []
+
     
     var chosenFriend: String?
     var chosenFriendIndex = 0
@@ -56,6 +58,10 @@ class ProfilePage: UIViewController, UICollectionViewDataSource, UICollectionVie
  
     override func viewDidLoad() {
         super.viewDidLoad()
+        gridOfPosts.dataSource = self
+        gridOfPosts.delegate = self
+        friendsList.dataSource = self
+        friendsList.delegate = self
         
         
         let db = Firestore.firestore()
@@ -71,10 +77,27 @@ class ProfilePage: UIViewController, UICollectionViewDataSource, UICollectionVie
             }
         }
         
-        gridOfPosts.dataSource = self
-        gridOfPosts.delegate = self
-        friendsList.dataSource = self
-        friendsList.delegate = self
+           ref.child("friends").observeSingleEvent(of: .value) { snapshot in
+               var loadedFriends: [String] = []
+               var friendUIDs: [String] = []
+               
+               for child in snapshot.children {
+                   if let friendSnap = child as? DataSnapshot {
+                       let friendName = friendSnap.key
+                       let friendID = friendSnap.value as? String ?? ""
+                       loadedFriends.append(friendName)
+                       friendUIDs.append(friendID)
+                   }
+               }
+               
+               self.tempFriends = loadedFriends
+               self.friendUIDs = friendUIDs
+               DispatchQueue.main.async {
+                   self.friendsList.reloadData()
+               }
+           }
+        
+        
         let layout = UICollectionViewFlowLayout()
                 layout.minimumInteritemSpacing = 0 // No horizontal spacing
                 layout.minimumLineSpacing = 0 // No vertical spacing
@@ -131,6 +154,7 @@ class ProfilePage: UIViewController, UICollectionViewDataSource, UICollectionVie
         }
         if segue.identifier == "toOtherProfile", let vc = segue.destination as? OtherProfilePage {
             vc.otherUserNameText = "THIS IS THE TEMP PAGE FOR THE OTHER PROFILES"
+            vc.otherUserID = friendUIDs[chosenFriendIndex]
         }
         
     
@@ -155,6 +179,8 @@ class ProfilePage: UIViewController, UICollectionViewDataSource, UICollectionVie
         tableView.deselectRow(at: indexPath, animated: true)
         chosenFriend = tempFriends[indexPath.row]
         chosenFriendIndex = indexPath.row
+        let chosenFriendID = friendUIDs[indexPath.row]
+            print("Selected friend: \(chosenFriend!) -> UID: \(chosenFriendID)")
         performSegue(withIdentifier: "toOtherProfile", sender: self)
     
     }

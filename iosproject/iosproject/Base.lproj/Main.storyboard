@@ -460,7 +460,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="DO NOT DELETE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nGr-YE-VrW">
-                                <rect key="frame" x="0.0" y="200" width="386" height="482"/>
+                                <rect key="frame" x="120" y="70" width="180" height="76"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="bio" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0gp-cj-XmZ">
+                                <rect key="frame" x="-20" y="140" width="406" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -472,6 +479,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="LEZ-fi-w9O"/>
                     <connections>
+                        <outlet property="otherBio" destination="0gp-cj-XmZ" id="DCw-HF-cD8"/>
                         <outlet property="otherUserName" destination="nGr-YE-VrW" id="bGO-qe-aCc"/>
                     </connections>
                 </viewController>

@@ -15,12 +15,26 @@ import FirebaseDatabase
 class OtherProfilePage: UIViewController {
     
     var otherUserNameText = ""
+    var otherUserID = ""
     @IBOutlet weak var otherUserName: UILabel!
     
+    @IBOutlet weak var otherBio: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        otherUserName.text = otherUserNameText
+//        otherUserName.text = otherUserNameText
+        let db = Firestore.firestore()
+        var ref : DatabaseReference!
+        ref = Database.database().reference().child("users").child(otherUserID)
+        ref.observeSingleEvent(of: .value) { snapshot in
+            if let username = snapshot.childSnapshot(forPath: "userName").value as? String {
+                self.otherUserName.text = username
+            }
+            if let bio = snapshot.childSnapshot(forPath: "bio").value as? String {
+                self.otherBio.text = bio
+            }
+        }
+        print(otherUserID)
 
         // Do any additional setup after loading the view.
     }
