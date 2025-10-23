@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
 var idCounter = 4
 
 class AddPostViewController: UIViewController {
@@ -15,15 +17,25 @@ class AddPostViewController: UIViewController {
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var statusLabel: UILabel!
     
+    let curUser = Auth.auth().currentUser!.uid
+    var curUserName = ""
+    
     var caption: String?
     var image: UIImage?
     var location: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         statusLabel.text = ""
-        // Do any additional setup after loading the view.
+        var ref : DatabaseReference!
+        ref = Database.database().reference().child("users").child(curUser)
+        ref.observeSingleEvent(of: .value) { snapshot in
+            if let username = snapshot.childSnapshot(forPath: "userName").value as? String {
+                self.curUserName = username
+            }
+            // Do any additional setup after loading the view.
+        }
     }
     
     
@@ -39,7 +51,7 @@ class AddPostViewController: UIViewController {
            location != "",
            let image = image {
             let newDate = Date()
-            let newPost = FeedPost(id: "test\(idCounter)", username: "IsaacPlayz245", postImage: image, timestamp: newDate, likeCount: 0, commentCount: 0, location: location, caption: caption)
+            let newPost = FeedPost(id: "test\(idCounter)", username: curUserName, postImage: image, timestamp: newDate, likeCount: 0, commentCount: 0, location: location, caption: caption)
             
             posts.append(newPost)
             idCounter += 1
