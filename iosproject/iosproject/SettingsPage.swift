@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseDatabase
 
 class SettingsPage: ModeViewController {
     var isPrivate: Bool = false
@@ -35,7 +36,31 @@ class SettingsPage: ModeViewController {
     @IBAction func PrivateSwitch(_ sender: UISwitch) {
         isPrivate = sender.isOn
         print("Private: \(isPrivate)")
+        let ref = Database.database().reference()
+        guard let uid = Auth.auth().currentUser?.uid else {
+            // if in here, something seriously went wrong (inside a session without UID)
+            self.showError(title:"Bad User", message:"Invalid Session")
+            self.performSegue(withIdentifier: "settingsLogoutSegue", sender: nil)
+            // might be overkill, but just make the user log out, and have them login with a new session
+            return
+        }
+        ref.child("users").child(uid).child("isPrivate").setValue(isPrivate) { error, _ in
+            if let error = error {
+                self.showError(title:"Error updating private", message: "error: \(error.localizedDescription)")
+            } else {
+                // for debugging only
+                print("Successfully set isPrivate to \(self.isPrivate) in firebase.")
+            }
+        }
     }
+    
+    private func showError(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    
     @IBAction func logOffButton(_ sender: Any) {
         do {
             try Auth.auth().signOut()

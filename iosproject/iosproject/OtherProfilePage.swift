@@ -50,14 +50,14 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
     
     var otherSelectedPostImage: UIImage?
     var otherSelectedPostIndex: Int = 0
+    var isPrivate:Bool = false
     
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        otherMapView.isHidden = true
-        otherFriendsList.isHidden = true
+
         otherGridOfPosts.dataSource = self
         otherGridOfPosts.delegate = self
         otherFriendsList.delegate = self
@@ -72,9 +72,23 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
             if let username = snapshot.childSnapshot(forPath: "userName").value as? String {
                 self.otherUserName.text = username
             }
-            if let bio = snapshot.childSnapshot(forPath: "bio").value as? String {
-                self.otherBio.text = bio
+            if let isPrivate = snapshot.childSnapshot(forPath: "isPrivate").value as? Bool, isPrivate {
+                // private profile
+                self.isPrivate = true
+                self.setProfilePrivate()
+                self.otherMapView.isHidden = true
+                self.otherFriendsList.isHidden = true
+                self.otherGridOfPosts.isHidden = true
+                self.otherOptionsBar.isHidden = true
+                
+            } else {
+                // later on, setProfilePublic will handle populating the the profile with data
+                // consider making this code simple later
+                if let bio = snapshot.childSnapshot(forPath: "bio").value as? String {
+                    self.setProfilePublic(bio: bio)
+                }
             }
+
         }
         
         ref.child("friends").observeSingleEvent(of: .value) { snapshot in
@@ -111,6 +125,15 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
         print(otherUserID)
 
         // Do any additional setup after loading the view.
+    }
+    
+    // function for setting profiles based on private or public
+    func setProfilePrivate() {
+        self.otherBio.text = "This user is private."
+    }
+    
+    func setProfilePublic(bio: String) {
+        self.otherBio.text = bio
     }
     
     
