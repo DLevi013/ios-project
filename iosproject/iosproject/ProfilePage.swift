@@ -150,7 +150,7 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
         if segue.identifier == "profileToPost", let vc = segue.destination as? PostPage {
             vc.selectedPostImage = selectedPostImage.self
             vc.selectedPostIndex = selectedPostIndex.self
-            vc.userID = "DANIEL"
+            vc.userID = self.userNameField.text!
         }
         if segue.identifier == "toOtherProfile", let vc = segue.destination as? OtherProfilePage {
             vc.otherUserNameText = "THIS IS THE TEMP PAGE FOR THE OTHER PROFILES"
