@@ -458,6 +458,9 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="gear" catalog="system" selectedImage="gear" id="XOn-Jf-Ftz"/>
+                    <connections>
+                        <outlet property="privateSwitch" destination="c51-hr-OBT" id="a1L-If-83K"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mqj-w4-59j" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1025,7 +1028,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="5qL-vd-dKm"/>
-        <segue reference="dZC-Gb-wSO"/>
+        <segue reference="3M1-JZ-sx3"/>
         <segue reference="GaF-N1-Ow1"/>
         <segue reference="OMm-Br-J1h"/>
         <segue reference="PAo-2q-nIS"/>

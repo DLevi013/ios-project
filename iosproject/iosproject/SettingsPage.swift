@@ -13,9 +13,29 @@ class SettingsPage: ModeViewController {
     var isPrivate: Bool = false
     var isDark: Bool = false
     var isNotif: Bool = false
+    @IBOutlet weak var privateSwitch: UISwitch!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        var ref: DatabaseReference!
+        ref = Database.database().reference()
+        guard let uid = Auth.auth().currentUser?.uid else {
+            // shouldn't pass unless something happened
+            self.showError(title:"Bad User", message:"Invalid Session")
+            self.performSegue(withIdentifier: "settingsLogoutSegue", sender: nil)
+            // might be overkill, but just make the user log out, and have them login with a new session
+            return
+        }
+        
+        ref.child("users").child(uid).child("isPrivate").observeSingleEvent(of: .value) { snapshot in
+            if let isPrivate = snapshot.value as? Bool {
+                DispatchQueue.main.async {
+                    self.privateSwitch.isOn = isPrivate
+                }
+            } else {
+                self.privateSwitch.isOn = false
+            }
+        }
     }
     
     @IBAction func pressedProfileButton(_ sender: Any) {
