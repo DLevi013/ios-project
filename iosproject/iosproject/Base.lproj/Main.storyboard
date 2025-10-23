@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eEQ-TE-gdZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24128" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eEQ-TE-gdZ">
     <device id="retina6_3" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
         <capability name="Map view configurations" minToolsVersion="14.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -466,7 +466,7 @@
         <!--Other Profile Page-->
         <scene sceneID="QdW-Py-iRy">
             <objects>
-                <viewController id="gBh-e3-1bW" customClass="OtherProfilePage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OtherProfilePage" id="gBh-e3-1bW" customClass="OtherProfilePage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nvO-A0-pAE">
                         <rect key="frame" x="0.0" y="0.0" width="402" height="802"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -551,6 +551,35 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <mapView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qcY-y5-PyI">
+                                <rect key="frame" x="16" y="335" width="360" height="391"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <standardMapConfiguration key="preferredConfiguration"/>
+                            </mapView>
+                            <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="bMy-ll-4sp">
+                                <rect key="frame" x="16" y="335" width="370" height="415"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CellView" textLabel="VwZ-Cx-Svh" style="IBUITableViewCellStyleDefault" id="UdW-hi-Dye">
+                                        <rect key="frame" x="0.0" y="50" width="370" height="51"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UdW-hi-Dye" id="HtV-Jg-hOQ">
+                                            <rect key="frame" x="0.0" y="0.0" width="370" height="51"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="VwZ-Cx-Svh">
+                                                    <rect key="frame" x="20" y="0.0" width="330" height="51"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="oa6-gO-RpA"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -558,7 +587,9 @@
                     <navigationItem key="navigationItem" id="LEZ-fi-w9O"/>
                     <connections>
                         <outlet property="otherBio" destination="0gp-cj-XmZ" id="DCw-HF-cD8"/>
+                        <outlet property="otherFriendsList" destination="bMy-ll-4sp" id="CP5-F8-QEQ"/>
                         <outlet property="otherGridOfPosts" destination="QE5-XO-kiP" id="zsU-Ni-T5C"/>
+                        <outlet property="otherMapView" destination="qcY-y5-PyI" id="3Cm-pm-2v5"/>
                         <outlet property="otherOptionsBar" destination="gei-Ih-PTx" id="Vl2-OM-ka1"/>
                         <outlet property="otherUserName" destination="nGr-YE-VrW" id="bGO-qe-aCc"/>
                         <segue destination="diZ-9n-Pv5" kind="show" identifier="otherProfileToPost" id="CrI-Dp-VLO"/>
@@ -674,14 +705,14 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CellView" textLabel="TRI-S0-Yaf" style="IBUITableViewCellStyleDefault" id="4Lf-Dg-U0X">
-                                        <rect key="frame" x="0.0" y="50" width="402" height="43.666667938232422"/>
+                                        <rect key="frame" x="0.0" y="50" width="402" height="51"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4Lf-Dg-U0X" id="Uei-gB-yGG">
-                                            <rect key="frame" x="0.0" y="0.0" width="402" height="43.666667938232422"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="402" height="51"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="TRI-S0-Yaf">
-                                                    <rect key="frame" x="20" y="0.0" width="362" height="43.666667938232422"/>
+                                                    <rect key="frame" x="20" y="0.0" width="362" height="51"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
                                                     <nil key="textColor"/>
@@ -995,7 +1026,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="5qL-vd-dKm"/>
         <segue reference="dZC-Gb-wSO"/>
-        <segue reference="GaF-N1-Ow1"/>
+        <segue reference="CrI-Dp-VLO"/>
         <segue reference="OMm-Br-J1h"/>
         <segue reference="PAo-2q-nIS"/>
     </inferredMetricsTieBreakers>
@@ -1006,7 +1037,7 @@
         <image name="heart" catalog="system" width="128" height="107"/>
         <image name="house" catalog="system" width="128" height="104"/>
         <image name="mappin.and.ellipse" catalog="system" width="110" height="128"/>
-        <image name="message" catalog="system" width="128" height="116"/>
+        <image name="message" catalog="system" width="128" height="106"/>
         <image name="person" catalog="system" width="128" height="121"/>
         <image name="plus.circle" catalog="system" width="128" height="123"/>
         <systemColor name="systemBackgroundColor">

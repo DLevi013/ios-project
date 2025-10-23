@@ -99,9 +99,9 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
         
         
         let layout = UICollectionViewFlowLayout()
-                layout.minimumInteritemSpacing = 0 // No horizontal spacing
-                layout.minimumLineSpacing = 0 // No vertical spacing
-                layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0) // No padding
+                layout.minimumInteritemSpacing = 0
+                layout.minimumLineSpacing = 0
+                layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
                 gridOfPosts.collectionViewLayout = layout
                 optionsBar.selectedSegmentIndex = 0
 
@@ -175,12 +175,10 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Row selected: \(indexPath.row)")
         tableView.deselectRow(at: indexPath, animated: true)
         chosenFriend = tempFriends[indexPath.row]
         chosenFriendIndex = indexPath.row
         let chosenFriendID = friendUIDs[indexPath.row]
-            print("Selected friend: \(chosenFriend!) -> UID: \(chosenFriendID)")
         performSegue(withIdentifier: "toOtherProfile", sender: self)
     
     }

@@ -19,7 +19,7 @@ class OtherPost: UICollectionViewCell {
 
 
 
-class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout  {
+class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UITableViewDelegate, UITableViewDataSource  {
 
     
     var otherUserNameText = ""
@@ -32,6 +32,20 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
     
     @IBOutlet weak var otherGridOfPosts: UICollectionView!
     
+    
+    @IBOutlet weak var otherMapView: MKMapView!
+    
+    @IBOutlet weak var otherFriendsList: UITableView!
+    
+    let textCellIdentifier = "CellView"
+    
+    public var tempFriends = ["Isaac", "Ian", "Austin"]
+    public var friendUIDs: [String] = []
+
+    var nextFriend : String = ""
+    var chosenFriend: String?
+    var chosenFriendIndex = 0
+    
     var posts: [UIImage] = [UIImage(named: "gsWithSoup")!, UIImage(named: "halfEaten")!,UIImage(named: "parisChoco")!,UIImage(named: "parisMatcha")!]
     
     var otherSelectedPostImage: UIImage?
@@ -42,8 +56,12 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        otherMapView.isHidden = true
+        otherFriendsList.isHidden = true
         otherGridOfPosts.dataSource = self
         otherGridOfPosts.delegate = self
+        otherFriendsList.delegate = self
+        otherFriendsList.dataSource = self
 
         
 //        otherUserName.text = otherUserNameText
@@ -59,14 +77,36 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
             }
         }
         
+        ref.child("friends").observeSingleEvent(of: .value) { snapshot in
+            var loadedFriends: [String] = []
+            var friendUIDs: [String] = []
+            
+            for child in snapshot.children {
+                if let friendSnap = child as? DataSnapshot {
+                    let friendName = friendSnap.key
+                    let friendID = friendSnap.value as? String ?? ""
+                    loadedFriends.append(friendName)
+                    friendUIDs.append(friendID)
+                }
+            }
+            
+            self.tempFriends = loadedFriends
+            self.friendUIDs = friendUIDs
+            DispatchQueue.main.async {
+                self.otherFriendsList.reloadData()
+            }
+        }
+        
         let layout = UICollectionViewFlowLayout()
-                layout.minimumInteritemSpacing = 0 // No horizontal spacing
-                layout.minimumLineSpacing = 0 // No vertical spacing
-                layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0) // No padding
+                layout.minimumInteritemSpacing = 0
+                layout.minimumLineSpacing = 0
+                layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
                 otherGridOfPosts.collectionViewLayout = layout
                 otherOptionsBar.selectedSegmentIndex = 0
 
-    
+        let initialLocation = CLLocationCoordinate2D(latitude: 30.2862, longitude: -97.7394)
+        let region = MKCoordinateRegion(center: initialLocation, latitudinalMeters: 1000, longitudinalMeters: 1000)
+        otherMapView.setRegion(region, animated: false)
         
         print(otherUserID)
 
@@ -106,20 +146,54 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
         if segue.identifier == "otherProfileToPost", let vc = segue.destination as? PostPage {
             vc.selectedPostImage = otherSelectedPostImage.self
             vc.selectedPostIndex = otherSelectedPostIndex.self
-            vc.userID = "DANIEL"
+            vc.userID = otherUserName.text!
         }
     
     }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return tempFriends.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: textCellIdentifier, for:indexPath)
+        var content = cell.defaultContentConfiguration()
+        content.text = tempFriends[indexPath.row]
+        cell.contentConfiguration = content
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("Row selected: \(indexPath.row)")
+        tableView.deselectRow(at: indexPath, animated: true)
+        chosenFriend = tempFriends[indexPath.row]
+        chosenFriendIndex = indexPath.row
+        let chosenFriendID = friendUIDs[indexPath.row]
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            if let newVC = storyboard.instantiateViewController(withIdentifier: "OtherProfilePage") as? OtherProfilePage {
+                newVC.otherUserID = chosenFriendID
+                newVC.otherUserNameText = tempFriends[indexPath.row]
+                self.present(newVC, animated: true, completion: nil)
+            }
+
+    }
+    
     
     @IBAction func otherChooseTab(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
             case 0:
                 otherGridOfPosts.isHidden = false
+            otherMapView.isHidden = true
+            otherFriendsList.isHidden = true
             otherGridOfPosts.reloadData()
             case 1:
             otherGridOfPosts.isHidden = true
+            otherMapView.isHidden = false
+            otherFriendsList.isHidden = true
             case 2:
             otherGridOfPosts.isHidden = true
+            otherMapView.isHidden = true
+            otherFriendsList.isHidden = false
             default:
             otherGridOfPosts.isHidden = false
             }
