@@ -14,4 +14,6 @@ struct FeedPost {
     let timestamp: Date
     let likeCount: Int
     let commentCount: Int
+    let location: String
+    let caption: String
 }

@@ -15,18 +15,24 @@
 
 import UIKit
 
+var posts: [FeedPost] = []
+
 class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     
     let postTableViewCellIdentifier = "PostCell"
-    var posts: [FeedPost] = []
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
         fetchPosts()
     }
+    
+//    override func viewWillAppear(_ animated: Bool) {
+//        fetchPosts()
+//    }
     
     func setupTableView(){
         tableView.dataSource = self
@@ -39,11 +45,11 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func fetchPosts(){
         // fetch post data from db
         // MOCK IMPLEMENTATION FOR TESTING
-        for x in 0...4{
+        if posts.count == 0{
             let newDate = Date()
             let newPostImage = UIImage(named: "chickenAndRice")
             
-            let newPost = FeedPost(id: "test\(x)", username: "IsaacPlayz245", postImage: newPostImage, timestamp: newDate, likeCount: 1000, commentCount: 3827)
+            let newPost = FeedPost(id: "test1", username: "IsaacPlayz245", postImage: newPostImage, timestamp: newDate, likeCount: 1000, commentCount: 3827, location: "Isaac's Carribean Restauarant", caption: "This Chicken and Rice from here is heavenly.")
             
             posts.append(newPost)
         }
@@ -72,6 +78,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         cell.commentCountLabel.text = String(post.commentCount)
         
         cell.postImageView.image = post.postImage
+        cell.captionLabel.text = String(post.caption)
         return cell
     }
     
