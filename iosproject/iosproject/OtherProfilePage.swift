@@ -19,7 +19,7 @@ class OtherPost: UICollectionViewCell {
 
 
 
-class OtherProfilePage: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout  {
+class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout  {
 
     
     var otherUserNameText = ""

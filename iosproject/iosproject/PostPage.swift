@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PostPage: UIViewController {
+class PostPage: ModeViewController {
 
     var userID : String = ""
     var selectedPostImage: UIImage?

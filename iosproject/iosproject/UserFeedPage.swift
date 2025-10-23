@@ -8,7 +8,7 @@
 import UIKit
 import FirebaseAuth
 
-class UserFeedPage: UIViewController {
+class UserFeedPage: ModeViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

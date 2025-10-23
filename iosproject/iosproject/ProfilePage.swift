@@ -20,7 +20,7 @@ class Post: UICollectionViewCell {
 
 
 
-class ProfilePage: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UITableViewDelegate, UITableViewDataSource {
+class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var userNameField: UILabel!
     

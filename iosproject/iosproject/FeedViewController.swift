@@ -17,7 +17,7 @@ import UIKit
 
 var posts: [FeedPost] = []
 
-class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class FeedViewController: ModeViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     

@@ -13,7 +13,7 @@ struct TemporaryPost{
     var location : CLLocationCoordinate2D
 }
 
-class DiscoverPage : UIViewController, MKMapViewDelegate, UISearchBarDelegate{
+class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var searchField: UISearchBar!
@@ -25,7 +25,6 @@ class DiscoverPage : UIViewController, MKMapViewDelegate, UISearchBarDelegate{
     
     func searchBar(_ searchField: UISearchBar, textDidChange text: String) {
         self.searchText = searchField.searchTextField.text!
-        print(searchText)
         let list = self.locations.map { post in post.name }
         let results = list.filter { $0.lowercased().contains(searchText.lowercased()) }
         if !results.isEmpty{
@@ -34,8 +33,6 @@ class DiscoverPage : UIViewController, MKMapViewDelegate, UISearchBarDelegate{
     }
     
     func searchBarSearchButtonClicked(_ searchField: UISearchBar){
-        print("Pressed")
-        let annotation = MKPointAnnotation()
         var match: TemporaryPost = self.locations[0]
         for post in self.locations {
             if post.name.lowercased().contains(searchText.lowercased()) {
@@ -43,18 +40,19 @@ class DiscoverPage : UIViewController, MKMapViewDelegate, UISearchBarDelegate{
                 match = post
             }
         }
-        annotation.coordinate = match.location
-        annotation.title = match.name
-        changeAnnotationRegion(annotation:   annotation)
+        let region = MKCoordinateRegion(
+            center: match.location,
+            latitudinalMeters: self.viewSize,
+            longitudinalMeters: self.viewSize
+        )
+        mapView.setRegion(region, animated: true)
     }
     
     override func viewDidLoad(){
         super.viewDidLoad()
         mapView.delegate = self
         searchField.delegate = self
-        
         //getMarkers()
-        
         temporaryLocations()
         reloadAnnotations()
     }
@@ -81,7 +79,7 @@ class DiscoverPage : UIViewController, MKMapViewDelegate, UISearchBarDelegate{
     }
     
     @IBAction func plusPressed(_ sender: Any) {
-        viewSize -= 100
+        viewSize = max(100, viewSize - 100)
         setAnnotationRegion()
     }
     @IBAction func minusPressed(_ sender: Any) {
@@ -90,23 +88,13 @@ class DiscoverPage : UIViewController, MKMapViewDelegate, UISearchBarDelegate{
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        self.viewSize = 500
-        self.currentView = view
+        viewSize = 500
+        currentView = view
         setAnnotationRegion()
     }
     
-    // change later,
-    func changeAnnotationRegion(annotation: MKAnnotation) {
-        let region = MKCoordinateRegion(
-            center: annotation.coordinate,
-            latitudinalMeters: self.viewSize,
-            longitudinalMeters: self.viewSize
-        )
-        mapView.setRegion(region, animated: true)
-    }
-    
     func setAnnotationRegion() { // ? change to annotation ?
-        guard let annotation = self.currentView.annotation else { return }
+        guard let annotation = currentView?.annotation else { return }
         let region = MKCoordinateRegion(
             center: annotation.coordinate,
             latitudinalMeters: self.viewSize,

@@ -8,7 +8,7 @@
 import UIKit
 import FirebaseAuth
 
-class SettingsPage: UIViewController {
+class SettingsPage: ModeViewController {
     var isPrivate: Bool = false
     var isDark: Bool = false
     var isNotif: Bool = false
@@ -23,7 +23,8 @@ class SettingsPage: UIViewController {
     
     @IBAction func DarkSwitch(_ sender: UISwitch) {
         isDark = sender.isOn
-        print("Darkmode: \(isDark)")
+        // print("Darkmode: \(isDark)")
+        ThemeManager.shared.toggleMode(isDark: isDark)
     }
     
     @IBAction func NotificationSwitch(_ sender: UISwitch) {
