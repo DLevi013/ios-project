@@ -25,20 +25,21 @@ class ModeViewController: UIViewController {
             switch subview {
             case let label as UILabel:
                 label.textColor = AppColors.text
-            case let table as UITableView:
-                table.backgroundColor = AppColors.secondaryBackground
             case let button as UIButton:
                 button.tintColor = AppColors.text
+            case let table as UITableView:
+                table.backgroundColor = AppColors.secondaryBackground
             case let TableCell as UITableViewCell:
                 TableCell.backgroundColor = AppColors.secondaryBackground
             case let SearchBarUI as UISearchBar:
-                SearchBarUI.backgroundColor = AppColors.secondaryBackground
+                SearchBarUI.barTintColor = AppColors.secondaryBackground
             case let CollectionView as UICollectionView:
                 CollectionView.backgroundColor = AppColors.screen
             case let CollectionViewCell as UICollectionViewCell:
                 CollectionViewCell.backgroundColor = AppColors.screen
-//            case let SelectedSegmentedControl as UISegmentedControl:
-//                SelectedSegmentedControl.selectedSegmentIndex = AppColors.segmentedControlIndex
+            case let SelectedSegmentedControl as UISegmentedControl:
+                SelectedSegmentedControl.selectedSegmentTintColor = AppColors.segmentedControlIndex
+        
             default:
                 if subview.tag == 100 {
                     subview.backgroundColor = AppColors.banner

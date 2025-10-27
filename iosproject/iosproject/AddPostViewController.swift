@@ -10,7 +10,7 @@ import Firebase
 import FirebaseAuth
 var idCounter = 4
 
-class AddPostViewController: UIViewController, UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
 
     @IBOutlet weak var captionTextField: UITextField!
