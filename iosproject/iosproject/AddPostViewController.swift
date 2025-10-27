@@ -10,7 +10,7 @@ import Firebase
 import FirebaseAuth
 var idCounter = 4
 
-class AddPostViewController: UIViewController {
+class AddPostViewController: UIViewController, UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
 
     @IBOutlet weak var captionTextField: UITextField!
@@ -40,9 +40,20 @@ class AddPostViewController: UIViewController {
     
     
     @IBAction func addImagePressed(_ sender: Any) {
-        image = UIImage(named: "parisMatcha")
-        statusLabel.text = "Added Image"
+        let photoPicker = UIImagePickerController()
+        photoPicker.delegate = self
+        photoPicker.sourceType = .photoLibrary
+        present(photoPicker, animated: true, completion: nil)
     }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let selectedImage = info[.originalImage] as? UIImage {
+            image = selectedImage
+            statusLabel.text = "Added Image"
+        }
+        dismiss(animated: true, completion: nil)
+    }
+
     
     @IBAction func postButtonPressed(_ sender: Any) {
         if let caption = captionTextField.text,
