@@ -12,7 +12,7 @@ var idCounter = 4
 
 class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
-
+    
     @IBOutlet weak var captionTextField: UITextField!
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var statusLabel: UILabel!
@@ -53,25 +53,52 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
         }
         dismiss(animated: true, completion: nil)
     }
-
+    
     
     @IBAction func postButtonPressed(_ sender: Any) {
-        if let caption = captionTextField.text,
-           caption != "",
-           let location = locationTextField.text,
-           location != "",
-           let image = image {
-            let newDate = Date()
-            let newPost = FeedPost(id: "test\(idCounter)", username: curUserName, postImage: image, timestamp: newDate, likeCount: 0, commentCount: 0, location: location, caption: caption)
-            
-            posts.append(newPost)
-            idCounter += 1
-            statusLabel.text = "Added Post"
-        }else{
+        
+        guard let caption = captionTextField.text,
+            !caption.isEmpty,
+            let location = locationTextField.text,
+            !location.isEmpty,
+            let image = image else {
             // make this an alert
             statusLabel.text = "Please provide all info"
+            return
         }
+       
+        let newDate = Date()
+        let newPost = FeedPost(id: "test\(idCounter)", username: curUserName, postImage: image, timestamp: newDate, likeCount: 0, commentCount: 0, location: location, caption: caption)
         
+        posts.append(newPost)
+        idCounter += 1
+        statusLabel.text = "Added Post"
+        
+        
+        let ref = Database.database().reference()
+        let postsRef = ref.child("posts").childByAutoId()
+        let postId = postsRef.key ?? UUID().uuidString
+        
+        let timestamp = Date().timeIntervalSince1970
+        let postData: [String: Any] = [
+            "postId": postId,
+            "userId": self.curUser,
+            "username": self.curUserName,
+            "caption": caption,
+            "location": location,
+            "timestamp": timestamp,
+            "likeCount": 0,
+            "commentCount": 0
+        ]
+        
+        postsRef.setValue(postData) { (error, _) in
+            if let error = error {
+                print("Error saving post: \(error.localizedDescription)")
+                self.statusLabel.text = "Post failed"
+            } else {
+                print("✅ Post successfully added!")
+                self.statusLabel.text = "Post added!"
+            }
+        }
     }
-    
 }

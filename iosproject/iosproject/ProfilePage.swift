@@ -69,7 +69,7 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
         var ref : DatabaseReference!
         ref = Database.database().reference().child("users").child(curUser)
         ref.observeSingleEvent(of: .value) { snapshot in
-            if let username = snapshot.childSnapshot(forPath: "userName").value as? String {
+            if let username = snapshot.childSnapshot(forPath: "username").value as? String {
                 self.userNameField.text = username
             }
             if let bio = snapshot.childSnapshot(forPath: "bio").value as? String {
