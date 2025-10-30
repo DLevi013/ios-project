@@ -7,14 +7,19 @@
 
 import UIKit
 import FirebaseDatabase
+import FirebaseAuth
 
-class FeedViewController: ModeViewController, UITableViewDataSource, UITableViewDelegate {
+class FeedViewController: ModeViewController, UITableViewDataSource, UITableViewDelegate, PostTableViewCellDelegate {
+    
+    
 
     @IBOutlet weak var tableView: UITableView!
     
     var posts: [FeedPost] = []
     let postTableViewCellIdentifier = "PostCell"
     let ref = Database.database().reference()
+//    var otherProfile = ""
+    
     
     
     override func viewDidLoad() {
@@ -51,6 +56,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
                     let comments = dict["comments"] as? [String] ?? []
                     let location = dict["location"] as? String ?? ""
                     let caption = dict["caption"] as? String ?? ""
+//                    let otherProfile = dict["userId"] as? String ?? ""
                     
                     if let url = URL(string: imageUrl) {
                         URLSession.shared.dataTask(with: url) { data, response, error in
@@ -96,6 +102,14 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         }
     }
     
+    
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "feedToProfile",
+//           let vc = segue.destination as? OtherProfilePage{
+//        }
+//           
+//    }
+//    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: postTableViewCellIdentifier, for: indexPath) as? PostTableViewCell else {
                fatalError("Could not dequeue PostTableViewCell")
@@ -118,8 +132,42 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         
         cell.postImageView.image = post.postImage
         cell.captionLabel.text = String(post.caption)
+        
+        cell.delegate = self
         return cell
     }
+    
+    
+    func didTapLikeButton(on cell: PostTableViewCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        let post = posts[indexPath.row]
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        let postRef = ref.child("posts").child(post.postId).child("likes")
+
+                // Check if user already liked
+        postRef.observeSingleEvent(of: .value) { snapshot,error  in
+                    var likes = snapshot.value as? [String] ?? []
+                    if likes.contains(userId) {
+                        // Unlike
+                        likes.removeAll { $0 == userId }
+                    } else {
+                        // Like
+                        likes.append(userId)
+                    }
+
+                    // Update Firebase
+                    postRef.setValue(likes)
+                    self.posts[indexPath.row].likeCount = likes.count
+                    self.tableView.reloadRows(at: [indexPath], with: .none)
+                    let heartImage = likes.contains(userId) ? UIImage(systemName: "heart.fill") : UIImage(systemName: "heart")
+                    cell.likeButton.setImage(heartImage, for: .normal)
+            
+        
+                }
+        }
+    
+
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return posts.count

@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol PostTableViewCellDelegate: AnyObject {
+    func didTapLikeButton(on cell: PostTableViewCell)
+}
+
 class PostTableViewCell: UITableViewCell {
   
     @IBOutlet weak var usernameLabel: UILabel!
@@ -15,6 +19,9 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var commentCountLabel: UILabel!
     @IBOutlet weak var captionLabel: UILabel!
     @IBOutlet weak var postImageView: UIImageView!
+    @IBOutlet weak var likeButton: UIButton!
+    
+    weak var delegate: PostTableViewCellDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -28,5 +35,11 @@ class PostTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    
+    @IBAction func likeButtonPressed(_ sender: Any) {
+        delegate?.didTapLikeButton(on: self)
+        
+    }
+    
 
 }

@@ -262,6 +262,9 @@
                                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="heart" catalog="system"/>
+                                                    <connections>
+                                                        <action selector="likeButtonPressed:" destination="ClU-qB-w0s" eventType="touchUpInside" id="BHf-BB-xhq"/>
+                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j1B-FM-vhT">
                                                     <rect key="frame" x="90" y="345" width="52.666666666666657" height="35"/>
@@ -333,6 +336,7 @@
                                             <outlet property="captionLabel" destination="T6Q-oC-7Tg" id="XAM-ZX-38s"/>
                                             <outlet property="commentCountLabel" destination="cf7-S1-uHN" id="lgr-BY-Bvk"/>
                                             <outlet property="dateLabel" destination="ML5-i9-8SI" id="RtR-Iy-gRq"/>
+                                            <outlet property="likeButton" destination="LM9-KO-5jF" id="POI-TZ-tRb"/>
                                             <outlet property="likeCountLabel" destination="FQB-Vh-Cqf" id="2kc-ON-paL"/>
                                             <outlet property="postImageView" destination="Lum-vT-i4m" id="fX2-9l-GoY"/>
                                             <outlet property="usernameLabel" destination="0kw-XD-m5L" id="d3W-Fg-ImO"/>
@@ -347,6 +351,7 @@
                     <tabBarItem key="tabBarItem" title="" image="house" catalog="system" selectedImage="house" id="gMI-0k-OnV"/>
                     <connections>
                         <outlet property="tableView" destination="hgs-4F-nUN" id="ksX-sy-aqG"/>
+                        <segue destination="gBh-e3-1bW" kind="show" identifier="feedToProfile" id="xv7-d8-adJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ddM-Mr-DZ9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1021,9 +1026,10 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="5qL-vd-dKm"/>
-        <segue reference="3M1-JZ-sx3"/>
+        <segue reference="Dg8-T7-dec"/>
         <segue reference="GaF-N1-Ow1"/>
         <segue reference="OMm-Br-J1h"/>
+        <segue reference="xv7-d8-adJ"/>
         <segue reference="PAo-2q-nIS"/>
     </inferredMetricsTieBreakers>
     <resources>
