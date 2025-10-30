@@ -8,6 +8,9 @@
 import UIKit
 import Firebase
 import FirebaseAuth
+import FirebaseStorage
+import FirebaseDatabase
+
 var idCounter = 4
 
 class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
@@ -15,26 +18,24 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
     
     @IBOutlet weak var captionTextField: UITextField!
     @IBOutlet weak var locationTextField: UITextField!
-    @IBOutlet weak var statusLabel: UILabel!
+    @IBOutlet weak var postButton: UIButton!
     
     let curUser = Auth.auth().currentUser!.uid
     var curUserName = ""
     
     var caption: String?
-    var image: UIImage?
+    var imageLink: String?
     var location: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        statusLabel.text = ""
-        var ref : DatabaseReference!
+        var ref: DatabaseReference!
         ref = Database.database().reference().child("users").child(curUser)
         ref.observeSingleEvent(of: .value) { snapshot in
             if let username = snapshot.childSnapshot(forPath: "userName").value as? String {
                 self.curUserName = username
             }
-            // Do any additional setup after loading the view.
         }
     }
     
@@ -48,10 +49,49 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let selectedImage = info[.originalImage] as? UIImage {
-            image = selectedImage
-            statusLabel.text = "Added Image"
+            guard let imageData = selectedImage.jpegData(compressionQuality: 0.8) else {
+                dismiss(animated: true, completion: nil)
+                return
+            }
+
+            let storageRef = Storage.storage().reference().child("postImages/\(UUID().uuidString).jpg")
+            storageRef.putData(imageData, metadata: nil) { metadata, error in
+                guard error == nil else {
+                    print("Image upload failed: \(error!)")
+                    let controller = UIAlertController(title: "Add Image", message: "Image upload failed.", preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "OK", style: .default)
+                    controller.addAction(okAction)
+                    controller.preferredAction = okAction
+                    self.present(controller, animated:true)
+                    return
+                }
+                storageRef.downloadURL { url, error in
+                    guard let downloadURL = url else {
+                        print("Image upload failed: \(error!)")
+                        let controller = UIAlertController(title: "Add Image", message: "Image upload failed: \(error!)", preferredStyle: .alert)
+                        let okAction = UIAlertAction(title: "OK", style: .default)
+                        controller.addAction(okAction)
+                        controller.preferredAction = okAction
+                        self.present(controller, animated:true)
+                        print("Failed to get download URL")
+                        return
+                    }
+                    // Save downloadURL.absoluteString in your database!
+                    self.imageLink = downloadURL.absoluteString
+                    self.postButton.isEnabled = true
+                    
+                    let controller = UIAlertController(title: "Add Image", message: "Image successfully added.", preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "OK", style: .default)
+                    controller.addAction(okAction)
+                    controller.preferredAction = okAction
+                    self.present(controller, animated:true)
+                }
+            }
+            
+            dismiss(animated: true, completion: nil)
+        } else {
+            dismiss(animated: true, completion: nil)
         }
-        dismiss(animated: true, completion: nil)
     }
     
     
@@ -61,44 +101,57 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
             !caption.isEmpty,
             let location = locationTextField.text,
             !location.isEmpty,
-            let image = image else {
-            // make this an alert
-            statusLabel.text = "Please provide all info"
+            let imageLink = imageLink,
+            !imageLink.isEmpty else {
+            
+            let controller = UIAlertController(title: "Missing fields", message: "Please provide all info to make a post.", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default)
+            controller.addAction(okAction)
+            controller.preferredAction = okAction
+            present(controller, animated:true)
             return
         }
-       
-        let newDate = Date()
-        let newPost = FeedPost(id: "test\(idCounter)", username: curUserName, postImage: image, timestamp: newDate, likeCount: 0, commentCount: 0, location: location, caption: caption)
-        
-        posts.append(newPost)
-        idCounter += 1
-        statusLabel.text = "Added Post"
-        
         
         let ref = Database.database().reference()
-        let postsRef = ref.child("posts").childByAutoId()
-        let postId = postsRef.key ?? UUID().uuidString
-        
-        let timestamp = Date().timeIntervalSince1970
-        let postData: [String: Any] = [
-            "postId": postId,
-            "userId": self.curUser,
-            "username": self.curUserName,
-            "caption": caption,
-            "location": location,
-            "timestamp": timestamp,
-            "likeCount": 0,
-            "commentCount": 0
-        ]
-        
-        postsRef.setValue(postData) { (error, _) in
-            if let error = error {
-                print("Error saving post: \(error.localizedDescription)")
-                self.statusLabel.text = "Post failed"
-            } else {
-                print("✅ Post successfully added!")
-                self.statusLabel.text = "Post added!"
+        ref.child("users").child(curUser).child("username").observeSingleEvent(of: .value) { snapshot in
+            guard let userName = snapshot.value as? String else {
+                let controller = UIAlertController(title: "Error", message: "Could not fetch username.", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default)
+                controller.addAction(okAction)
+                controller.preferredAction = okAction
+                self.present(controller, animated:true)
+                return
+            }
+            let postsRef = ref.child("posts").childByAutoId()
+            let postId = postsRef.key ?? UUID().uuidString
+            let timestamp = Date().timeIntervalSince1970
+            let postData: [String: Any] = [
+                "postId": postId,
+                "userId": self.curUser,
+                "username": userName,
+                "image": imageLink,
+                "timestamp": timestamp,
+                "caption": caption,
+                "likes": [String](),
+                "comments": [String](),
+                "location": location
+            ]
+            postsRef.setValue(postData) { error, _ in
+                var alertMessage = ""
+                if let error = error {
+                    print("Error saving post: \(error.localizedDescription)")
+                    alertMessage = "Post failed"
+                } else {
+                    print("Post successfully added!")
+                    alertMessage = "Post added!"
+                }
+                let controller = UIAlertController(title: "Add Post", message: alertMessage, preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default)
+                controller.addAction(okAction)
+                controller.preferredAction = okAction
+                self.present(controller, animated:true)
             }
         }
     }
 }
+

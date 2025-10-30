@@ -983,13 +983,6 @@
                                     <segue destination="kfs-fF-rSt" kind="presentation" identifier="backToFeedFromAddPost" modalPresentationStyle="fullScreen" id="5qL-vd-dKm"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ncw-xm-Qeg">
-                                <rect key="frame" x="71" y="716" width="237" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="P7B-hD-sno"/>
                         <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -997,7 +990,7 @@
                     <connections>
                         <outlet property="captionTextField" destination="rfP-AC-tSF" id="NEO-nM-Z9e"/>
                         <outlet property="locationTextField" destination="Tfg-av-wXq" id="8dB-Ho-968"/>
-                        <outlet property="statusLabel" destination="ncw-xm-Qeg" id="XqG-7t-ZFj"/>
+                        <outlet property="postButton" destination="aAb-mU-42W" id="hzh-aZ-8i2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ita-lM-fgI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -5,23 +5,16 @@
 //  Created by Isaac Thomas on 10/20/25.
 //
 
-
-//
-//  FeedViewController.swift
-//  iosproject
-//
-//  Created by Isaac Thomas on 10/20/25.
-//
-
 import UIKit
-
-var posts: [FeedPost] = []
+import FirebaseDatabase
 
 class FeedViewController: ModeViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     
+    var posts: [FeedPost] = []
     let postTableViewCellIdentifier = "PostCell"
+    let ref = Database.database().reference()
     
     
     override func viewDidLoad() {
@@ -30,9 +23,9 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         fetchPosts()
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        fetchPosts()
-//    }
+    override func viewWillAppear(_ animated: Bool) {
+        fetchPosts()
+    }
     
     func setupTableView(){
         tableView.dataSource = self
@@ -43,19 +36,64 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
     }
     
     func fetchPosts(){
-        // fetch post data from db
-        // MOCK IMPLEMENTATION FOR TESTING
-        if posts.count == 0{
-            let newDate = Date()
-            let newPostImage = UIImage(named: "chickenAndRice")
-            
-            let newPost = FeedPost(id: "test1", username: "IsaacPlayz245", postImage: newPostImage, timestamp: newDate, likeCount: 1000, commentCount: 3827, location: "Isaac's Carribean Restauarant", caption: "This Chicken and Rice from here is heavenly.")
-            
-            posts.append(newPost)
-        }
+        posts = [FeedPost]()
         
-        // reloadData
-        tableView.reloadData()
+        ref.child("posts").observeSingleEvent(of: .value) { snapshot in
+            var feedPosts: [FeedPost] = []
+            for child in snapshot.children {
+                if let childSnapshot = child as? DataSnapshot,
+                   let dict = childSnapshot.value as? [String: Any] {
+                    let postId = dict["postId"] as? String ?? ""
+                    let username = dict["username"] as? String ?? ""
+                    let imageUrl = dict["image"] as? String ?? ""
+                    let timestamp = dict["timestamp"] as? Double ?? 0
+                    let likeCount = (dict["likes"] as? [String])?.count ?? 0
+                    let comments = dict["comments"] as? [String] ?? []
+                    let location = dict["location"] as? String ?? ""
+                    let caption = dict["caption"] as? String ?? ""
+                    
+                    if let url = URL(string: imageUrl) {
+                        URLSession.shared.dataTask(with: url) { data, response, error in
+                            if let data = data, let image = UIImage(data: data) {
+                                DispatchQueue.main.async {
+                                    let post = FeedPost(
+                                        postId: postId,
+                                        username: username,
+                                        postImage: image,
+                                        timestamp: Int(timestamp),
+                                        likeCount: likeCount,
+                                        comments: comments,
+                                        location: location,
+                                        caption: caption
+                                    )
+                                    feedPosts.append(post)
+                                    self.posts = feedPosts
+                                    self.tableView.reloadData()
+                                }
+                            }
+                        }.resume()
+                    } else {
+                        // If image URL invalid, append post with nil image to avoid skipping
+                        let post = FeedPost(
+                            postId: postId,
+                            username: username,
+                            postImage: nil,
+                            timestamp: Int(timestamp),
+                            likeCount: likeCount,
+                            comments: comments,
+                            location: location,
+                            caption: caption
+                        )
+                        feedPosts.append(post)
+                    }
+                }
+            }
+            // In case all images are invalid and no async call triggered reload here
+            DispatchQueue.main.async {
+                self.posts = feedPosts
+                self.tableView.reloadData()
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -70,12 +108,13 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         
         // IMPLEMENT DATE/TIME SHOWING LATER(like time only if its current day, yesterday, then month and days without year for current year, then full date after that.
         let dateFormatter = DateFormatter()
+        let date = Date(timeIntervalSince1970: TimeInterval(post.timestamp))
         dateFormatter.dateStyle = .medium
-        cell.dateLabel.text = dateFormatter.string(from: post.timestamp)
+        cell.dateLabel.text = dateFormatter.string(from: date)
         
         
         cell.likeCountLabel.text = String(post.likeCount)
-        cell.commentCountLabel.text = String(post.commentCount)
+        cell.commentCountLabel.text = String(post.comments.count)
         
         cell.postImageView.image = post.postImage
         cell.captionLabel.text = String(post.caption)

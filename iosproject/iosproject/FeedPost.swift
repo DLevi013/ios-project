@@ -8,12 +8,12 @@
 import UIKit
 
 struct FeedPost {
-    let id: String
+    let postId: String
     let username: String
     let postImage: UIImage?
-    let timestamp: Date
+    let timestamp: Int
     let likeCount: Int
-    let commentCount: Int
+    let comments: [String]
     let location: String
     let caption: String
 }
