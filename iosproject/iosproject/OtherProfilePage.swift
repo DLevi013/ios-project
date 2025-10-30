@@ -64,12 +64,12 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
         otherFriendsList.dataSource = self
 
         
-//        otherUserName.text = otherUserNameText
+        // otherUserName.text = otherUserNameText
         let db = Firestore.firestore()
         var ref : DatabaseReference!
         ref = Database.database().reference().child("users").child(otherUserID)
         ref.observeSingleEvent(of: .value) { snapshot in
-            if let username = snapshot.childSnapshot(forPath: "userName").value as? String {
+            if let username = snapshot.childSnapshot(forPath: "username").value as? String {
                 self.otherUserName.text = username
             }
             if let isPrivate = snapshot.childSnapshot(forPath: "isPrivate").value as? Bool, isPrivate {

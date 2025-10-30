@@ -103,13 +103,23 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
     }
     
     
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "feedToProfile",
-//           let vc = segue.destination as? OtherProfilePage{
-//        }
-//           
-//    }
-//    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        /*
+        if segue.identifier == "feedToProfile",
+            let vc = segue.destination as? OtherProfilePage,
+            let userId = sender as? String {
+                vc.otherUserID = userId
+        }
+         */
+        if segue.identifier == "feedToProfile",
+           let uid = sender as? String,
+           let destination = segue.destination as? OtherProfilePage {
+            print("Setting destination with \(uid)")
+            destination.otherUserID = uid
+        }
+           
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: postTableViewCellIdentifier, for: indexPath) as? PostTableViewCell else {
                fatalError("Could not dequeue PostTableViewCell")
@@ -137,6 +147,27 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         return cell
     }
     
+    
+    func didTapProfileButton(on cell: PostTableViewCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        let post = posts[indexPath.row]
+        let username = post.username
+        
+        let usersRef = Database.database().reference().child("users")
+        usersRef.queryOrdered(byChild: "username").queryEqual(toValue:username).observeSingleEvent(of: .value) { snapshot in
+            guard let firstChild = snapshot.children.allObjects.first as? DataSnapshot else {
+                print("DEBUG: NO USER \(username) FOUND")
+                return
+            }
+            let uid = firstChild.key
+            print("FOUND UID: \(uid)")
+            DispatchQueue.main.async {
+                self.performSegue(withIdentifier: "feedToProfile", sender: uid)
+            }
+        }
+        
+        // performSegue(withIdentifier: "feedToProfile", sender: post.username)
+    }
     
     func didTapLikeButton(on cell: PostTableViewCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }

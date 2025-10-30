@@ -9,7 +9,9 @@ import UIKit
 
 protocol PostTableViewCellDelegate: AnyObject {
     func didTapLikeButton(on cell: PostTableViewCell)
+    func didTapProfileButton(on cell: PostTableViewCell)
 }
+
 
 class PostTableViewCell: UITableViewCell {
   
@@ -39,6 +41,10 @@ class PostTableViewCell: UITableViewCell {
     @IBAction func likeButtonPressed(_ sender: Any) {
         delegate?.didTapLikeButton(on: self)
         
+    }
+    
+    @IBAction func profileButtonTapped(_ sender: Any) {
+        delegate?.didTapProfileButton(on: self)
     }
     
 

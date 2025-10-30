@@ -243,6 +243,9 @@
                                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="person" catalog="system"/>
+                                                    <connections>
+                                                        <action selector="profileButtonTapped:" destination="ClU-qB-w0s" eventType="touchUpInside" id="UQO-Jb-3lg"/>
+                                                    </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0kw-XD-m5L">
                                                     <rect key="frame" x="56" y="8" width="36" height="21"/>
@@ -1027,7 +1030,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="5qL-vd-dKm"/>
         <segue reference="Dg8-T7-dec"/>
-        <segue reference="GaF-N1-Ow1"/>
+        <segue reference="CrI-Dp-VLO"/>
         <segue reference="OMm-Br-J1h"/>
         <segue reference="xv7-d8-adJ"/>
         <segue reference="PAo-2q-nIS"/>
