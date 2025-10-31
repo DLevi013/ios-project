@@ -199,7 +199,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zei-mc-GiM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1646.5648854961833" y="117.60563380281691"/>
+            <point key="canvasLocation" x="1640" y="86"/>
         </scene>
         <!--Feed View Controller-->
         <scene sceneID="hyr-Ty-RUa">
@@ -1028,12 +1028,12 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="5qL-vd-dKm"/>
+        <segue reference="R97-3n-0RC"/>
         <segue reference="6GE-aQ-DkX"/>
         <segue reference="CrI-Dp-VLO"/>
         <segue reference="OMm-Br-J1h"/>
         <segue reference="xv7-d8-adJ"/>
-        <segue reference="PAo-2q-nIS"/>
+        <segue reference="c0R-CK-ZJv"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="chevron.right" catalog="system" width="97" height="128"/>

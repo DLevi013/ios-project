@@ -161,7 +161,6 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
     }
     
     
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tempFriends.count
     }
