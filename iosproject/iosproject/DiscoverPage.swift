@@ -66,16 +66,46 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate 
             mapView.addAnnotation(annotation)
         }
     }
-
+    
     func temporaryLocations(){
         locations.append(TemporaryPost(name:"Tower", location: CLLocationCoordinate2D(latitude: 30.28565,longitude: -97.73921)))
         locations.append(TemporaryPost(name:"Union", location: CLLocationCoordinate2D(latitude: 30.28663,longitude: -97.74116)))
-
-        locations.append(TemporaryPost(name:"Tower", location: CLLocationCoordinate2D(latitude: 30.28361,longitude: -97.73650)))
+        locations.append(TemporaryPost(name:"Gregory", location: CLLocationCoordinate2D(latitude: 30.28361,longitude: -97.73650)))
     }
-  
+    
     @IBAction func filterPressed(_ sender: Any) {
-        //reloadAnnotations()
+        Task{
+            await searchForPlace(addressString: self.searchText)
+        }
+    }
+    
+    func searchForPlace(addressString: String) async{
+        self.locations = []
+        let region = MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: 30.28663,longitude: -97.74116),
+            latitudinalMeters: self.viewSize,
+            longitudinalMeters: self.viewSize
+        )
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = "food"
+        request.region = region
+        
+        let search = MKLocalSearch(request: request)
+        do {
+            let response = try await search.start()
+            for item in response.mapItems {
+                guard let name = item.name else {
+                    continue
+                }
+                let result = TemporaryPost(name: name, location: item.location.coordinate)
+                self.locations.append(result)
+                self.reloadAnnotations()
+            }
+        } catch {
+            print("serach failed")
+        }
+       
+  
     }
     
     @IBAction func plusPressed(_ sender: Any) {
