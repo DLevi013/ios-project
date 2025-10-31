@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24128" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eEQ-TE-gdZ">
-    <device id="retina6_3" orientation="portrait" appearance="light"/>
+    <device id="retina6_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
         <capability name="Map view configurations" minToolsVersion="14.0"/>
@@ -15,12 +15,15 @@
             <objects>
                 <viewController storyboardIdentifier="LoginPage" id="eEQ-TE-gdZ" customClass="LoginPage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="qtL-R3-e6y">
-                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="foocation logo" translatesAutoresizingMaskIntoConstraints="NO" id="hJK-Oz-giE">
-                                <rect key="frame" x="34" y="84" width="325" height="206"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="foocation logo" translatesAutoresizingMaskIntoConstraints="NO" id="hJK-Oz-giE">
+                                <rect key="frame" x="19" y="84" width="402" height="206"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="402" id="Foy-KU-BIR"/>
+                                    <constraint firstAttribute="height" constant="206" id="ILr-G3-mP1"/>
+                                </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Email:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9iR-gF-0jE">
                                 <rect key="frame" x="49" y="353" width="46" height="21"/>
@@ -68,9 +71,8 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eVz-BT-1U0">
-                                <rect key="frame" x="163" y="555" width="66" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eVz-BT-1U0">
+                                <rect key="frame" x="187" y="555" width="66" height="35"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Login"/>
@@ -81,6 +83,12 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="0cn-yS-UM2"/>
                         <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstItem="eVz-BT-1U0" firstAttribute="centerX" secondItem="qtL-R3-e6y" secondAttribute="centerX" id="4se-4K-6ZV"/>
+                            <constraint firstItem="hJK-Oz-giE" firstAttribute="centerX" secondItem="qtL-R3-e6y" secondAttribute="centerX" id="EMb-zm-CTC"/>
+                            <constraint firstItem="hJK-Oz-giE" firstAttribute="top" secondItem="0cn-yS-UM2" secondAttribute="top" constant="22" id="Ldd-sx-Lld"/>
+                            <constraint firstItem="eVz-BT-1U0" firstAttribute="top" secondItem="0cn-yS-UM2" secondAttribute="top" constant="493" id="snT-Bw-7RD"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="passwordTextField" destination="xzb-ws-b34" id="vM9-Y4-oti"/>
@@ -91,19 +99,22 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ujc-4A-txx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="iGm-K3-3AO" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="604" y="87"/>
+            <point key="canvasLocation" x="602.98507462686564" y="86.498855835240263"/>
         </scene>
         <!--Sign Up Page-->
         <scene sceneID="gWv-t2-vN7">
             <objects>
                 <viewController id="eAN-jk-3ys" customClass="SignUpPage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="P4N-h7-56k">
-                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="foocation logo" translatesAutoresizingMaskIntoConstraints="NO" id="Ibo-tK-OM0">
-                                <rect key="frame" x="38" y="85" width="325" height="206"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="foocation logo" translatesAutoresizingMaskIntoConstraints="NO" id="Ibo-tK-OM0">
+                                <rect key="frame" x="-294" y="85" width="1028" height="206"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="1028" id="OG3-av-Tcf"/>
+                                    <constraint firstAttribute="height" constant="206" id="lj8-4B-UU4"/>
+                                </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Email:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pRX-pG-5tB">
                                 <rect key="frame" x="67" y="354" width="47" height="20"/>
@@ -151,9 +162,8 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HPd-hk-QKa">
-                                <rect key="frame" x="156" y="604" width="89" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HPd-hk-QKa">
+                                <rect key="frame" x="175.66666666666666" y="604" width="88.999999999999972" height="35"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Sign Up!"/>
@@ -187,6 +197,12 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ECv-hU-mQJ"/>
                         <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstItem="Ibo-tK-OM0" firstAttribute="centerX" secondItem="P4N-h7-56k" secondAttribute="centerX" id="FKn-y3-amv"/>
+                            <constraint firstItem="Ibo-tK-OM0" firstAttribute="top" secondItem="ECv-hU-mQJ" secondAttribute="top" constant="23" id="MMj-45-mGu"/>
+                            <constraint firstItem="HPd-hk-QKa" firstAttribute="centerX" secondItem="P4N-h7-56k" secondAttribute="centerX" id="bwF-dK-yiH"/>
+                            <constraint firstItem="HPd-hk-QKa" firstAttribute="top" secondItem="ECv-hU-mQJ" secondAttribute="top" constant="542" id="g90-sq-zQK"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="JgT-Ql-CcZ"/>
                     <connections>
@@ -206,7 +222,7 @@
             <objects>
                 <viewController id="oXN-jg-vFE" customClass="FeedViewController" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DWM-ck-5uI">
-                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view tag="100" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iGC-0o-RuK">
@@ -366,7 +382,7 @@
             <objects>
                 <viewController id="iF1-R9-xMt" customClass="SettingsPage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="s4y-C6-Yon">
-                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="settings page" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xYi-dP-vcP">
@@ -479,7 +495,7 @@
             <objects>
                 <viewController storyboardIdentifier="OtherProfilePage" id="gBh-e3-1bW" customClass="OtherProfilePage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nvO-A0-pAE">
-                        <rect key="frame" x="0.0" y="0.0" width="402" height="802"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="884"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="bio" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0gp-cj-XmZ">
@@ -615,7 +631,7 @@
             <objects>
                 <viewController id="AZC-Xx-jcF" customClass="ProfilePage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="RH5-0f-bx0">
-                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="UserName" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H82-UR-Chq">
@@ -760,7 +776,7 @@
             <objects>
                 <viewController id="diZ-9n-Pv5" customClass="PostPage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="In5-3x-uyB">
-                        <rect key="frame" x="0.0" y="0.0" width="402" height="802"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="884"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view tag="100" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5id-no-39b">
@@ -856,7 +872,7 @@
             <objects>
                 <viewController id="Mf7-pK-mys" customClass="DiscoverPage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iBE-pp-T5c">
-                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dz1-5P-aEG">
@@ -883,7 +899,7 @@
                                 </connections>
                             </button>
                             <searchBar contentMode="redraw" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qM8-S4-pDV">
-                                <rect key="frame" x="0.0" y="113" width="290" height="44"/>
+                                <rect key="frame" x="0.0" y="113" width="328" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
@@ -935,7 +951,7 @@
             <objects>
                 <viewController id="7Y2-4b-ByA" customClass="AddPostViewController" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="g3O-md-bFw">
-                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AWN-uj-ong">
@@ -1028,12 +1044,12 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="5qL-vd-dKm"/>
+        <segue reference="R97-3n-0RC"/>
         <segue reference="Dg8-T7-dec"/>
         <segue reference="CrI-Dp-VLO"/>
         <segue reference="OMm-Br-J1h"/>
         <segue reference="xv7-d8-adJ"/>
-        <segue reference="PAo-2q-nIS"/>
+        <segue reference="c0R-CK-ZJv"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="chevron.right" catalog="system" width="97" height="128"/>
