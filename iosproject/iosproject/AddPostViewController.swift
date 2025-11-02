@@ -13,7 +13,7 @@ import FirebaseDatabase
 
 var idCounter = 4
 
-class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LocationSelectionDelegate{
     
     
     @IBOutlet weak var captionTextField: UITextField!
@@ -25,7 +25,9 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
     
     var caption: String?
     var imageLink: String?
-    var location: String?
+    // var location: String?
+    var latitude: Double?
+    var longitude: Double?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,13 +96,23 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
         }
     }
     
+    @IBAction func addLocationPressed(_ sender: Any) {
+        performSegue(withIdentifier: "postToDiscoverSegue", sender: self)
+    }
+    
+    func didSelectLocation(selectedLatitude: Double, selectedLongitude: Double) {
+        self.latitude = selectedLatitude
+        self.longitude = selectedLongitude
+    }
     
     @IBAction func postButtonPressed(_ sender: Any) {
         
         guard let caption = captionTextField.text,
             !caption.isEmpty,
-            let location = locationTextField.text,
-            !location.isEmpty,
+//            let location = locationTextField.text,
+//            !location.isEmpty,
+            let longtitude = longitude,
+            let latitude = latitude,
             let imageLink = imageLink,
             !imageLink.isEmpty else {
             
@@ -134,7 +146,7 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
                 "caption": caption,
                 "likes": [String](),
                 "comments": [String](),
-                "location": location
+                "location": [longtitude, latitude]
             ]
             postsRef.setValue(postData) { error, _ in
                 var alertMessage = ""
@@ -153,5 +165,17 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
             }
         }
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "postToDiscoverSegue" {
+            if let discoverVC = segue.destination as? DiscoverPage {
+                discoverVC.isSelectingLocation = true
+                discoverVC.discoverDelegate = self
+            }
+        }
+    }
 }
 
+protocol LocationSelectionDelegate: AnyObject {
+    func didSelectLocation(selectedLatitude: Double, selectedLongitude: Double)
+}
