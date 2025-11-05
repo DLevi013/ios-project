@@ -12,10 +12,12 @@
 		933043FA2EA817090000C814 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 933043F92EA817090000C814 /* FirebaseFirestore */; };
 		933043FC2EA81B490000C814 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 933043FB2EA81B490000C814 /* FirebaseDatabase */; };
 		B902EF7D2EB2DA360095BA6F /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = B902EF7C2EB2DA360095BA6F /* FirebaseStorage */; };
+		B9FCE9902EBACF5E00BF5751 /* CommentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FCE98F2EBACF5E00BF5751 /* CommentTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		93ACE23D2E96E3DD009A5E80 /* iosproject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosproject.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9FCE98F2EBACF5E00BF5751 /* CommentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -58,6 +60,7 @@
 		93ACE2342E96E3DD009A5E80 = {
 			isa = PBXGroup;
 			children = (
+				B9FCE98F2EBACF5E00BF5751 /* CommentTableViewCell.swift */,
 				93ACE23F2E96E3DD009A5E80 /* iosproject */,
 				93ACE23E2E96E3DD009A5E80 /* Products */,
 			);
@@ -153,6 +156,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9FCE9902EBACF5E00BF5751 /* CommentTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
