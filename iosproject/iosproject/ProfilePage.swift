@@ -28,7 +28,7 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
     
     
     
-    var posts: [UIImage] = [UIImage(named: "gsWithSoup")!, UIImage(named: "halfEaten")!,UIImage(named: "parisChoco")!,UIImage(named: "parisMatcha")!]
+    var posts: [UIImage] = []
     
     @IBOutlet weak var optionsBar: UISegmentedControl!
     
@@ -76,11 +76,37 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
                 self.bioField.text = bio
             }
         }
+        // Load user's posts (from top-level /posts)
+        let postsRef = Database.database().reference().child("posts")
+        postsRef.observeSingleEvent(of: .value) { snapshot in
+            var loadedImages: [UIImage] = []
+
+            for child in snapshot.children {
+                if let postSnap = child as? DataSnapshot,
+                   let postDict = postSnap.value as? [String: Any],
+                   let userId = postDict["userId"] as? String,
+                   userId == curUser,
+                   let imageUrl = postDict["image"] as? String,
+                   let url = URL(string: imageUrl) {
+
+                    URLSession.shared.dataTask(with: url) { data, _, _ in
+                        if let data = data, let img = UIImage(data: data) {
+                            DispatchQueue.main.async {
+                                loadedImages.append(img)
+                                self.posts = loadedImages
+                                self.gridOfPosts.reloadData()
+                            }
+                        }
+                    }.resume()
+                }
+            }
+        }
         
-           ref.child("friends").observeSingleEvent(of: .value) { snapshot in
+           ref.child("friends").observe(.value) { snapshot in
                var loadedFriends: [String] = []
                var friendUIDs: [String] = []
-               
+               print("Checking friends for user: \(curUser)")
+               print("Snapshot: \(snapshot.value ?? "No friends")")
                for child in snapshot.children {
                    if let friendSnap = child as? DataSnapshot {
                        let friendName = friendSnap.key
@@ -114,9 +140,7 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
         
         
     }
-    
-    
-    
+
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

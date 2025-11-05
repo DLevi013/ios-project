@@ -53,11 +53,16 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
     var isPrivate:Bool = false
     
     
+    @IBOutlet weak var addFriendButton: UIButton!
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        friendCheck()
         
 
+//        addFriendButton.isHidden = true
         otherGridOfPosts.dataSource = self
         otherGridOfPosts.delegate = self
         otherFriendsList.delegate = self
@@ -222,6 +227,73 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
             }
         
         
+    }
+    
+    
+    @IBAction func addFriendTapped(_ sender: Any) {
+        guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+            let ref = Database.database().reference()
+
+            // Get both usernames for cleaner display
+            let currentUserRef = ref.child("users").child(currentUserID)
+            let otherUserRef = ref.child("users").child(otherUserID)
+
+            currentUserRef.child("username").observeSingleEvent(of: .value) { snapshot in
+                let currentUsername = snapshot.value as? String ?? "Unknown"
+                otherUserRef.child("username").observeSingleEvent(of: .value) { otherSnap in
+                    let otherUsername = otherSnap.value as? String ?? "Unknown"
+
+                    let updates = [
+                        "users/\(currentUserID)/friends/\(otherUsername)": self.otherUserID,
+                        "users/\(self.otherUserID)/friends/\(currentUsername)": currentUserID
+                    ]
+                    ref.updateChildValues(updates) { error, _ in
+                        if let error = error {
+                            print("Error in adding friend", error.localizedDescription)
+                        } else {
+                            print("Added Friend!")
+                            DispatchQueue.main.async {
+                                self.addFriendButton.isHidden = true
+                            }
+                        }
+                    }
+                }
+            }
+    }
+    
+    func friendCheck() {
+        addFriendButton.isHidden = false
+        let db = Database.database().reference()
+        guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+        
+        let friendsRef = db.child("users").child(currentUserID).child("friends")
+        friendsRef.observeSingleEvent(of: .value) { snapshot in
+            var isFriend = false
+            for child in snapshot.children {
+                if let friendSnap = child as? DataSnapshot,
+                   let friendUID = friendSnap.value as? String,
+                   friendUID == self.otherUserID {
+                    isFriend = true
+                    break
+                }
+            }
+
+            DispatchQueue.main.async {
+                if isFriend {
+                    // Already friends
+                    self.addFriendButton.setTitle("Friends", for: .normal)
+                    self.addFriendButton.isEnabled = false
+                    self.addFriendButton.isHidden = true
+                } else {
+                    // Not friends yet
+                    self.addFriendButton.setTitle("Add Friend", for: .normal)
+                    self.addFriendButton.isEnabled = true
+                    self.addFriendButton.isHidden = false
+                }
+                
+                
+            }
+        }
     }
     
 
