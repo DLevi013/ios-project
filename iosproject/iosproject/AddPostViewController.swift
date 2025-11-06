@@ -17,7 +17,7 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
     
     
     @IBOutlet weak var captionTextField: UITextField!
-    @IBOutlet weak var locationTextField: UITextField!
+    //@IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var postButton: UIButton!
     
     let curUser = Auth.auth().currentUser!.uid
@@ -25,7 +25,7 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
     
     var caption: String?
     var imageLink: String?
-    // var location: String?
+    var locationName: String = ""
     var latitude: Double?
     var longitude: Double?
     
@@ -100,17 +100,17 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
         performSegue(withIdentifier: "postToDiscoverSegue", sender: self)
     }
     
-    func didSelectLocation(selectedLatitude: Double, selectedLongitude: Double) {
+    func didSelectLocation(selectedLatitude: Double, selectedLongitude: Double, selectedName: String) {
         self.latitude = selectedLatitude
         self.longitude = selectedLongitude
+        self.locationName = selectedName
     }
     
     @IBAction func postButtonPressed(_ sender: Any) {
         
         guard let caption = captionTextField.text,
             !caption.isEmpty,
-//            let location = locationTextField.text,
-//            !location.isEmpty,
+            !locationName.isEmpty,
             let longtitude = longitude,
             let latitude = latitude,
             let imageLink = imageLink,
@@ -137,6 +137,10 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
             let postsRef = ref.child("posts").childByAutoId()
             let postId = postsRef.key ?? UUID().uuidString
             let timestamp = Date().timeIntervalSince1970
+            let lat = String(format: "%.4f", self.latitude!).replacingOccurrences(of: ".", with: "_")
+            let lon = String(format: "%.4f", self.longitude!).replacingOccurrences(of: ".", with: "_")
+            let locationId = "\(self.locationName)_\(lat)_\(lon)"
+            let locationRef = ref.child("locations").child(locationId)
             let postData: [String: Any] = [
                 "postId": postId,
                 "userId": self.curUser,
@@ -146,8 +150,26 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
                 "caption": caption,
                 "likes": [String](),
                 "comments": [String](),
-                "location": [longtitude, latitude]
+                "locationId": locationId
             ]
+            let locationData: [String: Any] = [
+                "name": self.locationName,
+                "coordinates": [
+                    "latitude": latitude,
+                    "longitude": longtitude
+                ]
+            ]
+            locationRef.updateChildValues(locationData) { error, _ in
+                if let error = error {
+                    print("Failed to update/find location: \(error.localizedDescription)")
+                }
+                let postIdsRef = locationRef.child("postIds")
+                postIdsRef.updateChildValues([postId: true]) { error, _ in
+                    if let error = error {
+                        print("Failed to attach postId: \(error.localizedDescription)")
+                    }
+                }
+            }
             postsRef.setValue(postData) { error, _ in
                 var alertMessage = ""
                 if let error = error {
@@ -164,6 +186,7 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
                 self.present(controller, animated:true)
             }
         }
+
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -177,5 +200,5 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
 }
 
 protocol LocationSelectionDelegate: AnyObject {
-    func didSelectLocation(selectedLatitude: Double, selectedLongitude: Double)
+    func didSelectLocation(selectedLatitude: Double, selectedLongitude: Double, selectedName: String)
 }

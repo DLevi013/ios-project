@@ -30,12 +30,12 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     var locations:[RestaurantPin] = []
     var viewSize:Double = 500
     var currentView: MKAnnotationView!
-    
-    var selectedCoordinate: CLLocationCoordinate2D?
-    
+        
+    // Add post interaction
     var discoverDelegate: AddPostViewController?
     var isSelectingLocation: Bool = false
-    
+    var selectedCoordinate: CLLocationCoordinate2D?
+    var selectedName: String = ""
     
     override func viewDidLoad(){
         super.viewDidLoad()
@@ -53,7 +53,6 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             confirmLocationButton.isHidden = true
         }
         reloadAnnotations()
-        
     }
     
     func searchBar(_ searchField: UISearchBar, textDidChange text: String) {
@@ -95,9 +94,9 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             let response = try await search.start()
             for item in response.mapItems {
                 guard let name = item.name else { continue }
+                // need to filter out names with weird characters
                 let result = RestaurantPin(name: name, location: item.location.coordinate)
                 self.searchFieldLocations.append(result)
-                
             }
             DispatchQueue.main.async {
                 self.searchResults.reloadData()
@@ -125,6 +124,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         annotation.title = searchFieldLocations[indexPath.row].name
         if isSelectingLocation {
             selectedCoordinate = searchFieldLocations[indexPath.row].location
+            selectedName = annotation.title!
         }
         mapView.addAnnotation(annotation)
         let region = MKCoordinateRegion(
@@ -149,11 +149,11 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         if isSelectingLocation {
             selectedCoordinate = view.annotation?.coordinate
+            selectedName = (view.annotation?.title)!!
         }
         viewSize = 500
         currentView = view
         setAnnotationRegion()
-        
     }
     
     func setAnnotationRegion() {
@@ -175,10 +175,8 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             present(alert, animated: true)
             return
         }
-        discoverDelegate?.didSelectLocation(selectedLatitude: coordinate.latitude, selectedLongitude: coordinate.longitude)
+        discoverDelegate?.didSelectLocation(selectedLatitude: coordinate.latitude, selectedLongitude: coordinate.longitude,  selectedName: selectedName)
                 
         dismiss(animated: true)
- 
     }
-    
 }
