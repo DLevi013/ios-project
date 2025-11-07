@@ -13,7 +13,7 @@ struct FeedPost {
     let postImage: UIImage?
     let timestamp: Int
     var likeCount: Int
-    let comments: [String]
+    var comments: [String]
     let location: String
     let caption: String
 }
