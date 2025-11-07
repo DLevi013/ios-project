@@ -22,6 +22,7 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var captionLabel: UILabel!
     @IBOutlet weak var postImageView: UIImageView!
     @IBOutlet weak var likeButton: UIButton!
+    @IBOutlet weak var commentButton: UIButton!
     
     weak var delegate: PostTableViewCellDelegate?
     
@@ -47,5 +48,4 @@ class PostTableViewCell: UITableViewCell {
         delegate?.didTapProfileButton(on: self)
     }
     
-
 }

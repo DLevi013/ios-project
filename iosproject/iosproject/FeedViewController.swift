@@ -18,6 +18,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
     var posts: [FeedPost] = []
     let postTableViewCellIdentifier = "PostCell"
     let ref = Database.database().reference()
+    var selectedIndex: Int?
 //    var otherProfile = ""
     
     
@@ -117,6 +118,12 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
             print("Setting destination with \(uid)")
             destination.otherUserID = uid
         }
+        if segue.identifier == "feedToPost" {
+            if let destinationVC = segue.destination as? PostPage,
+               let index = selectedIndex {
+                destinationVC.post = posts[index]
+            }
+        }
            
     }
     
@@ -142,7 +149,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         
         cell.postImageView.image = post.postImage
         cell.captionLabel.text = String(post.caption)
-        
+        cell.commentButton.tag = indexPath.row
         cell.delegate = self
         return cell
     }
@@ -198,6 +205,12 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         }
     
 
+    @IBAction func didTapCommentButton(_ sender: UIButton) {
+        selectedIndex = sender.tag
+        performSegue(withIdentifier:"feedToPost", sender: self)
+        
+        
+    }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
