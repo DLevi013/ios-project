@@ -26,6 +26,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
+        setupRefreshControl()
         fetchPosts()
     }
     
@@ -39,6 +40,16 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 400
         tableView.separatorStyle = .none
+    }
+    
+    func setupRefreshControl() {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        tableView.refreshControl = refreshControl
+    }
+    
+    @objc func handleRefresh() {
+        fetchPosts()
     }
     
     func fetchPosts(){
@@ -76,6 +87,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
                                     feedPosts.append(post)
                                     self.posts = feedPosts
                                     self.tableView.reloadData()
+                                    self.tableView.refreshControl?.endRefreshing()
                                 }
                             }
                         }.resume()
@@ -99,6 +111,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
             DispatchQueue.main.async {
                 self.posts = feedPosts
                 self.tableView.reloadData()
+                self.tableView.refreshControl?.endRefreshing()
             }
         }
     }
@@ -175,6 +188,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         
         // performSegue(withIdentifier: "feedToProfile", sender: post.username)
     }
+    
     
     func didTapLikeButton(on cell: PostTableViewCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
