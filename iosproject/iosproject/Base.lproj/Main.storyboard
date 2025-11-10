@@ -500,7 +500,7 @@
             <objects>
                 <viewController storyboardIdentifier="OtherProfilePage" id="gBh-e3-1bW" customClass="OtherProfilePage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nvO-A0-pAE">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="894"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="884"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="bio" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0gp-cj-XmZ">
@@ -687,7 +687,7 @@
                                 <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </view>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="8hi-Ww-79D">
-                                <rect key="frame" x="108" y="263" width="195" height="32"/>
+                                <rect key="frame" x="109" y="263" width="195" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <segments>
                                     <segment title="Posts"/>
@@ -1286,11 +1286,11 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="5qL-vd-dKm"/>
-        <segue reference="Dg8-T7-dec"/>
+        <segue reference="dZC-Gb-wSO"/>
         <segue reference="Ww1-1g-ExL"/>
         <segue reference="GaF-N1-Ow1"/>
         <segue reference="OmV-5X-INh"/>
-        <segue reference="xv7-d8-adJ"/>
+        <segue reference="Bic-WB-kOL"/>
         <segue reference="PAo-2q-nIS"/>
     </inferredMetricsTieBreakers>
     <resources>

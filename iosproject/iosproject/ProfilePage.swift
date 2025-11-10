@@ -203,10 +203,48 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
         chosenFriend = tempFriends[indexPath.row]
         chosenFriendIndex = indexPath.row
         let chosenFriendID = friendUIDs[indexPath.row]
-        performSegue(withIdentifier: "toOtherProfile", sender: self)
-    
+        
+        let alertController = UIAlertController(title: "Friend Action", message: "Select an action to perform for \(chosenFriend!)", preferredStyle: .actionSheet)
+        
+        let viewProfileAction = UIAlertAction(title: "View Profile", style: .default){ _ in
+            self.performSegue(withIdentifier: "toOtherProfile", sender: self)
+        }
+        
+        let removeFriendAction = UIAlertAction(title: "Remove Friend", style: .destructive){ _ in
+            self.removeFriend(chosenFriend: self.chosenFriend!)
+        }
+        
+        alertController.addAction(viewProfileAction)
+        alertController.addAction(removeFriendAction)
+        
+        alertController.preferredAction = viewProfileAction
+        present(alertController, animated: true)
     }
     
+    func removeFriend(chosenFriend: String) {
+        guard let curUser = Auth.auth().currentUser?.uid else { return }
+        let ref = Database.database().reference()
+        // remove friend from user's friends
+        ref.child("users").child(curUser).child("friends").child(chosenFriend).removeValue { error, _ in
+            if let error = error {
+                print("Error removing friend: \(error.localizedDescription)")
+            } else {
+                print("Friend removed successfully from user's list.")
+                // remove user from friend's friends
+                ref.child("users").child(chosenFriend).child("friends").child(curUser).removeValue { error, _ in
+                    if let error = error {
+                        print("Error removing user from friend's list: \(error.localizedDescription)")
+                    } else {
+                        print("User removed successfully from friend's list.")
+                
+                        DispatchQueue.main.async {
+                            self.friendsList.reloadData()
+                        }
+                    }
+                }
+            }
+        }
+    }
   
     
     @IBAction func choosingTab(_ sender: UISegmentedControl) {
@@ -243,3 +281,4 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
     */
 
 }
+
