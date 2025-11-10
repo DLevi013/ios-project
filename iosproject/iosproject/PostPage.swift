@@ -9,7 +9,7 @@ import UIKit
 import FirebaseDatabase
 
 class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
-    var comments: [String] = []
+    var comments: [Comment] = []
     
 
     var post: FeedPost?
@@ -35,7 +35,7 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
         guard let post = post else { return }
         
         if let image = post.postImage {
-                    postImages.image = image
+            postImages.image = image
         }
         print("\(post.caption)")
         userIDField.text = post.username
@@ -47,47 +47,42 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
         commentTableView.delegate = self
         
         let postRef = ref.child(post.postId).child("comments")
-        postRef.observe(.value) { snapshot  in
-            if let array = snapshot.value as? [String] {
-                self.comments = array
-                print("\(self.comments)")
-                self.commentTableView.reloadData()
+        postRef.observe(.value) { snapshot in
+            var loadedComments: [Comment] = []
+            if let array = snapshot.value as? [[String: Any]] {
+                for dict in array {
+                    if let comment = Comment.from(dict: dict) {
+                        loadedComments.append(comment)
+                    }
+                }
             }
+            self.comments = loadedComments
+            print("Loaded Comments: \(self.comments)")
+            self.commentTableView.reloadData()
         }
         
         // Do any additional setup after loading the view.
     }
     
     @IBAction func sendCommentTapped(_ sender: Any) {
-        if commentTextField == nil {
+        guard let commentText = commentTextField.text, !commentText.isEmpty else {
             showError(title: "Invalid comment", message: "Comment cannot be empty.")
             return
         }
-        
-        post?.comments.append(commentTextField.text!)
+        let comment = Comment(commentId: UUID().uuidString, username: userIDField.text ?? "Unknown", text: commentText, timestamp: Date())
+        // post?.comments.append(comment)
+        self.comments.append(comment)
         let ref = Database.database().reference()
         let postRef = ref.child("posts").child(post!.postId)
-        /*
-        postRef.getData { (error, snapshot) in
+        let commentDicts = self.comments.map { $0.toDict() }
+        postRef.child("comments").setValue(commentDicts) { error, _ in
             if let error = error {
-                self.showError(title: "ERROR", message:"\(error)")
-            }
-            guard let postDict = snapshot?.value as? [String: Any],
-                let caption = postDict["caption"] as? String else {
-                    print("SOMETING WRONG")
-                    return
-            }
-            print("CAPTION: \(caption)")
-        }
-        */
-        postRef.child("comments").setValue(post?.comments) { error, _ in
-            if let error = error {
-                self.showError(title: "ERROR", message:"\(error)")
+                self.showError(title: "ERROR", message: "\(error)")
             } else {
                 self.showError(title:"Success", message: "comment sent!")
             }
         }
-        print("SENT: \(commentTextField.text!)")
+        print("SENT: \(commentText)")
         
         
     }
@@ -113,9 +108,16 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "commentCell", for: indexPath)
-        cell.textLabel?.text = comments[indexPath.row]
-        cell.textLabel?.numberOfLines = 0
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "commentCell", for: indexPath) as? CommentTableViewCell else {
+            fatalError("Could not dequeue CommentTableViewCell")
+        }
+        let comment = comments[indexPath.row]
+        cell.usernameLabel.text = comment.username
+        cell.commentLabel.text = comment.text
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .short
+        cell.dateLabel.text = formatter.string(from: comment.timestamp)
         return cell
     }
 
