@@ -9,6 +9,11 @@ import UIKit
 
 class CommentTableViewCell: UITableViewCell {
 
+    
+    @IBOutlet weak var usernameLabel: UILabel!
+    @IBOutlet weak var commentLabel: UILabel!
+    @IBOutlet weak var dateLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -20,4 +25,7 @@ class CommentTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+    @IBAction func userButtonPressed(_ sender: Any) {
+        
+    }
 }
