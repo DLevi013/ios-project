@@ -60,6 +60,7 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
     override func viewDidLoad() {
         super.viewDidLoad()
         friendCheck()
+
         
 
 //        addFriendButton.isHidden = true
@@ -257,9 +258,13 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
                             }
                         }
                     }
+                    
+                    
+                    
                 }
             }
     }
+    
     
     func friendCheck() {
         addFriendButton.isHidden = false
@@ -280,12 +285,10 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
 
             DispatchQueue.main.async {
                 if isFriend {
-                    // Already friends
                     self.addFriendButton.setTitle("Friends", for: .normal)
                     self.addFriendButton.isEnabled = false
                     self.addFriendButton.isHidden = true
                 } else {
-                    // Not friends yet
                     self.addFriendButton.setTitle("Add Friend", for: .normal)
                     self.addFriendButton.isEnabled = true
                     self.addFriendButton.isHidden = false

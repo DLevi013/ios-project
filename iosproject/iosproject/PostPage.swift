@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseDatabase
+import FirebaseAuth
 
 class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
     var comments: [Comment] = []
@@ -29,9 +30,17 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var commentTextField: UITextField!
     
     
+    var currentUserName = ""
+    
+    
     let ref = Database.database().reference().child("posts")
+    
+    var userNameRef : DatabaseReference!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        getUserName()
         guard let post = post else { return }
         
         if let image = post.postImage {
@@ -61,6 +70,8 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
             self.commentTableView.reloadData()
         }
         
+
+        
         // Do any additional setup after loading the view.
     }
     
@@ -69,7 +80,7 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
             showError(title: "Invalid comment", message: "Comment cannot be empty.")
             return
         }
-        let comment = Comment(commentId: UUID().uuidString, username: userIDField.text ?? "Unknown", text: commentText, timestamp: Date())
+        let comment = Comment(commentId: UUID().uuidString, username: currentUserName, text: commentText, timestamp: Date())
         // post?.comments.append(comment)
         self.comments.append(comment)
         let ref = Database.database().reference()
@@ -93,15 +104,6 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
         present(alert, animated: true, completion: nil)
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return comments.count
@@ -119,6 +121,23 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
         formatter.timeStyle = .short
         cell.dateLabel.text = formatter.string(from: comment.timestamp)
         return cell
+    }
+    
+    
+    func getUserName(){
+        guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+
+        let ref = Database.database().reference()
+        ref.child("users").child(currentUserID).child("username").observeSingleEvent(of: .value) { snapshot in
+            if let username = snapshot.value as? String {
+                self.currentUserName = username
+            } else {
+                self.currentUserName = "No Username Found!"
+            }
+        }
+        
+        
+
     }
 
 }
