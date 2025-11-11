@@ -18,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="foocation logo" translatesAutoresizingMaskIntoConstraints="NO" id="hJK-Oz-giE">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="white_logo_text" translatesAutoresizingMaskIntoConstraints="NO" id="hJK-Oz-giE">
                                 <rect key="frame" x="19" y="84" width="402" height="206"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="402" id="Foy-KU-BIR"/>
@@ -109,7 +109,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="foocation logo" translatesAutoresizingMaskIntoConstraints="NO" id="Ibo-tK-OM0">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="white_logo_text" translatesAutoresizingMaskIntoConstraints="NO" id="Ibo-tK-OM0">
                                 <rect key="frame" x="-294" y="85" width="1028" height="206"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="1028" id="OG3-av-Tcf"/>
@@ -229,12 +229,18 @@
                                 <rect key="frame" x="-87" y="0.0" width="553" height="102"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="white_logo_text" translatesAutoresizingMaskIntoConstraints="NO" id="WHU-ke-pPX">
+                                        <rect key="frame" x="70" y="12" width="186" height="116"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x6i-cd-I50">
-                                        <rect key="frame" x="469" y="59" width="50" height="35"/>
+                                        <rect key="frame" x="471" y="50" width="47" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" image="plus.circle" catalog="system"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="plus" catalog="system">
+                                            <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </buttonConfiguration>
                                         <connections>
                                             <segue destination="7Y2-4b-ByA" kind="presentation" identifier="HomeAddPostSegue" modalPresentationStyle="fullScreen" id="Dg8-T7-dec"/>
                                         </connections>
@@ -380,7 +386,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ddM-Mr-DZ9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1822" y="805"/>
+            <point key="canvasLocation" x="1821.818181818182" y="804.6025104602511"/>
         </scene>
         <!--Settings Page-->
         <scene sceneID="dNf-3o-g5R">
@@ -401,12 +407,18 @@
                                 <rect key="frame" x="-75" y="0.0" width="553" height="102"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="white_logo_text" translatesAutoresizingMaskIntoConstraints="NO" id="lhU-zv-oHS">
+                                        <rect key="frame" x="54" y="12" width="186" height="116"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="roI-PR-Dgz">
-                                        <rect key="frame" x="427" y="59" width="50" height="35"/>
+                                        <rect key="frame" x="463" y="53" width="47" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" image="plus.circle" catalog="system"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="plus" catalog="system">
+                                            <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </buttonConfiguration>
                                         <connections>
                                             <segue destination="7Y2-4b-ByA" kind="presentation" identifier="SettingsAddPostSegue" modalPresentationStyle="fullScreen" id="3M1-JZ-sx3"/>
                                         </connections>
@@ -493,7 +505,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mqj-w4-59j" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3188" y="1654"/>
+            <point key="canvasLocation" x="3186.818181818182" y="1653.7656903765692"/>
         </scene>
         <!--Other Profile Page-->
         <scene sceneID="QdW-Py-iRy">
@@ -514,12 +526,18 @@
                                 <rect key="frame" x="-103" y="0.0" width="553" height="102"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="white_logo_text" translatesAutoresizingMaskIntoConstraints="NO" id="KZ8-wu-Mky">
+                                        <rect key="frame" x="86" y="12" width="186" height="116"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rQQ-mB-Gki">
-                                        <rect key="frame" x="454" y="66" width="50" height="35"/>
+                                        <rect key="frame" x="484" y="53" width="47" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" image="plus.circle" catalog="system"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="plus" catalog="system">
+                                            <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </buttonConfiguration>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -661,12 +679,18 @@
                                 <rect key="frame" x="-75" y="0.0" width="553" height="102"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="white_logo_text" translatesAutoresizingMaskIntoConstraints="NO" id="gg6-GZ-Jjs">
+                                        <rect key="frame" x="68" y="12" width="186" height="116"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="82A-Gn-oWs">
-                                        <rect key="frame" x="425" y="59" width="50" height="35"/>
+                                        <rect key="frame" x="471" y="53" width="47" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" image="plus.circle" catalog="system"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="plus" catalog="system">
+                                            <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </buttonConfiguration>
                                         <connections>
                                             <segue destination="7Y2-4b-ByA" kind="presentation" identifier="ProfileAddPostSegue" modalPresentationStyle="fullScreen" id="dZC-Gb-wSO"/>
                                         </connections>
@@ -798,12 +822,18 @@
                             <view tag="100" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5id-no-39b">
                                 <rect key="frame" x="-87" y="-8" width="553" height="102"/>
                                 <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="white_logo_text" translatesAutoresizingMaskIntoConstraints="NO" id="GV4-eG-Oej">
+                                        <rect key="frame" x="65" y="12" width="186" height="116"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aAF-V1-kFZ">
-                                        <rect key="frame" x="468" y="59" width="50" height="35"/>
+                                        <rect key="frame" x="467" y="53" width="47" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" image="plus.circle" catalog="system"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="plus" catalog="system">
+                                            <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </buttonConfiguration>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -1079,17 +1109,23 @@
             <objects>
                 <viewController id="Mf7-pK-mys" customClass="DiscoverPage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iBE-pp-T5c">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="884"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view tag="100" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vlB-vG-51R">
-                                <rect key="frame" x="-75.666666666666686" y="0.0" width="553.33333333333337" height="102"/>
+                                <rect key="frame" x="-45.666666666666657" y="0.0" width="493.33333333333326" height="91"/>
                                 <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="white_logo_text" translatesAutoresizingMaskIntoConstraints="NO" id="U1I-Ke-zUT">
+                                        <rect key="frame" x="45" y="12" width="186" height="116"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tpL-pm-Tpy">
-                                        <rect key="frame" x="425.33333333333337" y="59" width="50" height="35"/>
+                                        <rect key="frame" x="414.66666666666669" y="53" width="47" height="30"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" image="plus.circle" catalog="system"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="plus" catalog="system">
+                                            <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </buttonConfiguration>
                                         <connections>
                                             <segue destination="7Y2-4b-ByA" kind="presentation" identifier="DiscoverAddPostSegue" modalPresentationStyle="fullScreen" id="6GE-aQ-DkX"/>
                                         </connections>
@@ -1097,14 +1133,14 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="tpL-pm-Tpy" secondAttribute="trailing" constant="78" id="A1r-ck-OUB"/>
+                                    <constraint firstAttribute="trailing" secondItem="tpL-pm-Tpy" secondAttribute="trailing" constant="31.670000000000002" id="A1r-ck-OUB"/>
                                     <constraint firstItem="tpL-pm-Tpy" firstAttribute="bottom" secondItem="vlB-vG-51R" secondAttribute="bottomMargin" id="ArQ-v4-c3O"/>
-                                    <constraint firstItem="tpL-pm-Tpy" firstAttribute="top" secondItem="vlB-vG-51R" secondAttribute="top" constant="59" id="ClH-xH-SOl"/>
+                                    <constraint firstItem="tpL-pm-Tpy" firstAttribute="top" secondItem="vlB-vG-51R" secondAttribute="top" constant="53" id="ClH-xH-SOl"/>
                                     <constraint firstAttribute="width" secondItem="vlB-vG-51R" secondAttribute="height" multiplier="553:102" id="dR2-lb-0Cn"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="hop-4v-nCa">
-                                <rect key="frame" x="0.0" y="146" width="402" height="305"/>
+                                <rect key="frame" x="0.0" y="135" width="402" height="305"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="305" id="bzj-7f-5UL"/>
@@ -1122,7 +1158,7 @@
                                 <sections/>
                             </tableView>
                             <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="qM8-S4-pDV">
-                                <rect key="frame" x="0.0" y="136" width="402" height="44"/>
+                                <rect key="frame" x="0.0" y="125" width="402" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="qM8-S4-pDV" secondAttribute="height" multiplier="201:22" id="Zq6-a1-avh"/>
                                 </constraints>
@@ -1143,7 +1179,7 @@
                                 </connections>
                             </button>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dz1-5P-aEG">
-                                <rect key="frame" x="20" y="146" width="402" height="485"/>
+                                <rect key="frame" x="20" y="135" width="402" height="485"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="485" id="ypY-tZ-ckm"/>
                                 </constraints>
@@ -1285,24 +1321,24 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="5qL-vd-dKm"/>
-        <segue reference="dZC-Gb-wSO"/>
-        <segue reference="Ww1-1g-ExL"/>
-        <segue reference="GaF-N1-Ow1"/>
+        <segue reference="R97-3n-0RC"/>
+        <segue reference="Dg8-T7-dec"/>
+        <segue reference="swg-nk-JWB"/>
+        <segue reference="CrI-Dp-VLO"/>
         <segue reference="OmV-5X-INh"/>
-        <segue reference="Bic-WB-kOL"/>
+        <segue reference="xv7-d8-adJ"/>
         <segue reference="PAo-2q-nIS"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="chevron.right" catalog="system" width="97" height="128"/>
-        <image name="foocation logo" width="1028" height="638"/>
         <image name="gear" catalog="system" width="128" height="122"/>
         <image name="heart" catalog="system" width="128" height="107"/>
         <image name="house" catalog="system" width="128" height="104"/>
         <image name="mappin.and.ellipse" catalog="system" width="110" height="128"/>
         <image name="message" catalog="system" width="128" height="106"/>
         <image name="person" catalog="system" width="128" height="121"/>
-        <image name="plus.circle" catalog="system" width="128" height="123"/>
+        <image name="plus" catalog="system" width="128" height="113"/>
+        <image name="white_logo_text" width="1536" height="1024"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24128" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina6_12" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="retina6_9" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -12,17 +12,11 @@
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ufv-Aj-RPo">
-                                <rect key="frame" x="117.66666666666669" y="217" width="158" height="37"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="31"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="foocation logo" translatesAutoresizingMaskIntoConstraints="NO" id="Mxp-a3-VrI">
-                                <rect key="frame" x="25" y="284" width="342" height="219"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="white_logo_text" translatesAutoresizingMaskIntoConstraints="NO" id="Mxp-a3-VrI">
+                                <rect key="frame" x="49" y="159" width="342" height="638"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="342" id="FzK-PN-AbX"/>
                                     <constraint firstAttribute="height" constant="638" id="R9F-ea-KA7"/>
@@ -32,10 +26,8 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
-                            <constraint firstItem="Mxp-a3-VrI" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="AWp-jg-pqG"/>
-                            <constraint firstItem="ufv-Aj-RPo" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="DFc-AE-OZj"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Mxp-a3-VrI" secondAttribute="bottom" constant="281" id="EMN-2C-3nk"/>
-                            <constraint firstItem="ufv-Aj-RPo" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="99" id="dBJ-cG-XTJ"/>
+                            <constraint firstItem="Mxp-a3-VrI" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="MMZ-Ug-Qaa"/>
+                            <constraint firstItem="Mxp-a3-VrI" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="jSZ-1n-rgJ"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -45,6 +37,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="foocation logo" width="1028" height="638"/>
+        <image name="white_logo_text" width="1536" height="1024"/>
     </resources>
 </document>
