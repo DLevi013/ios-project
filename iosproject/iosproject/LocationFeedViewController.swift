@@ -1,26 +1,22 @@
 //
-//  FeedViewController.swift
+//  LocationFeedViewController.swift
 //  iosproject
 //
-//  Created by Isaac Thomas on 10/20/25.
+//  Created by Isaac Thomas on 11/11/25.
 //
 
 import UIKit
 import FirebaseDatabase
 import FirebaseAuth
 
-class FeedViewController: ModeViewController, UITableViewDataSource, UITableViewDelegate, PostTableViewCellDelegate {
+class LocationFeedViewController: ModeViewController, UITableViewDataSource, UITableViewDelegate, PostTableViewCellDelegate {
     
-
     @IBOutlet weak var tableView: UITableView!
     
     var posts: [FeedPost] = []
     let postTableViewCellIdentifier = "PostCell"
     let ref = Database.database().reference()
     var selectedIndex: Int?
-//    var otherProfile = ""
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,84 +49,88 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
     
     func fetchPosts() {
         posts = []
-        guard let currentUserId = Auth.auth().currentUser?.uid else { return }
-        let userRef = ref.child("users").child(currentUserId)
-        
-        // get friend uids
-        userRef.child("friends").observeSingleEvent(of: .value) { friendSnapshot in
-            var friendUIDs: Set<String> = []
-            for child in friendSnapshot.children {
-                if let friendSnap = child as? DataSnapshot,
-                   let friendUID = friendSnap.value as? String {
-                    friendUIDs.insert(friendUID)
-                }
-            }
-            // add self too
-            friendUIDs.insert(currentUserId)
+        ref.child("posts").observeSingleEvent(of: .value) { snapshot in
+            var feedPosts: [FeedPost] = []
+            var userPrivacyCache: [String: Bool] = [:]
+            let group = DispatchGroup()
+            
+            for child in snapshot.children {
+                if let childSnapshot = child as? DataSnapshot,
+                   let dict = childSnapshot.value as? [String: Any],
+                   let postUserId = dict["userId"] as? String {
 
-            // fetch posts and only add those from friends to posts
-            self.ref.child("posts").observeSingleEvent(of: .value) { snapshot in
-                var feedPosts: [FeedPost] = []
-                for child in snapshot.children {
-                    if let childSnapshot = child as? DataSnapshot,
-                       let dict = childSnapshot.value as? [String: Any],
-                       let postUserId = dict["userId"] as? String,
-                       friendUIDs.contains(postUserId) {
-                        let postId = dict["postId"] as? String ?? ""
-                        let username = dict["username"] as? String ?? ""
-                        let imageUrl = dict["image"] as? String ?? ""
-                        let timestamp = dict["timestamp"] as? Double ?? 0
-                        let likeCount = (dict["likes"] as? [String])?.count ?? 0
-
-                        let commentsArray = dict["comments"] as? [[String: Any]] ?? []
-                        let commentObjs = commentsArray.compactMap { Comment.from(dict: $0) }
-
-                        let location = dict["location"] as? String ?? ""
-                        let caption = dict["caption"] as? String ?? ""
-                        
-                        if let url = URL(string: imageUrl) {
-                            URLSession.shared.dataTask(with: url) { data, response, error in
-                                if let data = data, let image = UIImage(data: data) {
-                                    DispatchQueue.main.async {
-                                        let post = FeedPost(
-                                            postId: postId,
-                                            username: username,
-                                            postImage: image,
-                                            timestamp: Int(timestamp),
-                                            likeCount: likeCount,
-                                            comments: commentObjs,
-                                            location: location,
-                                            caption: caption
-                                        )
-                                        feedPosts.append(post)
-                                        self.posts = feedPosts
-                                        self.tableView.reloadData()
-                                        self.tableView.refreshControl?.endRefreshing()
+                    // Enter group for each post (will only fetch privacy for new users)
+                    group.enter()
+                    
+                    func processPostIfAllowed(isPrivate: Bool) {
+                        if !isPrivate {
+                            let postId = dict["postId"] as? String ?? ""
+                            let username = dict["username"] as? String ?? ""
+                            let imageUrl = dict["image"] as? String ?? ""
+                            let timestamp = dict["timestamp"] as? Double ?? 0
+                            let likeCount = (dict["likes"] as? [String])?.count ?? 0
+                            let commentsArray = dict["comments"] as? [[String: Any]] ?? []
+                            let commentObjs = commentsArray.compactMap { Comment.from(dict: $0) }
+                            let location = dict["location"] as? String ?? ""
+                            let caption = dict["caption"] as? String ?? ""
+                            
+                            if let url = URL(string: imageUrl) {
+                                URLSession.shared.dataTask(with: url) { data, response, error in
+                                    if let data = data, let image = UIImage(data: data) {
+                                        DispatchQueue.main.async {
+                                            let post = FeedPost(
+                                                postId: postId,
+                                                username: username,
+                                                postImage: image,
+                                                timestamp: Int(timestamp),
+                                                likeCount: likeCount,
+                                                comments: commentObjs,
+                                                location: location,
+                                                caption: caption
+                                            )
+                                            feedPosts.append(post)
+                                            self.posts = feedPosts
+                                            self.tableView.reloadData()
+                                            self.tableView.refreshControl?.endRefreshing()
+                                        }
                                     }
-                                }
-                            }.resume()
-                        } else {
-                            // If image URL invalid, append post with nil image to avoid skipping
-                            let post = FeedPost(
-                                postId: postId,
-                                username: username,
-                                postImage: nil,
-                                timestamp: Int(timestamp),
-                                likeCount: likeCount,
-                                comments: commentObjs,
-                                location: location,
-                                caption: caption
-                            )
-                            feedPosts.append(post)
+                                }.resume()
+                            } else {
+                                // If image URL invalid, append post with nil image
+                                let post = FeedPost(
+                                    postId: postId,
+                                    username: username,
+                                    postImage: nil,
+                                    timestamp: Int(timestamp),
+                                    likeCount: likeCount,
+                                    comments: commentObjs,
+                                    location: location,
+                                    caption: caption
+                                )
+                                feedPosts.append(post)
+                            }
+                        }
+                        group.leave()
+                    }
+                    
+                    // Check cache first
+                    if let cachedPrivacy = userPrivacyCache[postUserId] {
+                        processPostIfAllowed(isPrivate: cachedPrivacy)
+                    } else {
+                        // Fetch privacy from DB
+                        self.ref.child("users").child(postUserId).child("isPrivate").observeSingleEvent(of: .value) { privacySnap in
+                            let isPrivate = privacySnap.value as? Bool ?? false
+                            userPrivacyCache[postUserId] = isPrivate
+                            processPostIfAllowed(isPrivate: isPrivate)
                         }
                     }
                 }
-                // In case all images are invalid and no async call triggered reload here
-                DispatchQueue.main.async {
-                    self.posts = feedPosts
-                    self.tableView.reloadData()
-                    self.tableView.refreshControl?.endRefreshing()
-                }
+            }
+            // When all posts processed, update once in case no images loaded
+            group.notify(queue: .main) {
+                self.posts = feedPosts
+                self.tableView.reloadData()
+                self.tableView.refreshControl?.endRefreshing()
             }
         }
     }
@@ -144,13 +144,13 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
                 vc.otherUserID = userId
         }
          */
-        if segue.identifier == "feedToProfile",
+        if segue.identifier == "locationFeedToProfile",
            let uid = sender as? String,
            let destination = segue.destination as? OtherProfilePage {
             print("Setting destination with \(uid)")
             destination.otherUserID = uid
         }
-        if segue.identifier == "feedToPost" {
+        if segue.identifier == "locationFeedToPost" {
             if let destinationVC = segue.destination as? PostPage,
                let index = selectedIndex {
                 destinationVC.post = posts[index]
@@ -201,7 +201,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
             let uid = firstChild.key
             print("FOUND UID: \(uid)")
             DispatchQueue.main.async {
-                self.performSegue(withIdentifier: "feedToProfile", sender: uid)
+                self.performSegue(withIdentifier: "locationFeedToProfile", sender: uid)
             }
         }
         
@@ -241,13 +241,9 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         return posts.count
     }
     
-
     @IBAction func didTapCommentButton(_ sender: UIButton) {
         selectedIndex = sender.tag
-        performSegue(withIdentifier:"feedToPost", sender: self)
-        
-        
+        performSegue(withIdentifier:"locationFeedToPost", sender: self)
     }
-
+    
 }
-
