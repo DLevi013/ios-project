@@ -8,11 +8,12 @@
 import UIKit
 import MapKit
 import CoreLocation
-
+import FirebaseDatabase
 
 struct RestaurantPin{
     var name : String
     var location : CLLocationCoordinate2D
+    var address : String
 }
 
 class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
@@ -22,20 +23,23 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     @IBOutlet weak var searchField: UISearchBar!
     @IBOutlet weak var searchResults: UITableView!
     var searchText:String = ""
-    
-    @IBOutlet weak var confirmLocationButton: UIButton!
-
+    // stores search results, may be empty
     var searchFieldLocations: [RestaurantPin] = []
     
-    var locations:[RestaurantPin] = []
-    var viewSize:Double = 500
-    var currentView: MKAnnotationView!
-        
     // Add post interaction
     var discoverDelegate: AddPostViewController?
     var isSelectingLocation: Bool = false
     var selectedCoordinate: CLLocationCoordinate2D?
     var selectedName: String = ""
+    var selectedAddress: String = ""
+    @IBOutlet weak var confirmLocationButton: UIButton!
+
+    var locations:[RestaurantPin] = []
+    var viewSize:Double = 500
+    var currentView: MKAnnotationView!
+        
+    let ref = Database.database().reference()
+    @IBOutlet weak var moreInfoButton: UIButton!
     
     override func viewDidLoad(){
         super.viewDidLoad()
@@ -48,11 +52,11 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         searchResults.isHidden = true
         if self.isSelectingLocation {
             confirmLocationButton.isHidden = false
-            print("wow")
         } else {
             confirmLocationButton.isHidden = true
         }
-        reloadAnnotations()
+        moreInfoButton.isEnabled = false
+        loadLocations()
     }
     
     func searchBar(_ searchField: UISearchBar, textDidChange text: String) {
@@ -95,7 +99,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             for item in response.mapItems {
                 guard let name = item.name else { continue }
                 // need to filter out names with weird characters
-                let result = RestaurantPin(name: name, location: item.location.coordinate)
+                let result = RestaurantPin(name: name, location: item.location.coordinate, address: item.address?.fullAddress ?? "")
                 self.searchFieldLocations.append(result)
             }
             DispatchQueue.main.async {
@@ -122,10 +126,11 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         let annotation = MKPointAnnotation()
         annotation.coordinate = searchFieldLocations[indexPath.row].location
         annotation.title = searchFieldLocations[indexPath.row].name
-        if isSelectingLocation {
-            selectedCoordinate = searchFieldLocations[indexPath.row].location
-            selectedName = annotation.title!
-        }
+        
+        selectedCoordinate = searchFieldLocations[indexPath.row].location
+        selectedName = annotation.title!
+        selectedAddress = searchFieldLocations[indexPath.row].address
+        
         mapView.addAnnotation(annotation)
         let region = MKCoordinateRegion(
             center: searchFieldLocations[indexPath.row].location,
@@ -134,36 +139,55 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         )
         mapView.setRegion(region, animated: true)
         searchResults.isHidden = true
+        self.moreInfoButton.isEnabled = true
     }
     
-    func reloadAnnotations(){
-        mapView.removeAnnotations(mapView.annotations)
-        for location in locations{
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = location.location
-            annotation.title = location.name
-            mapView.addAnnotation(annotation)
+    func loadLocations() {
+        ref.child("locations").observeSingleEvent(of: .value) { snapshot in
+            for child in snapshot.children {
+                if let childSnapshot = child as? DataSnapshot,
+                   let dict = childSnapshot.value as? [String: Any] {
+                    
+                    let locationId = childSnapshot.key
+                    let name = dict["name"] as? String ?? ""
+                    let address = dict["address"] as? String ?? ""
+                    
+                    if let coords = dict["coordinates"] as? [String: Any],
+                       let lat = coords["latitude"] as? Double,
+                       let lon = coords["longitude"] as? Double {
+                        
+                        let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+                        self.locations.append(RestaurantPin(name: name, location: coordinate, address: address))
+                        let annotation = MKPointAnnotation()
+                        annotation.coordinate = coordinate
+                        annotation.title = name
+                        annotation.subtitle = address
+                        self.mapView.addAnnotation(annotation)
+                    }
+                }
+            }
         }
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        if isSelectingLocation {
-            selectedCoordinate = view.annotation?.coordinate
-            selectedName = (view.annotation?.title)!!
-        }
-        viewSize = 500
-        currentView = view
-        setAnnotationRegion()
-    }
     
-    func setAnnotationRegion() {
-        guard let annotation = currentView?.annotation else { return }
+        selectedCoordinate = view.annotation?.coordinate
+        selectedName = (view.annotation?.title)!!
+        selectedAddress = (view.annotation?.subtitle)!!
+        
+        viewSize = 500
+        guard let annotation = view.annotation else { return }
         let region = MKCoordinateRegion(
             center: annotation.coordinate,
             latitudinalMeters: self.viewSize,
             longitudinalMeters: self.viewSize
         )
         mapView.setRegion(region, animated: true)
+        self.moreInfoButton.isEnabled = true
+    }
+    
+    @IBAction func moreInfoPressed(_ sender: Any) {
+        performSegue(withIdentifier: "discoverToLocation", sender: self)
     }
     
     @IBAction func confirmLocationPressed(_ sender: Any) {
@@ -175,8 +199,18 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             present(alert, animated: true)
             return
         }
-        discoverDelegate?.didSelectLocation(selectedLatitude: coordinate.latitude, selectedLongitude: coordinate.longitude,  selectedName: selectedName)
+        discoverDelegate?.didSelectLocation(selectedLatitude: coordinate.latitude, selectedLongitude: coordinate.longitude,  selectedName: selectedName, address: self.selectedAddress)
                 
         dismiss(animated: true)
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+           if segue.identifier == "discoverToLocationSegue",
+              let destination = segue.destination as? FoodLocationViewController {
+               destination.name = selectedName
+               destination.address = selectedAddress
+               destination.delegate = self
+           }
+       }
+
 }

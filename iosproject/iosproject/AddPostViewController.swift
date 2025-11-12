@@ -26,6 +26,7 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
     var caption: String?
     var imageLink: String?
     var locationName: String = ""
+    var address: String = ""
     var latitude: Double?
     var longitude: Double?
     
@@ -100,10 +101,18 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
         performSegue(withIdentifier: "postToDiscoverSegue", sender: self)
     }
     
-    func didSelectLocation(selectedLatitude: Double, selectedLongitude: Double, selectedName: String) {
+    func didSelectLocation(selectedLatitude: Double, selectedLongitude: Double, selectedName: String, address: String) {
         self.latitude = selectedLatitude
         self.longitude = selectedLongitude
         self.locationName = selectedName
+        self.address = address
+    }
+    
+    func makeLocationId(lat: Double, lon: Double, name: String) -> String {
+        let lat = String(format: "%.4f", lat).replacingOccurrences(of: ".", with: "_")
+        let lon = String(format: "%.4f", lon).replacingOccurrences(of: ".", with: "_")
+        let locationId = "\(self.locationName);\(lat);\(lon)"
+        return locationId
     }
     
     @IBAction func postButtonPressed(_ sender: Any) {
@@ -124,6 +133,8 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
             return
         }
         
+        let locationId = makeLocationId(lat: self.longitude!, lon: self.latitude!, name: self.locationName)
+        
         let ref = Database.database().reference()
         ref.child("users").child(curUser).child("username").observeSingleEvent(of: .value) { snapshot in
             guard let userName = snapshot.value as? String else {
@@ -137,9 +148,6 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
             let postsRef = ref.child("posts").childByAutoId()
             let postId = postsRef.key ?? UUID().uuidString
             let timestamp = Date().timeIntervalSince1970
-            let lat = String(format: "%.4f", self.latitude!).replacingOccurrences(of: ".", with: "_")
-            let lon = String(format: "%.4f", self.longitude!).replacingOccurrences(of: ".", with: "_")
-            let locationId = "\(self.locationName)_\(lat)_\(lon)"
             let locationRef = ref.child("locations").child(locationId)
             let postData: [String: Any] = [
                 "postId": postId,
@@ -154,6 +162,7 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
             ]
             let locationData: [String: Any] = [
                 "name": self.locationName,
+                "address": self.address,
                 "coordinates": [
                     "latitude": latitude,
                     "longitude": longtitude
@@ -200,5 +209,6 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
 }
 
 protocol LocationSelectionDelegate: AnyObject {
-    func didSelectLocation(selectedLatitude: Double, selectedLongitude: Double, selectedName: String)
+    func didSelectLocation(selectedLatitude: Double, selectedLongitude: Double, selectedName: String, address: String)
 }
+
