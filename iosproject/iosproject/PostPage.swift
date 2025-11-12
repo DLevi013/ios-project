@@ -123,6 +123,9 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
         return cell
     }
     
+    @IBAction func locationButtonPressed(_ sender: Any) {
+        performSegue(withIdentifier: "postToLocation", sender: self)
+    }
     
     func getUserName(){
         guard let currentUserID = Auth.auth().currentUser?.uid else { return }
@@ -138,6 +141,18 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
         
         
 
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+       
+        if segue.identifier == "postToLocation",
+           let destination = segue.destination as? FoodLocationViewController,
+           let locationId = self.post?.location {
+            
+            destination.locationId = locationId
+            destination.delegate = self
+        }
+           
     }
 
 }

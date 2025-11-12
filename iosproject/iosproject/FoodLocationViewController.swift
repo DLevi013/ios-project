@@ -16,28 +16,32 @@ class FoodLocationViewController: UIViewController, MKMapViewDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     
-    var name: String?
-    var address: String?
     var delegate : UIViewController?
     var locationId: String?
-    
+    var currentAnnotation: LocationAnnotation?
     let ref = Database.database().reference()
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        nameLabel.text = name
-        addressValue.text = address
+        guard var id = locationId else {return}
+        id = id.replacingOccurrences(of: ".", with: "")
+            .replacingOccurrences(of: "#", with: "")
+            .replacingOccurrences(of: "$", with: "")
+            .replacingOccurrences(of: "[", with: "")
+            .replacingOccurrences(of: "]", with: "")
+        print(id)
+        addPin(paramId: id)
     }
     
-    func addPin(locationId: String) {
-        ref.child("locations").child(locationId).observeSingleEvent(of: .value) { snapshot in
+    func addPin(paramId: String) {
+        ref.child("locations").child(paramId).observeSingleEvent(of: .value) { snapshot, error in
+        
             guard let dict = snapshot.value as? [String: Any],
                   let coords = dict["coordinates"] as? [String: Any],
                   let lat = coords["latitude"] as? Double,
                   let lon = coords["longitude"] as? Double else {
-                print("Invalid or missing data for location \(locationId)")
+                print("Invalid or missing data for location \(paramId)")
                 return
             }
 
@@ -45,13 +49,29 @@ class FoodLocationViewController: UIViewController, MKMapViewDelegate {
             let address = dict["address"] as? String ?? "No Address"
             let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
 
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = coordinate
-            annotation.title = name
-            annotation.subtitle = address
-            self.mapView.addAnnotation(annotation)
-        }
-    }
-    
+            let annotation = LocationAnnotation(
+                coordinate: coordinate,
+                title: name,
+                subtitle: address,
+                address: address,
+                locationId: paramId
+            )
 
+            DispatchQueue.main.async {
+                self.mapView.addAnnotation(annotation)
+                self.currentAnnotation = annotation
+
+                let region = MKCoordinateRegion(
+                    center: coordinate,
+                    latitudinalMeters: 500,
+                    longitudinalMeters: 500
+                )
+                self.mapView.setRegion(region, animated: true)
+
+                self.nameLabel.text = name
+                self.addressValue.text = address
+            }
+        }
+
+    }
 }

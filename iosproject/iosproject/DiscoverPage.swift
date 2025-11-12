@@ -13,7 +13,7 @@ import FirebaseDatabase
 class LocationAnnotation: NSObject, MKAnnotation {
     var coordinate: CLLocationCoordinate2D
     var title: String?
-    var subtitle: String?
+    var subtitle: String? // same as address
     
     var address: String?
     var locationId: String?
@@ -31,12 +31,6 @@ class LocationAnnotation: NSObject, MKAnnotation {
        
     }
 }
-
-//struct RestaurantPin{
-//    var name : String
-//    var location : CLLocationCoordinate2D
-//    var address : String
-//}
 
 class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
     
@@ -76,7 +70,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         } else {
             confirmLocationButton.isHidden = true
         }
-        //moreInfoButton.isEnabled = false
+        moreInfoButton.isEnabled = false
         loadLocations()
     }
     
@@ -124,7 +118,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
                 // need to filter out names with weird characters
                 let coordinate = item.location.coordinate
                 let locationId = makeLocationId(lat: coordinate.latitude, lon: coordinate.longitude, name: name)
-                let result = LocationAnnotation(coordinate: item.location.coordinate, title: name, subtitle: item.address?.fullAddress ?? "", address: item.address?.fullAddress ?? "", locationId: locationId)
+                let result = LocationAnnotation(coordinate: item.location.coordinate, title: name, subtitle: item.address?.fullAddress, address: item.address?.fullAddress, locationId: locationId)
                
                 self.searchFieldLocations.append(result)
             }
@@ -158,9 +152,6 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         annotation.subtitle = LocationAnnot.subtitle
         
         selectedAnnot = LocationAnnot
-//        selectedCoordinate = LocationAnnot.coordinate
-//        selectedName = LocationAnnot.title
-//        selectedAddress = searchFieldLocations[indexPath.row].address
         
         mapView.addAnnotation(annotation)
         let region = MKCoordinateRegion(
@@ -170,7 +161,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         )
         mapView.setRegion(region, animated: true)
         searchResults.isHidden = true
-        moreInfoButton.isEnabled = true
+        //moreInfoButton.isEnabled = true
         view.bringSubviewToFront(moreInfoButton)
     }
     
@@ -187,7 +178,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
                        let lat = coords["latitude"] as? Double,
                        let lon = coords["longitude"] as? Double {
                         let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-                        //self.locations.append()
+                        
                                              
                         let locationAnnot = LocationAnnotation(coordinate: coordinate, title: name, subtitle: address, address: address, locationId: self.locationId)
                        
@@ -198,8 +189,6 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             }
         }
     }
-    
-    
     
     private func mapView(_ mapView: MKMapView, didSelect view: LocationAnnotation) {
         selectedAnnot = view
@@ -212,7 +201,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             longitudinalMeters: self.viewSize
         )
         mapView.setRegion(region, animated: true)
-        self.moreInfoButton.isEnabled = true
+        //self.moreInfoButton.isEnabled = true
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
@@ -227,7 +216,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             longitudinalMeters: self.viewSize
         )
         mapView.setRegion(region, animated: true)
-        self.moreInfoButton.isEnabled = true
+        //self.moreInfoButton.isEnabled = true
     }
     
     @IBAction func moreInfoPressed(_ sender: Any) {
@@ -260,8 +249,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
            let destination = segue.destination as? FoodLocationViewController,
            let selectedAnnot = selectedAnnot {
             
-            destination.name = selectedAnnot.title
-            destination.address = selectedAnnot.address
+            
             destination.locationId = selectedAnnot.locationId
             destination.delegate = self
         }

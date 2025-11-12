@@ -10,6 +10,10 @@ import FirebaseDatabase
 import FirebaseAuth
 
 class LocationFeedViewController: ModeViewController, UITableViewDataSource, UITableViewDelegate, PostTableViewCellDelegate {
+    func didTapLocation(on cell: PostTableViewCell) {
+        
+    }
+    
     
     @IBOutlet weak var tableView: UITableView!
     

@@ -318,12 +318,6 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G2p-uX-MGm">
-                                                    <rect key="frame" x="392" y="344" width="48" height="35"/>
-                                                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <state key="normal" title="Button"/>
-                                                    <buttonConfiguration key="configuration" style="plain" image="mappin.and.ellipse" catalog="system"/>
-                                                </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hi" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T6Q-oC-7Tg">
                                                     <rect key="frame" x="20" y="381" width="360" height="20.333333333333314"/>
                                                     <constraints>
@@ -333,6 +327,15 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G2p-uX-MGm">
+                                                    <rect key="frame" x="392" y="345" width="48" height="35"/>
+                                                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="plain" image="mappin.and.ellipse" catalog="system"/>
+                                                    <connections>
+                                                        <action selector="locationButtonPressed:" destination="ClU-qB-w0s" eventType="touchUpInside" id="6zJ-Rx-UJG"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="G2p-uX-MGm" firstAttribute="top" secondItem="Lum-vT-i4m" secondAttribute="bottom" constant="-1.6666666666666856" id="0jg-GK-nbt"/>
@@ -382,6 +385,7 @@
                         <outlet property="tableView" destination="hgs-4F-nUN" id="ksX-sy-aqG"/>
                         <segue destination="gBh-e3-1bW" kind="show" identifier="feedToProfile" id="xv7-d8-adJ"/>
                         <segue destination="diZ-9n-Pv5" kind="presentation" identifier="feedToPost" id="Wcn-2n-62O"/>
+                        <segue destination="Fo0-96-Aug" kind="presentation" identifier="feedToLocation" id="cXD-TO-S7o"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ddM-Mr-DZ9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -500,7 +504,7 @@
             <objects>
                 <viewController storyboardIdentifier="OtherProfilePage" id="gBh-e3-1bW" customClass="OtherProfilePage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nvO-A0-pAE">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="884"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="894"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="bio" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0gp-cj-XmZ">
@@ -795,7 +799,7 @@
             <objects>
                 <viewController id="diZ-9n-Pv5" customClass="PostPage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="In5-3x-uyB">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="884"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="894"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view tag="100" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5id-no-39b">
@@ -878,6 +882,9 @@
                                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="mappin.and.ellipse" catalog="system"/>
+                                                    <connections>
+                                                        <action selector="locationButtonPressed:" destination="diZ-9n-Pv5" eventType="touchUpInside" id="cqO-B9-eom"/>
+                                                    </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hi" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cjl-oY-FxG">
                                                     <rect key="frame" x="20" y="381" width="360" height="20.333333333333314"/>
@@ -929,7 +936,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="lHd-Zn-Bcc">
-                                <rect key="frame" x="0.0" y="538" width="440" height="281"/>
+                                <rect key="frame" x="0.0" y="548" width="440" height="281"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="281" id="g6x-nw-XTc"/>
@@ -1005,7 +1012,7 @@
                                 </prototypes>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Comments" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AIA-QZ-r6W">
-                                <rect key="frame" x="20" y="509" width="83" height="21"/>
+                                <rect key="frame" x="20" y="519" width="83" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -1020,7 +1027,7 @@
                                 </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yOa-eP-OPl">
-                                <rect key="frame" x="44" y="827" width="313" height="34"/>
+                                <rect key="frame" x="44" y="837" width="313" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="313" id="uIb-Ah-gyp"/>
                                     <constraint firstAttribute="height" constant="34" id="vp2-0l-i81"/>
@@ -1068,6 +1075,7 @@
                         <outlet property="likeLabel" destination="nO8-TQ-2Kf" id="Mc6-2g-25Z"/>
                         <outlet property="postImages" destination="t08-au-MtJ" id="IZx-p0-VdG"/>
                         <outlet property="userIDField" destination="0OI-jT-Kff" id="5cb-Yl-Axq"/>
+                        <segue destination="Fo0-96-Aug" kind="presentation" identifier="postToLocation" id="b39-WX-GwF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sXJ-eW-zRB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1179,7 +1187,7 @@
             <objects>
                 <viewController id="Fo0-96-Aug" customClass="FoodLocationViewController" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3Gk-JI-RhM">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="884"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="894"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view tag="100" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bD9-Cb-o7N">
@@ -1455,6 +1463,9 @@
                                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="mappin.and.ellipse" catalog="system"/>
+                                                    <connections>
+                                                        <action selector="didTapLocationButton:" destination="Uhq-Ql-mF8" eventType="touchUpInside" id="utT-me-i4I"/>
+                                                    </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hi" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vl5-Fz-1vb">
                                                     <rect key="frame" x="20" y="381" width="360" height="20.333333333333314"/>
@@ -1516,17 +1527,19 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="A3C-cv-hti" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="Uhq-Ql-mF8" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-265" y="793"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="5qL-vd-dKm"/>
-        <segue reference="6GE-aQ-DkX"/>
+        <segue reference="Dg8-T7-dec"/>
+        <segue reference="cXD-TO-S7o"/>
         <segue reference="Ww1-1g-ExL"/>
-        <segue reference="sJM-zT-5RF"/>
+        <segue reference="Wcn-2n-62O"/>
         <segue reference="OMm-Br-J1h"/>
-        <segue reference="4L0-Yq-fAk"/>
+        <segue reference="xv7-d8-adJ"/>
         <segue reference="PAo-2q-nIS"/>
     </inferredMetricsTieBreakers>
     <resources>

@@ -14,6 +14,8 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
 
     @IBOutlet weak var tableView: UITableView!
     
+    var selectedLocationId:String?
+    
     var posts: [FeedPost] = []
     let postTableViewCellIdentifier = "PostCell"
     let ref = Database.database().reference()
@@ -156,6 +158,14 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
                 destinationVC.post = posts[index]
             }
         }
+         
+        if segue.identifier == "feedToLocation",
+           let destination = segue.destination as? FoodLocationViewController,
+           let locationId = self.selectedLocationId {
+            
+            destination.locationId = locationId
+            destination.delegate = self
+        }
            
     }
     
@@ -237,17 +247,37 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
                 }
         }
     
+    func didTapLocation(on cell: PostTableViewCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        let post = posts[indexPath.row]
+        let postRef = ref.child("posts").child(post.postId).child("locationId")
+
+        postRef.observeSingleEvent(of: .value) { snapshot,error  in
+            
+                    self.selectedLocationId = post.location
+                    DispatchQueue.main.async {
+                        self.performSegue(withIdentifier: "feedToLocation", sender: self)
+                    }
+            
+        
+                }
+        }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return posts.count
     }
     
 
+   
+    
     @IBAction func didTapCommentButton(_ sender: UIButton) {
         selectedIndex = sender.tag
         performSegue(withIdentifier:"feedToPost", sender: self)
         
         
     }
+    
+   
 
 }
 

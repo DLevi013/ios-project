@@ -10,6 +10,7 @@ import UIKit
 protocol PostTableViewCellDelegate: AnyObject {
     func didTapLikeButton(on cell: PostTableViewCell)
     func didTapProfileButton(on cell: PostTableViewCell)
+    func didTapLocation(on cell: PostTableViewCell)
 }
 
 
@@ -47,5 +48,10 @@ class PostTableViewCell: UITableViewCell {
     @IBAction func profileButtonTapped(_ sender: Any) {
         delegate?.didTapProfileButton(on: self)
     }
+    
+    @IBAction func locationButtonPressed(_ sender: Any) {
+        delegate?.didTapLocation(on: self)
+    }
+    
     
 }
