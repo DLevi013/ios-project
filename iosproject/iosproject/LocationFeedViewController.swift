@@ -165,7 +165,6 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
            }
         
         cell.selectionStyle = .none
-        
         let post = posts[indexPath.row]
         cell.usernameLabel.text = post.username
         

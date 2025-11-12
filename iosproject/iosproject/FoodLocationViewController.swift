@@ -9,7 +9,6 @@ import UIKit
 import FirebaseDatabase
 import MapKit
 
-
 class FoodLocationViewController: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var nameLabel: UILabel!
@@ -17,10 +16,10 @@ class FoodLocationViewController: UIViewController, MKMapViewDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     
-    var name: String = ""
-    var address: String = ""
+    var name: String?
+    var address: String?
     var delegate : UIViewController?
-    var locationId: String = ""
+    var locationId: String?
     
     let ref = Database.database().reference()
 

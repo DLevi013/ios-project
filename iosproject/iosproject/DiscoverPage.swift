@@ -10,11 +10,33 @@ import MapKit
 import CoreLocation
 import FirebaseDatabase
 
-struct RestaurantPin{
-    var name : String
-    var location : CLLocationCoordinate2D
-    var address : String
+class LocationAnnotation: NSObject, MKAnnotation {
+    var coordinate: CLLocationCoordinate2D
+    var title: String?
+    var subtitle: String?
+    
+    var address: String?
+    var locationId: String?
+    
+    init(coordinate: CLLocationCoordinate2D,
+         title: String?,
+         subtitle: String?,
+         address: String?,
+         locationId: String?) {
+        self.coordinate = coordinate
+        self.title = title
+        self.subtitle = subtitle
+        self.address = address
+        self.locationId = locationId
+       
+    }
 }
+
+//struct RestaurantPin{
+//    var name : String
+//    var location : CLLocationCoordinate2D
+//    var address : String
+//}
 
 class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
     
@@ -24,17 +46,16 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     @IBOutlet weak var searchResults: UITableView!
     var searchText:String = ""
     // stores search results, may be empty
-    var searchFieldLocations: [RestaurantPin] = []
+    var searchFieldLocations: [LocationAnnotation] = []
     
     var discoverDelegate: AddPostViewController?
     var isSelectingLocation: Bool = false
-    var selectedCoordinate: CLLocationCoordinate2D?
-    var selectedName: String?
-    var selectedAddress: String?
+    var selectedAnnot: LocationAnnotation?
+
     var locationId: String?
     @IBOutlet weak var confirmLocationButton: UIButton!
 
-    var locations:[RestaurantPin] = []
+    var locations:[LocationAnnotation] = []
     var viewSize:Double = 500
     var currentView: MKAnnotationView?
         
@@ -101,7 +122,10 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             for item in response.mapItems {
                 guard let name = item.name else { continue }
                 // need to filter out names with weird characters
-                let result = RestaurantPin(name: name, location: item.location.coordinate, address: item.address?.fullAddress ?? "")
+                let coordinate = item.location.coordinate
+                let locationId = makeLocationId(lat: coordinate.latitude, lon: coordinate.longitude, name: name)
+                let result = LocationAnnotation(coordinate: item.location.coordinate, title: name, subtitle: item.address?.fullAddress ?? "", address: item.address?.fullAddress ?? "", locationId: locationId)
+               
                 self.searchFieldLocations.append(result)
             }
             DispatchQueue.main.async {
@@ -119,24 +143,28 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SearchResultCell", for: indexPath)
         var content = cell.defaultContentConfiguration( )
-        content.text = searchFieldLocations[indexPath.row].name
+        let LocationAnnot = searchFieldLocations[indexPath.row]
+        content.text = LocationAnnot.title
+        content.secondaryText = LocationAnnot.address
         cell.contentConfiguration = content
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let annotation = MKPointAnnotation()
-        annotation.coordinate = searchFieldLocations[indexPath.row].location
-        annotation.title = searchFieldLocations[indexPath.row].name
-        annotation.subtitle = searchFieldLocations[indexPath.row].address
+        let LocationAnnot = searchFieldLocations[indexPath.row]
+        annotation.coordinate = LocationAnnot.coordinate
+        annotation.title = LocationAnnot.title
+        annotation.subtitle = LocationAnnot.subtitle
         
-        selectedCoordinate = searchFieldLocations[indexPath.row].location
-        selectedName = searchFieldLocations[indexPath.row].name
-        selectedAddress = searchFieldLocations[indexPath.row].address
+        selectedAnnot = LocationAnnot
+//        selectedCoordinate = LocationAnnot.coordinate
+//        selectedName = LocationAnnot.title
+//        selectedAddress = searchFieldLocations[indexPath.row].address
         
         mapView.addAnnotation(annotation)
         let region = MKCoordinateRegion(
-            center: searchFieldLocations[indexPath.row].location,
+            center: LocationAnnot.coordinate,
             latitudinalMeters: self.viewSize,
             longitudinalMeters: self.viewSize
         )
@@ -144,7 +172,6 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         searchResults.isHidden = true
         moreInfoButton.isEnabled = true
         view.bringSubviewToFront(moreInfoButton)
-
     }
     
     func loadLocations() {
@@ -156,36 +183,44 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
                     self.locationId = childSnapshot.key
                     let name = dict["name"] as? String ?? ""
                     let address = dict["address"] as? String ?? ""
-                    
                     if let coords = dict["coordinates"] as? [String: Any],
                        let lat = coords["latitude"] as? Double,
                        let lon = coords["longitude"] as? Double {
-                        
                         let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-                        self.locations.append(RestaurantPin(name: name, location: coordinate, address: address))
-                        let annotation = MKPointAnnotation()
-                        annotation.coordinate = coordinate
-                        annotation.title = name
-                        annotation.subtitle = address
+                        //self.locations.append()
+                                             
+                        let locationAnnot = LocationAnnotation(coordinate: coordinate, title: name, subtitle: address, address: address, locationId: self.locationId)
+                       
                         
-                        self.mapView.addAnnotation(annotation)
+                        self.mapView.addAnnotation(locationAnnot)
                     }
                 }
             }
         }
     }
     
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
     
-        if let annotation = view.annotation {
-            selectedCoordinate = annotation.coordinate
-            selectedName = annotation.title ?? "Unknown"
-            selectedAddress = annotation.subtitle ?? "No Address"
-        }
-
+    
+    private func mapView(_ mapView: MKMapView, didSelect view: LocationAnnotation) {
+        selectedAnnot = view
         
         viewSize = 500
-        guard let annotation = view.annotation else { return }
+        guard let annotation = selectedAnnot else { return }
+        let region = MKCoordinateRegion(
+            center: annotation.coordinate,
+            latitudinalMeters: self.viewSize,
+            longitudinalMeters: self.viewSize
+        )
+        mapView.setRegion(region, animated: true)
+        self.moreInfoButton.isEnabled = true
+    }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+    
+        guard let annotation = view.annotation as? LocationAnnotation else { return }
+        self.selectedAnnot = annotation
+        viewSize = 500
+        
         let region = MKCoordinateRegion(
             center: annotation.coordinate,
             latitudinalMeters: self.viewSize,
@@ -200,7 +235,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     }
     
     @IBAction func confirmLocationPressed(_ sender: Any) {
-        guard let coordinate = selectedCoordinate else {
+        guard let coordinate = selectedAnnot?.coordinate else {
             let alert = UIAlertController(title: "No Location",
                                                     message: "Please select location on the map",
                                                     preferredStyle: .alert)
@@ -208,19 +243,27 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             present(alert, animated: true)
             return
         }
-        discoverDelegate?.didSelectLocation(selectedLatitude: coordinate.latitude, selectedLongitude: coordinate.longitude,  selectedName: selectedName!, address: selectedAddress!)
-                
+        discoverDelegate?.didSelectLocation(selectedLatitude: coordinate.latitude, selectedLongitude: coordinate.longitude,  selectedName: selectedAnnot?.title ?? "", address: selectedAnnot?.address ?? "")
+
         dismiss(animated: true)
     }
     
+    func makeLocationId(lat: Double, lon: Double, name: String) -> String {
+        let lat = String(format: "%.4f", lat).replacingOccurrences(of: ".", with: "_")
+        let lon = String(format: "%.4f", lon).replacingOccurrences(of: ".", with: "_")
+        let locationId = "\(name);\(lat);\(lon)"
+        return locationId
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-           if segue.identifier == "discoverToLocation",
-              let destination = segue.destination as? FoodLocationViewController {
-               destination.name = selectedName!
-               destination.address = selectedAddress!
-               destination.delegate = self
-               //destination.locationId = locationId!
-           }
-       }
-
+        if segue.identifier == "discoverToLocation",
+           let destination = segue.destination as? FoodLocationViewController,
+           let selectedAnnot = selectedAnnot {
+            
+            destination.name = selectedAnnot.title
+            destination.address = selectedAnnot.address
+            destination.locationId = selectedAnnot.locationId
+            destination.delegate = self
+        }
+    }
 }
