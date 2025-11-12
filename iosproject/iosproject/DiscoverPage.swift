@@ -26,17 +26,17 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     // stores search results, may be empty
     var searchFieldLocations: [RestaurantPin] = []
     
-    // Add post interaction
     var discoverDelegate: AddPostViewController?
     var isSelectingLocation: Bool = false
     var selectedCoordinate: CLLocationCoordinate2D?
-    var selectedName: String = ""
-    var selectedAddress: String = ""
+    var selectedName: String?
+    var selectedAddress: String?
+    var locationId: String?
     @IBOutlet weak var confirmLocationButton: UIButton!
 
     var locations:[RestaurantPin] = []
     var viewSize:Double = 500
-    var currentView: MKAnnotationView!
+    var currentView: MKAnnotationView?
         
     let ref = Database.database().reference()
     @IBOutlet weak var moreInfoButton: UIButton!
@@ -55,13 +55,15 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         } else {
             confirmLocationButton.isHidden = true
         }
-        moreInfoButton.isEnabled = false
+        //moreInfoButton.isEnabled = false
         loadLocations()
     }
     
     func searchBar(_ searchField: UISearchBar, textDidChange text: String) {
         self.searchText = searchField.searchTextField.text!
         searchResults.isHidden = false
+        searchResults.rowHeight = UITableView.automaticDimension
+        view.bringSubviewToFront(searchResults)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -126,9 +128,10 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         let annotation = MKPointAnnotation()
         annotation.coordinate = searchFieldLocations[indexPath.row].location
         annotation.title = searchFieldLocations[indexPath.row].name
+        annotation.subtitle = searchFieldLocations[indexPath.row].address
         
         selectedCoordinate = searchFieldLocations[indexPath.row].location
-        selectedName = annotation.title!
+        selectedName = searchFieldLocations[indexPath.row].name
         selectedAddress = searchFieldLocations[indexPath.row].address
         
         mapView.addAnnotation(annotation)
@@ -139,7 +142,9 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         )
         mapView.setRegion(region, animated: true)
         searchResults.isHidden = true
-        self.moreInfoButton.isEnabled = true
+        moreInfoButton.isEnabled = true
+        view.bringSubviewToFront(moreInfoButton)
+
     }
     
     func loadLocations() {
@@ -148,7 +153,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
                 if let childSnapshot = child as? DataSnapshot,
                    let dict = childSnapshot.value as? [String: Any] {
                     
-                    let locationId = childSnapshot.key
+                    self.locationId = childSnapshot.key
                     let name = dict["name"] as? String ?? ""
                     let address = dict["address"] as? String ?? ""
                     
@@ -162,6 +167,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
                         annotation.coordinate = coordinate
                         annotation.title = name
                         annotation.subtitle = address
+                        
                         self.mapView.addAnnotation(annotation)
                     }
                 }
@@ -171,9 +177,12 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
     
-        selectedCoordinate = view.annotation?.coordinate
-        selectedName = (view.annotation?.title)!!
-        selectedAddress = (view.annotation?.subtitle)!!
+        if let annotation = view.annotation {
+            selectedCoordinate = annotation.coordinate
+            selectedName = annotation.title ?? "Unknown"
+            selectedAddress = annotation.subtitle ?? "No Address"
+        }
+
         
         viewSize = 500
         guard let annotation = view.annotation else { return }
@@ -199,17 +208,18 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             present(alert, animated: true)
             return
         }
-        discoverDelegate?.didSelectLocation(selectedLatitude: coordinate.latitude, selectedLongitude: coordinate.longitude,  selectedName: selectedName, address: self.selectedAddress)
+        discoverDelegate?.didSelectLocation(selectedLatitude: coordinate.latitude, selectedLongitude: coordinate.longitude,  selectedName: selectedName!, address: selectedAddress!)
                 
         dismiss(animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-           if segue.identifier == "discoverToLocationSegue",
+           if segue.identifier == "discoverToLocation",
               let destination = segue.destination as? FoodLocationViewController {
-               destination.name = selectedName
-               destination.address = selectedAddress
+               destination.name = selectedName!
+               destination.address = selectedAddress!
                destination.delegate = self
+               //destination.locationId = locationId!
            }
        }
 
