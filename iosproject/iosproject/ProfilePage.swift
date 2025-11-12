@@ -62,7 +62,6 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
         friendsList.delegate = self
         
         
-        let db = Firestore.firestore()
         let curUser = Auth.auth().currentUser!.uid
         var ref : DatabaseReference!
         ref = Database.database().reference().child("users").child(curUser)
@@ -250,7 +249,6 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
     func removeFriend(chosenFriend: String) {
         guard let curUser = Auth.auth().currentUser?.uid else { return }
         let ref = Database.database().reference()
-        // remove friend from user's friends
         ref.child("users").child(curUser).child("friends").child(chosenFriend).removeValue { error, _ in
             if let error = error {
                 print("Error removing friend: \(error.localizedDescription)")

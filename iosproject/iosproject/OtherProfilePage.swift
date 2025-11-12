@@ -62,8 +62,6 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
         friendCheck()
 
         
-
-//        addFriendButton.isHidden = true
         otherGridOfPosts.dataSource = self
         otherGridOfPosts.delegate = self
         otherFriendsList.delegate = self
@@ -281,11 +279,10 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
     
     
     @IBAction func addFriendTapped(_ sender: Any) {
-        guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+        let currentUserID = Auth.auth().currentUser!.uid
             let ref = Database.database().reference()
 
-            // Get both usernames for cleaner display
-            let currentUserRef = ref.child("users").child(currentUserID)
+        let currentUserRef = ref.child("users").child(currentUserID)
             let otherUserRef = ref.child("users").child(otherUserID)
 
             currentUserRef.child("username").observeSingleEvent(of: .value) { snapshot in
@@ -307,9 +304,6 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
                             }
                         }
                     }
-                    
-                    
-                    
                 }
             }
     }
@@ -318,8 +312,7 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
     func friendCheck() {
         addFriendButton.isHidden = false
         let db = Database.database().reference()
-        guard let currentUserID = Auth.auth().currentUser?.uid else { return }
-        
+        let currentUserID = Auth.auth().currentUser!.uid
         let friendsRef = db.child("users").child(currentUserID).child("friends")
         friendsRef.observeSingleEvent(of: .value) { snapshot in
             var isFriend = false
@@ -334,7 +327,6 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
 
             DispatchQueue.main.async {
                 if isFriend {
-                    self.addFriendButton.setTitle("Friends", for: .normal)
                     self.addFriendButton.isEnabled = false
                     self.addFriendButton.isHidden = true
                 } else {
@@ -349,15 +341,5 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
     }
     
 
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
