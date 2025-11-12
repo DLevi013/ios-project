@@ -632,7 +632,7 @@
                         <outlet property="otherMapView" destination="qcY-y5-PyI" id="3Cm-pm-2v5"/>
                         <outlet property="otherOptionsBar" destination="gei-Ih-PTx" id="Vl2-OM-ka1"/>
                         <outlet property="otherUserName" destination="nGr-YE-VrW" id="bGO-qe-aCc"/>
-                        <segue destination="diZ-9n-Pv5" kind="presentation" identifier="otherProfileToPost" modalPresentationStyle="fullScreen" id="CrI-Dp-VLO"/>
+                        <segue destination="diZ-9n-Pv5" kind="presentation" identifier="otherProfileToPost" id="CrI-Dp-VLO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eEt-JS-xMd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -782,7 +782,7 @@
                         <outlet property="mapView" destination="sAP-5e-wqZ" id="UWc-gm-Cb9"/>
                         <outlet property="optionsBar" destination="8hi-Ww-79D" id="CKL-Yv-Lf7"/>
                         <outlet property="userNameField" destination="H82-UR-Chq" id="GYm-8Q-L7z"/>
-                        <segue destination="diZ-9n-Pv5" kind="presentation" identifier="profileToPost" modalPresentationStyle="fullScreen" id="GaF-N1-Ow1"/>
+                        <segue destination="diZ-9n-Pv5" kind="presentation" identifier="profileToPost" id="GaF-N1-Ow1"/>
                         <segue destination="gBh-e3-1bW" kind="show" identifier="toOtherProfile" id="Bic-WB-kOL"/>
                     </connections>
                 </viewController>
@@ -1371,7 +1371,7 @@
                                                     <buttonConfiguration key="configuration" style="plain" image="message" catalog="system"/>
                                                     <connections>
                                                         <action selector="didTapCommentButton:" destination="1Hh-Lk-zjc" eventType="touchUpInside" id="R4Y-9X-30K"/>
-                                                        <segue destination="diZ-9n-Pv5" kind="show" identifier="locationFeedToPost" id="sJM-zT-5RF"/>
+                                                        <segue destination="diZ-9n-Pv5" kind="presentation" identifier="locationFeedToPost" id="sJM-zT-5RF"/>
                                                     </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1,000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lfd-aF-hjb">
@@ -1466,7 +1466,7 @@
         <segue reference="5qL-vd-dKm"/>
         <segue reference="vcp-Th-Z0D"/>
         <segue reference="swg-nk-JWB"/>
-        <segue reference="sJM-zT-5RF"/>
+        <segue reference="Wcn-2n-62O"/>
         <segue reference="OmV-5X-INh"/>
         <segue reference="Bic-WB-kOL"/>
         <segue reference="PAo-2q-nIS"/>

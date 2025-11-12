@@ -46,7 +46,7 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
     var chosenFriend: String?
     var chosenFriendIndex = 0
     
-    var posts: [UIImage] = [UIImage(named: "gsWithSoup")!, UIImage(named: "halfEaten")!,UIImage(named: "parisChoco")!,UIImage(named: "parisMatcha")!]
+    var posts: [FeedPost] = []
     
     var otherSelectedPostImage: UIImage?
     var otherSelectedPostIndex: Int = 0
@@ -93,10 +93,63 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
                 if let bio = snapshot.childSnapshot(forPath: "bio").value as? String {
                     self.setProfilePublic(bio: bio)
                 }
-            }
+                
+                ref = Database.database().reference().child("posts")
+                    ref.observeSingleEvent(of: .value) { snapshot in
+                        var feedPosts: [FeedPost] = []
 
-        }
-        
+                        for child in snapshot.children {
+                            if let childSnapshot = child as? DataSnapshot,
+                               let dict = childSnapshot.value as? [String: Any],
+                               let postUserId = dict["userId"] as? String,
+                               postUserId == self.otherUserID {
+                                let postId = dict["postId"] as? String ?? childSnapshot.key
+                                let username = dict["username"] as? String ?? ""
+                                let imageUrl = dict["image"] as? String ?? ""
+                                let timestamp = dict["timestamp"] as? Double ?? 0
+                                let likeCount = (dict["likes"] as? [String])?.count ?? 0
+
+                                let commentsArray = dict["comments"] as? [[String: Any]] ?? []
+                                let commentObjs = commentsArray.compactMap { Comment.from(dict: $0) }
+
+                                let location = dict["location"] as? String ?? ""
+                                let caption = dict["caption"] as? String ?? ""
+
+                                if let url = URL(string: imageUrl) {
+                                    URLSession.shared.dataTask(with: url) { data, _, _ in
+                                        if let data = data, let image = UIImage(data: data) {
+                                            DispatchQueue.main.async {
+                                                let post = FeedPost(
+                                                    postId: postId,
+                                                    username: username,
+                                                    postImage: image,
+                                                    timestamp: Int(timestamp),
+                                                    likeCount: likeCount,
+                                                    comments: commentObjs,
+                                                    location: location,
+                                                    caption: caption
+                                                )
+                                                feedPosts.append(post)
+                                                self.posts = feedPosts
+                                                self.otherGridOfPosts.reloadData()
+                                            }
+                                        }
+                                    }.resume()
+                                } else {
+                                    print("No post found!")
+                                    
+                                }
+                            }
+                        }
+
+                        DispatchQueue.main.async {
+                            self.posts = feedPosts
+                            self.otherGridOfPosts.reloadData()
+                        }
+                    }
+                }
+            }
+        ref = Database.database().reference().child("users").child(otherUserID)
         ref.child("friends").observeSingleEvent(of: .value) { snapshot in
             var loadedFriends: [String] = []
             var friendUIDs: [String] = []
@@ -128,7 +181,7 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
         let region = MKCoordinateRegion(center: initialLocation, latitudinalMeters: 1000, longitudinalMeters: 1000)
         otherMapView.setRegion(region, animated: false)
         
-        print(otherUserID)
+        
 
         // Do any additional setup after loading the view.
     }
@@ -150,7 +203,7 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = otherGridOfPosts.dequeueReusableCell(withReuseIdentifier: "OtherPostCell", for: indexPath) as! OtherPost
-        cell.otherSinglePost.image = posts[indexPath.item]
+        cell.otherSinglePost.image = posts[indexPath.item].postImage
         return cell
     }
 
@@ -163,8 +216,6 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        
-        self.otherSelectedPostImage = posts[indexPath.row]
             self.otherSelectedPostIndex = indexPath.row
         performSegue(withIdentifier: "otherProfileToPost", sender: self)
         
@@ -173,9 +224,7 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "otherProfileToPost", let vc = segue.destination as? PostPage {
-            vc.selectedPostImage = otherSelectedPostImage.self
-            vc.selectedPostIndex = otherSelectedPostIndex.self
-            vc.userID = otherUserName.text!
+            vc.post = posts[otherSelectedPostIndex]
         }
     
     }

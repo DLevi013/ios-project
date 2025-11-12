@@ -110,7 +110,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
                                 }
                             }.resume()
                         } else {
-                            // If image URL invalid, append post with nil image to avoid skipping
+                            
                             let post = FeedPost(
                                 postId: postId,
                                 username: username,
@@ -125,7 +125,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
                         }
                     }
                 }
-                // In case all images are invalid and no async call triggered reload here
+                
                 DispatchQueue.main.async {
                     self.posts = feedPosts
                     self.tableView.reloadData()

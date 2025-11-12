@@ -28,7 +28,7 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
     
     
     
-    var posts: [UIImage] = []
+    var posts: [FeedPost] = []
     
     @IBOutlet weak var optionsBar: UISegmentedControl!
     
@@ -52,8 +52,6 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
     var selectedPostImage: UIImage?
     var selectedPostIndex: Int = 0
     
-
-    
     
  
     override func viewDidLoad() {
@@ -76,32 +74,64 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
                 self.bioField.text = bio
             }
         }
-        // Load user's posts (from top-level /posts)
-        let postsRef = Database.database().reference().child("posts")
-        postsRef.observeSingleEvent(of: .value) { snapshot in
-            var loadedImages: [UIImage] = []
+        
+        
+        ref = Database.database().reference().child("posts")
+            ref.observeSingleEvent(of: .value) { snapshot in
+                var feedPosts: [FeedPost] = []
 
-            for child in snapshot.children {
-                if let postSnap = child as? DataSnapshot,
-                   let postDict = postSnap.value as? [String: Any],
-                   let userId = postDict["userId"] as? String,
-                   userId == curUser,
-                   let imageUrl = postDict["image"] as? String,
-                   let url = URL(string: imageUrl) {
+                for child in snapshot.children {
+                    if let childSnapshot = child as? DataSnapshot,
+                       let dict = childSnapshot.value as? [String: Any],
+                       let postUserId = dict["userId"] as? String,
+                       postUserId == curUser {
+                        let postId = dict["postId"] as? String ?? childSnapshot.key
+                        let username = dict["username"] as? String ?? ""
+                        let imageUrl = dict["image"] as? String ?? ""
+                        let timestamp = dict["timestamp"] as? Double ?? 0
+                        let likeCount = (dict["likes"] as? [String])?.count ?? 0
 
-                    URLSession.shared.dataTask(with: url) { data, _, _ in
-                        if let data = data, let img = UIImage(data: data) {
-                            DispatchQueue.main.async {
-                                loadedImages.append(img)
-                                self.posts = loadedImages
-                                self.gridOfPosts.reloadData()
-                            }
+                        let commentsArray = dict["comments"] as? [[String: Any]] ?? []
+                        let commentObjs = commentsArray.compactMap { Comment.from(dict: $0) }
+
+                        let location = dict["location"] as? String ?? ""
+                        let caption = dict["caption"] as? String ?? ""
+
+                        if let url = URL(string: imageUrl) {
+                            URLSession.shared.dataTask(with: url) { data, _, _ in
+                                if let data = data, let image = UIImage(data: data) {
+                                    DispatchQueue.main.async {
+                                        let post = FeedPost(
+                                            postId: postId,
+                                            username: username,
+                                            postImage: image,
+                                            timestamp: Int(timestamp),
+                                            likeCount: likeCount,
+                                            comments: commentObjs,
+                                            location: location,
+                                            caption: caption
+                                        )
+                                        feedPosts.append(post)
+                                        self.posts = feedPosts
+                                        self.gridOfPosts.reloadData()
+                                    }
+                                }
+                            }.resume()
+                        } else {
+                            print("No post found!")
+                            
                         }
-                    }.resume()
+                    }
+                }
+
+                DispatchQueue.main.async {
+                    self.posts = feedPosts
+                    self.gridOfPosts.reloadData()
                 }
             }
-        }
         
+        
+           ref = Database.database().reference().child("users").child(curUser)
            ref.child("friends").observe(.value) { snapshot in
                var loadedFriends: [String] = []
                var friendUIDs: [String] = []
@@ -149,7 +179,7 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = gridOfPosts.dequeueReusableCell(withReuseIdentifier: "PostCell", for: indexPath) as! Post
-        cell.singlePost.image = posts[indexPath.item]
+        cell.singlePost.image = posts[indexPath.item].postImage
         return cell
     }
 
@@ -162,9 +192,7 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        
-        self.selectedPostImage = posts[indexPath.row]
-            self.selectedPostIndex = indexPath.row
+        self.selectedPostIndex = indexPath.row
         performSegue(withIdentifier: "profileToPost", sender: self)
         
         
@@ -172,9 +200,7 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "profileToPost", let vc = segue.destination as? PostPage {
-            vc.selectedPostImage = selectedPostImage.self
-            vc.selectedPostIndex = selectedPostIndex.self
-            vc.userID = self.userNameField.text!
+            vc.post = posts[selectedPostIndex]
         }
         if segue.identifier == "toOtherProfile", let vc = segue.destination as? OtherProfilePage {
             vc.otherUserNameText = "THIS IS THE TEMP PAGE FOR THE OTHER PROFILES"
