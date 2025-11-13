@@ -87,7 +87,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
                         let commentsArray = dict["comments"] as? [[String: Any]] ?? []
                         let commentObjs = commentsArray.compactMap { Comment.from(dict: $0) }
 
-                        let location = dict["location"] as? String ?? ""
+                        let location = dict["locationId"] as? String ?? ""
                         let caption = dict["caption"] as? String ?? ""
                         
                         if let url = URL(string: imageUrl) {
