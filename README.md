@@ -1,5 +1,5 @@
 # README
-# **Group #7 Members:**
+## **Group #7 Members:**
 
 - Isaac Thomas
 
