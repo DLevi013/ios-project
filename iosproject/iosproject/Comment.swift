@@ -23,6 +23,7 @@ extension Comment {
             "timestamp": timestamp.timeIntervalSince1970
         ]
     }
+
     static func from(dict: [String: Any]) -> Comment? {
         guard let commentId = dict["commentId"] as? String,
               let username = dict["username"] as? String,

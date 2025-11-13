@@ -13,7 +13,6 @@ protocol PostTableViewCellDelegate: AnyObject {
     func didTapLocation(on cell: PostTableViewCell)
 }
 
-
 class PostTableViewCell: UITableViewCell {
   
     @IBOutlet weak var usernameLabel: UILabel!
@@ -36,13 +35,11 @@ class PostTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
         // Configure the view for the selected state
     }
     
     @IBAction func likeButtonPressed(_ sender: Any) {
         delegate?.didTapLikeButton(on: self)
-        
     }
     
     @IBAction func profileButtonTapped(_ sender: Any) {
@@ -52,6 +49,4 @@ class PostTableViewCell: UITableViewCell {
     @IBAction func locationButtonPressed(_ sender: Any) {
         delegate?.didTapLocation(on: self)
     }
-    
-    
 }

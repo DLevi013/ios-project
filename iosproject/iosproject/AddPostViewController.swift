@@ -15,7 +15,6 @@ var idCounter = 4
 
 class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LocationSelectionDelegate{
     
-    
     @IBOutlet weak var captionTextField: UITextField!
     @IBOutlet weak var postButton: UIButton!
     
@@ -40,7 +39,6 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
             }
         }
     }
-    
     
     @IBAction func addImagePressed(_ sender: Any) {
         let photoPicker = UIImagePickerController()
@@ -115,7 +113,6 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
     }
     
     @IBAction func postButtonPressed(_ sender: Any) {
-        
         guard let caption = captionTextField.text,
             !caption.isEmpty,
             !locationName.isEmpty,

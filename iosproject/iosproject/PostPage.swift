@@ -10,39 +10,31 @@ import FirebaseDatabase
 import FirebaseAuth
 
 class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
-    var comments: [Comment] = []
-    
-
-    var post: FeedPost?
-    var userID : String = "default"
-    var selectedPostImage: UIImage?
-    var selectedPostIndex: Int = 0
-    
+ 
     @IBOutlet weak var postImages: UIImageView!
-    
     @IBOutlet weak var commentTableView: UITableView!
     @IBOutlet weak var userIDField: UILabel!
-    
     @IBOutlet weak var commentLabel: UILabel!
     @IBOutlet weak var likeLabel: UILabel!
-    
     @IBOutlet weak var captionLabel: UILabel!
     @IBOutlet weak var commentTextField: UITextField!
-    
-    
+
+    var comments: [Comment] = []
+
+    var post: FeedPost?
+    var userID: String = "default"
+    var selectedPostImage: UIImage?
+    var selectedPostIndex: Int = 0
     var currentUserName = ""
-    
-    
+
     let ref = Database.database().reference().child("posts")
-    
-    var userNameRef : DatabaseReference!
-    
-    
+    var userNameRef: DatabaseReference!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         getUserName()
         guard let post = post else { return }
-        
+
         if let image = post.postImage {
             postImages.image = image
         }
@@ -51,10 +43,10 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
         captionLabel.text = post.caption
         likeLabel.text = post.likeCount.description
         commentLabel.text = post.comments.count.description
-        
+
         commentTableView.dataSource = self
         commentTableView.delegate = self
-        
+
         let postRef = ref.child(post.postId).child("comments")
         postRef.observe(.value) { snapshot in
             var loadedComments: [Comment] = []
@@ -69,19 +61,14 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
             print("Loaded Comments: \(self.comments)")
             self.commentTableView.reloadData()
         }
-        
-
-        
-        // Do any additional setup after loading the view.
     }
-    
+
     @IBAction func sendCommentTapped(_ sender: Any) {
         guard let commentText = commentTextField.text, !commentText.isEmpty else {
             showError(title: "Invalid comment", message: "Comment cannot be empty.")
             return
         }
         let comment = Comment(commentId: UUID().uuidString, username: currentUserName, text: commentText, timestamp: Date())
-        // post?.comments.append(comment)
         self.comments.append(comment)
         let ref = Database.database().reference()
         let postRef = ref.child("posts").child(post!.postId)
@@ -90,25 +77,22 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
             if let error = error {
                 self.showError(title: "ERROR", message: "\(error)")
             } else {
-                self.showError(title:"Success", message: "comment sent!")
+                self.showError(title: "Success", message: "comment sent!")
             }
         }
         print("SENT: \(commentText)")
-        
-        
     }
-    
+
     private func showError(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
-    
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return comments.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "commentCell", for: indexPath) as? CommentTableViewCell else {
             fatalError("Could not dequeue CommentTableViewCell")
@@ -122,12 +106,12 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
         cell.dateLabel.text = formatter.string(from: comment.timestamp)
         return cell
     }
-    
+
     @IBAction func locationButtonPressed(_ sender: Any) {
         performSegue(withIdentifier: "postToLocation", sender: self)
     }
-    
-    func getUserName(){
+
+    func getUserName() {
         guard let currentUserID = Auth.auth().currentUser?.uid else { return }
 
         let ref = Database.database().reference()
@@ -138,21 +122,14 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
                 self.currentUserName = "No Username Found!"
             }
         }
-        
-        
-
     }
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-       
         if segue.identifier == "postToLocation",
            let destination = segue.destination as? FoodLocationViewController,
            let locationId = self.post?.location {
-            
             destination.locationId = locationId
             destination.delegate = self
         }
-           
     }
-
 }

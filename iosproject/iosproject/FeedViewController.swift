@@ -11,7 +11,6 @@ import FirebaseAuth
 
 class FeedViewController: ModeViewController, UITableViewDataSource, UITableViewDelegate, PostTableViewCellDelegate {
     
-
     @IBOutlet weak var tableView: UITableView!
     
     var selectedLocationId:String?
@@ -20,8 +19,6 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
     let postTableViewCellIdentifier = "PostCell"
     let ref = Database.database().reference()
     var selectedIndex: Int?
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,7 +71,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
             }
             // add self too
             friendUIDs.insert(currentUserId)
-
+            
             // fetch posts and only add those from friends to posts
             self.ref.child("posts").observeSingleEvent(of: .value) { snapshot, _ in
                 for child in snapshot.children {
@@ -87,13 +84,13 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
                         let imageUrl = dict["image"] as? String ?? ""
                         let timestamp = dict["timestamp"] as? Double ?? 0
                         let likeCount = (dict["likes"] as? [String])?.count ?? 0
-
+                        
                         let commentsArray = dict["comments"] as? [[String: Any]] ?? []
                         let commentObjs = commentsArray.compactMap { Comment.from(dict: $0) }
-
+                        
                         let location = dict["locationId"] as? String ?? ""
                         let caption = dict["caption"] as? String ?? ""
-
+                        
                         let post = FeedPost(
                             postId: postId,
                             username: username,
@@ -104,13 +101,13 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
                             location: location,
                             caption: caption
                         )
-
+                        
                         DispatchQueue.main.async {
                             self.posts.append(post)
                             let newIndexPath = IndexPath(row: self.posts.count - 1, section: 0)
                             self.tableView.insertRows(at: [newIndexPath], with: .automatic)
                         }
-
+                        
                         if let url = URL(string: imageUrl), !imageUrl.isEmpty {
                             URLSession.shared.dataTask(with: url) { data, _, _ in
                                 if let data = data,
@@ -133,7 +130,6 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
             }
         }
     }
-
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "feedToProfile",
@@ -142,6 +138,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
             print("Setting destination with \(uid)")
             destination.otherUserID = uid
         }
+        
         if segue.identifier == "feedToPost" {
             if let destinationVC = segue.destination as? PostPage,
                let index = selectedIndex {
@@ -156,7 +153,6 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
             destination.locationId = locationId
             destination.delegate = self
         }
-           
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -175,7 +171,6 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         dateFormatter.dateStyle = .medium
         cell.dateLabel.text = dateFormatter.string(from: date)
         
-        
         cell.likeCountLabel.text = String(post.likeCount)
         cell.commentCountLabel.text = String(post.comments.count)
         
@@ -185,7 +180,6 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         cell.delegate = self
         return cell
     }
-    
     
     func didTapProfileButton(on cell: PostTableViewCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
@@ -208,14 +202,13 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         // performSegue(withIdentifier: "feedToProfile", sender: post.username)
     }
     
-    
     func didTapLikeButton(on cell: PostTableViewCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         let post = posts[indexPath.row]
         guard let userId = Auth.auth().currentUser?.uid else { return }
         let postRef = ref.child("posts").child(post.postId).child("likes")
 
-                // Check if user already liked
+        // Check if user already liked
         postRef.observeSingleEvent(of: .value) { snapshot,error  in
                     var likes = snapshot.value as? [String] ?? []
                     if likes.contains(userId) {
@@ -232,7 +225,6 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
                     self.tableView.reloadRows(at: [indexPath], with: .none)
                     let heartImage = likes.contains(userId) ? UIImage(systemName: "heart.fill") : UIImage(systemName: "heart")
                     cell.likeButton.setImage(heartImage, for: .normal)
-            
         
                 }
         }
@@ -243,31 +235,20 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         let postRef = ref.child("posts").child(post.postId).child("locationId")
 
         postRef.observeSingleEvent(of: .value) { snapshot,error  in
-            
                     self.selectedLocationId = post.location
                     DispatchQueue.main.async {
                         self.performSegue(withIdentifier: "feedToLocation", sender: self)
                     }
-            
-        
                 }
         }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return posts.count
     }
-    
 
-   
-    
     @IBAction func didTapCommentButton(_ sender: UIButton) {
         selectedIndex = sender.tag
         performSegue(withIdentifier:"feedToPost", sender: self)
-        
-        
     }
-    
-   
 
 }
-

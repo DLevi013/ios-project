@@ -431,6 +431,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="chevron.right" catalog="system"/>
                                 <connections>
+                                    <action selector="pressedProfileButton:" destination="iF1-R9-xMt" eventType="touchUpInside" id="y5f-NI-Ewk"/>
                                     <segue destination="T3A-jt-ad7" kind="show" identifier="settingsToProfileSegue" id="Gnl-cP-v2M"/>
                                 </connections>
                             </button>
@@ -445,7 +446,7 @@
                                 <rect key="frame" x="266" y="336" width="61" height="28"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
-                                    <action selector="DarkSwitch:" destination="iF1-R9-xMt" eventType="valueChanged" id="9qy-J3-RBl"/>
+                                    <action selector="darkSwitch:" destination="iF1-R9-xMt" eventType="valueChanged" id="TNr-0I-uEl"/>
                                 </connections>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Notifications" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fU6-Vw-wYw">
@@ -466,7 +467,7 @@
                                 <rect key="frame" x="266" y="474" width="61" height="28"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
-                                    <action selector="PrivateSwitch:" destination="iF1-R9-xMt" eventType="valueChanged" id="MIc-ml-Hsm"/>
+                                    <action selector="privateSwitch:" destination="iF1-R9-xMt" eventType="valueChanged" id="gdE-rd-Ys3"/>
                                 </connections>
                             </switch>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h2l-Bn-20Y">
@@ -483,7 +484,7 @@
                                 <rect key="frame" x="266" y="398" width="61" height="28"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
-                                    <action selector="NotificationSwitch:" destination="iF1-R9-xMt" eventType="valueChanged" id="pAU-tL-uf4"/>
+                                    <action selector="notificationSwitch:" destination="iF1-R9-xMt" eventType="valueChanged" id="tCM-y4-00V"/>
                                 </connections>
                             </switch>
                         </subviews>
@@ -497,7 +498,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mqj-w4-59j" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3160" y="1677"/>
+            <point key="canvasLocation" x="3159.545454545455" y="1676.9874476987447"/>
         </scene>
         <!--Other Profile Page-->
         <scene sceneID="QdW-Py-iRy">
@@ -1269,30 +1270,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="440" height="884"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view tag="100" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bD9-Cb-o7N">
+                            <view tag="100" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bD9-Cb-o7N">
                                 <rect key="frame" x="-38" y="0.0" width="516.66666666666674" height="95.333333333333485"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="white_logo_text" translatesAutoresizingMaskIntoConstraints="NO" id="BU3-tJ-kbw">
-                                        <rect key="frame" x="45" y="12" width="186" height="116"/>
+                                        <rect key="frame" x="27" y="0.0" width="186" height="116"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ayi-sj-cVx">
-                                        <rect key="frame" x="438.33333333333331" y="53" width="47" height="34.333333333333343"/>
-                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" image="plus" catalog="system">
-                                            <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </buttonConfiguration>
-                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="bD9-Cb-o7N" secondAttribute="height" multiplier="553:102" id="0ti-ZQ-1df"/>
-                                    <constraint firstAttribute="trailing" secondItem="ayi-sj-cVx" secondAttribute="trailing" constant="31.670000000000002" id="3Xi-aT-wsc"/>
-                                    <constraint firstItem="ayi-sj-cVx" firstAttribute="top" secondItem="bD9-Cb-o7N" secondAttribute="top" constant="53" id="9yI-sQ-zCe"/>
-                                    <constraint firstItem="ayi-sj-cVx" firstAttribute="bottom" secondItem="bD9-Cb-o7N" secondAttribute="bottomMargin" id="x4X-rR-SkQ"/>
-                                    <constraint firstAttribute="width" secondItem="bD9-Cb-o7N" secondAttribute="height" multiplier="553:102" id="ymY-5p-KY6"/>
-                                </constraints>
                             </view>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1t5-W1-F7z">
                                 <rect key="frame" x="20" y="222" width="400" height="400"/>

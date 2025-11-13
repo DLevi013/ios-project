@@ -1,5 +1,5 @@
 //
-//  ThemeManger.swift
+//  ThemeManager.swift
 //  iosproject
 //
 //  Created by Austin Nguyen on 10/22/25.
@@ -26,17 +26,9 @@ class ThemeManager {
     private init() {
         currentMode = .light
         UserDefaults.standard.set(false, forKey: "mode")
-        
-//        let isDark = UserDefaults.standard.bool(forKey: "mode")
-//        currentMode = isDark ? .dark : .light
     }
     
-    func toggleMode(isDark : Bool) {
+    func toggleMode(isDark: Bool) {
         currentMode = isDark ? .dark : .light
     }
-    
-}
-
-extension Notification.Name {
-    static let themeChanged = Notification.Name("themeChanged")
 }

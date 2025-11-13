@@ -18,15 +18,11 @@ class Post: UICollectionViewCell {
     @IBOutlet weak var singlePost: UIImageView!
 }
 
-
-
 class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var userNameField: UILabel!
     
     @IBOutlet weak var bioField: UILabel!
-    
-    
     
     var posts: [FeedPost] = []
     
@@ -36,7 +32,6 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
     
     @IBOutlet weak var mapView: MKMapView!
     
-    
     @IBOutlet weak var friendsList: UITableView!
     
     let textCellIdentifier = "CellView"
@@ -44,19 +39,13 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
     public var tempFriends = ["Isaac", "Ian", "Austin"]
     public var friendUIDs: [String] = []
 
-    
     var chosenFriend: String?
     var chosenFriendIndex = 0
-    
     
     var selectedPostImage: UIImage?
     var selectedPostIndex: Int = 0
     
-    
     @IBOutlet weak var editProfileButton: UIButton!
-    
-    
-    
  
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,7 +53,6 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
         gridOfPosts.delegate = self
         friendsList.dataSource = self
         friendsList.delegate = self
-        
         
         let curUser = Auth.auth().currentUser!.uid
         var ref : DatabaseReference!
@@ -77,7 +65,6 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
                 self.bioField.text = bio
             }
         }
-        
         
         ref = Database.database().reference().child("posts")
             ref.observeSingleEvent(of: .value) { snapshot in
@@ -133,7 +120,6 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
                 }
             }
         
-        
            ref = Database.database().reference().child("users").child(curUser)
            ref.child("friends").observe(.value) { snapshot in
                var loadedFriends: [String] = []
@@ -156,7 +142,6 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
                }
            }
         
-        
         let layout = UICollectionViewFlowLayout()
                 layout.minimumInteritemSpacing = 0
                 layout.minimumLineSpacing = 0
@@ -170,7 +155,6 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
                 let region = MKCoordinateRegion(center: initialLocation, latitudinalMeters: 1000, longitudinalMeters: 1000)
                 mapView.setRegion(region, animated: false)
         friendsList.isHidden = true
-        
         
     }
     
@@ -189,9 +173,6 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
             }
         }
     }
-
-
-    
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return posts.count
@@ -215,7 +196,6 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
         self.selectedPostIndex = indexPath.row
         performSegue(withIdentifier: "profileToPost", sender: self)
         
-        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -229,10 +209,7 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
 //        if segue.identifier == "profileToEditProfile", let vc = segue.destination as? EditProfileViewController {
 //        }
         
-    
     }
-    
-    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tempFriends.count
@@ -293,7 +270,6 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
         }
     }
   
-    
     @IBAction func choosingTab(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
             case 0:
@@ -320,6 +296,4 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
         
     }
     
-
 }
-

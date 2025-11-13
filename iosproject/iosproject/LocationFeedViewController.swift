@@ -216,7 +216,6 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
                     self.tableView.reloadRows(at: [indexPath], with: .none)
                     let heartImage = likes.contains(userId) ? UIImage(systemName: "heart.fill") : UIImage(systemName: "heart")
                     cell.likeButton.setImage(heartImage, for: .normal)
-            
         
                 }
         }
