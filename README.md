@@ -57,7 +57,7 @@ Here’s users you can use to look at existing functionality for feeds and frien
 
       - Has all the same implementation as the ProfilePage
 
-  - Beta - 20%
+  - Beta
 
     - EditProfilePage UI and functionality
 
