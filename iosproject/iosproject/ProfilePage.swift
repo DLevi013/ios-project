@@ -53,6 +53,10 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
     var selectedPostIndex: Int = 0
     
     
+    @IBOutlet weak var editProfileButton: UIButton!
+    
+    
+    
  
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -169,6 +173,23 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
         
         
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let curUser = Auth.auth().currentUser!.uid
+        let ref = Database.database().reference().child("users").child(curUser)
+        
+        ref.observeSingleEvent(of: .value) { snapshot in
+            if let username = snapshot.childSnapshot(forPath: "username").value as? String {
+                self.userNameField.text = username
+            }
+            if let bio = snapshot.childSnapshot(forPath: "bio").value as? String {
+                self.bioField.text = bio
+            }
+        }
+    }
+
 
     
     
@@ -205,6 +226,8 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
             vc.otherUserNameText = "THIS IS THE TEMP PAGE FOR THE OTHER PROFILES"
             vc.otherUserID = friendUIDs[chosenFriendIndex]
         }
+//        if segue.identifier == "profileToEditProfile", let vc = segue.destination as? EditProfileViewController {
+//        }
         
     
     }
@@ -292,17 +315,11 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
             }
     }
     
-    
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @IBAction func editProfilePressed(_ sender: Any) {
+        performSegue(withIdentifier: "profileToEditProfile", sender: self)
+        
     }
-    */
+    
 
 }
 
