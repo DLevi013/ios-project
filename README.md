@@ -200,8 +200,6 @@ Here’s users you can use to look at existing functionality for feeds and frien
 
     - Added functionality to redirect user to display restaurant info when checking location of post 
 
-\
-
 
 **Deviations:**
 
