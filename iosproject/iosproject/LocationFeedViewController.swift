@@ -53,19 +53,21 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
     
     func fetchPosts() {
         posts = []
-        ref.child("posts").observeSingleEvent(of: .value) { snapshot in
+        ref.child("posts").observeSingleEvent(of: .value) { snapshot, _ in
+            // final array to sort
             var feedPosts: [FeedPost] = []
+            // unchanged
             var userPrivacyCache: [String: Bool] = [:]
             let group = DispatchGroup()
-            
+
             for child in snapshot.children {
                 if let childSnapshot = child as? DataSnapshot,
                    let dict = childSnapshot.value as? [String: Any],
                    let postUserId = dict["userId"] as? String {
 
-                    // Enter group for each post (will only fetch privacy for new users)
-                    group.enter()
-                    
+                    // privacy check
+                    group.enter()  // enter for privacy
+
                     func processPostIfAllowed(isPrivate: Bool) {
                         if !isPrivate {
                             let postId = dict["postId"] as? String ?? ""
@@ -77,68 +79,68 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
                             let commentObjs = commentsArray.compactMap { Comment.from(dict: $0) }
                             let location = dict["location"] as? String ?? ""
                             let caption = dict["caption"] as? String ?? ""
-                            
-                            if let url = URL(string: imageUrl) {
-                                URLSession.shared.dataTask(with: url) { data, response, error in
-                                    if let data = data, let image = UIImage(data: data) {
-                                        DispatchQueue.main.async {
-                                            let post = FeedPost(
-                                                postId: postId,
-                                                username: username,
-                                                postImage: image,
-                                                timestamp: Int(timestamp),
-                                                likeCount: likeCount,
-                                                comments: commentObjs,
-                                                location: location,
-                                                caption: caption
-                                            )
-                                            feedPosts.append(post)
-                                            self.posts = feedPosts
-                                            self.tableView.reloadData()
-                                            self.tableView.refreshControl?.endRefreshing()
-                                        }
+
+                            // create post without image first, image lookup will be async
+                            let post = FeedPost(
+                                postId: postId,
+                                username: username,
+                                postImage: nil,
+                                timestamp: Int(timestamp),
+                                likeCount: likeCount,
+                                comments: commentObjs,
+                                location: location,
+                                caption: caption
+                            )
+                            feedPosts.append(post)
+
+                            // async image download
+                            if let url = URL(string: imageUrl), !imageUrl.isEmpty {
+                                // enter each image task
+                                group.enter()
+                                URLSession.shared.dataTask(with: url) { data, _, _ in
+                                    if let data = data,
+                                       let image = UIImage(data: data),
+                                       let idx = feedPosts.firstIndex(where: { $0.postId == postId }) {
+                                        feedPosts[idx].postImage = image
                                     }
+                                    // leave when image is done
+                                    group.leave()
                                 }.resume()
-                            } else {
-                                // If image URL invalid, append post with nil image
-                                let post = FeedPost(
-                                    postId: postId,
-                                    username: username,
-                                    postImage: nil,
-                                    timestamp: Int(timestamp),
-                                    likeCount: likeCount,
-                                    comments: commentObjs,
-                                    location: location,
-                                    caption: caption
-                                )
-                                feedPosts.append(post)
                             }
+                            // if no image, post is done
                         }
+                        // leave for privacy
                         group.leave()
                     }
-                    
-                    // Check cache first
+
+                    // privacy cache
                     if let cachedPrivacy = userPrivacyCache[postUserId] {
                         processPostIfAllowed(isPrivate: cachedPrivacy)
                     } else {
-                        // Fetch privacy from DB
-                        self.ref.child("users").child(postUserId).child("isPrivate").observeSingleEvent(of: .value) { privacySnap in
-                            let isPrivate = privacySnap.value as? Bool ?? false
-                            userPrivacyCache[postUserId] = isPrivate
-                            processPostIfAllowed(isPrivate: isPrivate)
-                        }
+                        self.ref.child("users").child(postUserId).child("isPrivate")
+                            .observeSingleEvent(of: .value) { privacySnap, _ in
+                                let isPrivate = privacySnap.value as? Bool ?? false
+                                userPrivacyCache[postUserId] = isPrivate
+                                processPostIfAllowed(isPrivate: isPrivate)
+                            }
                     }
                 }
             }
-            // When all posts processed, update once in case no images loaded
+
+            // When ALL privacy and images finish, sort and reload
             group.notify(queue: .main) {
-                self.posts = feedPosts
-                self.tableView.reloadData()
-                self.tableView.refreshControl?.endRefreshing()
+                self.finalizeLocationFeed(feedPosts)
             }
         }
     }
-    
+
+    // helper function for ONE-TIME sort and reload after 
+    private func finalizeLocationFeed(_ unsorted: [FeedPost]) {
+        let sorted = unsorted.sorted { $0.timestamp > $1.timestamp }   // newest first
+        self.posts = sorted
+        self.tableView.reloadData()
+        self.tableView.refreshControl?.endRefreshing()
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         /*

@@ -59,7 +59,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         let userRef = ref.child("users").child(currentUserId)
         
         // get friend uids
-        userRef.child("friends").observeSingleEvent(of: .value) { friendSnapshot in
+        userRef.child("friends").observeSingleEvent(of: .value) { friendSnapshot, _ in
             var friendUIDs: Set<String> = []
             for child in friendSnapshot.children {
                 if let friendSnap = child as? DataSnapshot,
@@ -70,9 +70,13 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
             // add self too
             friendUIDs.insert(currentUserId)
 
+            // variables that track image downloads
+            var tempPosts: [FeedPost] = []
+            var pendingImageDownloads = 0
+            var completedDownloads = 0
+
             // fetch posts and only add those from friends to posts
-            self.ref.child("posts").observeSingleEvent(of: .value) { snapshot in
-                var feedPosts: [FeedPost] = []
+            self.ref.child("posts").observeSingleEvent(of: .value) { snapshot, _ in
                 for child in snapshot.children {
                     if let childSnapshot = child as? DataSnapshot,
                        let dict = childSnapshot.value as? [String: Any],
@@ -89,51 +93,50 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
 
                         let location = dict["locationId"] as? String ?? ""
                         let caption = dict["caption"] as? String ?? ""
-                        
-                        if let url = URL(string: imageUrl) {
-                            URLSession.shared.dataTask(with: url) { data, response, error in
-                                if let data = data, let image = UIImage(data: data) {
-                                    DispatchQueue.main.async {
-                                        let post = FeedPost(
-                                            postId: postId,
-                                            username: username,
-                                            postImage: image,
-                                            timestamp: Int(timestamp),
-                                            likeCount: likeCount,
-                                            comments: commentObjs,
-                                            location: location,
-                                            caption: caption
-                                        )
-                                        feedPosts.append(post)
-                                        self.posts = feedPosts
-                                        self.tableView.reloadData()
-                                        self.tableView.refreshControl?.endRefreshing()
-                                    }
+
+                        let post = FeedPost(
+                            postId: postId,
+                            username: username,
+                            postImage: nil,
+                            timestamp: Int(timestamp),
+                            likeCount: likeCount,
+                            comments: commentObjs,
+                            location: location,
+                            caption: caption
+                        )
+                        tempPosts.append(post)
+
+                        if let url = URL(string: imageUrl), !imageUrl.isEmpty {
+                            pendingImageDownloads += 1
+                            URLSession.shared.dataTask(with: url) { data, _, _ in
+                                if let data = data,
+                                   let image = UIImage(data: data),
+                                   let idx = tempPosts.firstIndex(where: { $0.postId == postId }) {
+                                    tempPosts[idx].postImage = image
+                                }
+                                completedDownloads += 1
+                                if completedDownloads == pendingImageDownloads {
+                                    self.finalizeFeed(tempPosts)
                                 }
                             }.resume()
-                        } else {
-                            
-                            let post = FeedPost(
-                                postId: postId,
-                                username: username,
-                                postImage: nil,
-                                timestamp: Int(timestamp),
-                                likeCount: likeCount,
-                                comments: commentObjs,
-                                location: location,
-                                caption: caption
-                            )
-                            feedPosts.append(post)
                         }
                     }
                 }
-                
-                DispatchQueue.main.async {
-                    self.posts = feedPosts
-                    self.tableView.reloadData()
-                    self.tableView.refreshControl?.endRefreshing()
+
+                if pendingImageDownloads == 0 {
+                    self.finalizeFeed(tempPosts)
                 }
             }
+        }
+    }
+
+    // Helper function for finalizing the feedpost (sorting based on timestamp)
+    private func finalizeFeed(_ unsorted: [FeedPost]) {
+        let sorted = unsorted.sorted { $0.timestamp > $1.timestamp }
+        self.posts = sorted
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            self.tableView.refreshControl?.endRefreshing()
         }
     }
     
