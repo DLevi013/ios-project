@@ -250,7 +250,7 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
         tableView.deselectRow(at: indexPath, animated: true)
         chosenFriend = tempFriends[indexPath.row]
         chosenFriendIndex = indexPath.row
-        let chosenFriendID = friendUIDs[indexPath.row]
+        // let chosenFriendID = friendUIDs[indexPath.row]
         
         let alertController = UIAlertController(title: "Friend Action", message: "Select an action to perform for \(chosenFriend!)", preferredStyle: .actionSheet)
         

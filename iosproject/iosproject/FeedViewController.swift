@@ -20,7 +20,6 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
     let postTableViewCellIdentifier = "PostCell"
     let ref = Database.database().reference()
     var selectedIndex: Int?
-//    var otherProfile = ""
     
     
     
@@ -32,6 +31,8 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        posts = []
+        tableView.reloadData()
         fetchPosts()
     }
     
@@ -50,11 +51,15 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
     }
     
     @objc func handleRefresh() {
+        posts = []
+        tableView.reloadData()
         fetchPosts()
     }
     
     func fetchPosts() {
         posts = []
+        tableView.reloadData()
+        
         guard let currentUserId = Auth.auth().currentUser?.uid else { return }
         let userRef = ref.child("users").child(currentUserId)
         
@@ -69,11 +74,6 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
             }
             // add self too
             friendUIDs.insert(currentUserId)
-
-            // variables that track image downloads
-            var tempPosts: [FeedPost] = []
-            var pendingImageDownloads = 0
-            var completedDownloads = 0
 
             // fetch posts and only add those from friends to posts
             self.ref.child("posts").observeSingleEvent(of: .value) { snapshot, _ in
@@ -104,51 +104,38 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
                             location: location,
                             caption: caption
                         )
-                        tempPosts.append(post)
+
+                        DispatchQueue.main.async {
+                            self.posts.append(post)
+                            let newIndexPath = IndexPath(row: self.posts.count - 1, section: 0)
+                            self.tableView.insertRows(at: [newIndexPath], with: .automatic)
+                        }
 
                         if let url = URL(string: imageUrl), !imageUrl.isEmpty {
-                            pendingImageDownloads += 1
                             URLSession.shared.dataTask(with: url) { data, _, _ in
                                 if let data = data,
-                                   let image = UIImage(data: data),
-                                   let idx = tempPosts.firstIndex(where: { $0.postId == postId }) {
-                                    tempPosts[idx].postImage = image
-                                }
-                                completedDownloads += 1
-                                if completedDownloads == pendingImageDownloads {
-                                    self.finalizeFeed(tempPosts)
+                                   let image = UIImage(data: data) {
+                                    DispatchQueue.main.async {
+                                        if let idx = self.posts.firstIndex(where: { $0.postId == postId }) {
+                                            self.posts[idx].postImage = image
+                                            let indexPath = IndexPath(row: idx, section: 0)
+                                            self.tableView.reloadRows(at: [indexPath], with: .automatic)
+                                        }
+                                    }
                                 }
                             }.resume()
                         }
                     }
                 }
-
-                if pendingImageDownloads == 0 {
-                    self.finalizeFeed(tempPosts)
+                DispatchQueue.main.async {
+                    self.tableView.refreshControl?.endRefreshing()
                 }
             }
         }
     }
 
-    // Helper function for finalizing the feedpost (sorting based on timestamp)
-    private func finalizeFeed(_ unsorted: [FeedPost]) {
-        let sorted = unsorted.sorted { $0.timestamp > $1.timestamp }
-        self.posts = sorted
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-            self.tableView.refreshControl?.endRefreshing()
-        }
-    }
-    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        /*
-        if segue.identifier == "feedToProfile",
-            let vc = segue.destination as? OtherProfilePage,
-            let userId = sender as? String {
-                vc.otherUserID = userId
-        }
-         */
         if segue.identifier == "feedToProfile",
            let uid = sender as? String,
            let destination = segue.destination as? OtherProfilePage {

@@ -17,7 +17,6 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
     
     
     @IBOutlet weak var captionTextField: UITextField!
-    //@IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var postButton: UIButton!
     
     let curUser = Auth.auth().currentUser!.uid
@@ -79,7 +78,7 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
                         print("Failed to get download URL")
                         return
                     }
-                    // Save downloadURL.absoluteString in your database!
+
                     self.imageLink = downloadURL.absoluteString
                     self.postButton.isEnabled = true
                     

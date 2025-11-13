@@ -14,7 +14,6 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
         
     }
     
-    
     @IBOutlet weak var tableView: UITableView!
     
     var posts: [FeedPost] = []
@@ -30,6 +29,9 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        posts.removeAll()
+        tableView.reloadData()
         fetchPosts()
     }
     
@@ -48,25 +50,21 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
     }
     
     @objc func handleRefresh() {
+        posts.removeAll()
+        tableView.reloadData()
         fetchPosts()
     }
     
     func fetchPosts() {
         posts = []
+        tableView.reloadData()
         ref.child("posts").observeSingleEvent(of: .value) { snapshot, _ in
-            // final array to sort
-            var feedPosts: [FeedPost] = []
-            // unchanged
             var userPrivacyCache: [String: Bool] = [:]
-            let group = DispatchGroup()
 
             for child in snapshot.children {
                 if let childSnapshot = child as? DataSnapshot,
                    let dict = childSnapshot.value as? [String: Any],
                    let postUserId = dict["userId"] as? String {
-
-                    // privacy check
-                    group.enter()  // enter for privacy
 
                     func processPostIfAllowed(isPrivate: Bool) {
                         if !isPrivate {
@@ -80,7 +78,6 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
                             let location = dict["location"] as? String ?? ""
                             let caption = dict["caption"] as? String ?? ""
 
-                            // create post without image first, image lookup will be async
                             let post = FeedPost(
                                 postId: postId,
                                 username: username,
@@ -91,29 +88,29 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
                                 location: location,
                                 caption: caption
                             )
-                            feedPosts.append(post)
+                            DispatchQueue.main.async {
+                                self.posts.append(post)
+                                let insertedIndex = self.posts.count - 1
+                                let indexPath = IndexPath(row: insertedIndex, section: 0)
+                                self.tableView.insertRows(at: [indexPath], with: .automatic)
+                            }
 
-                            // async image download
                             if let url = URL(string: imageUrl), !imageUrl.isEmpty {
-                                // enter each image task
-                                group.enter()
                                 URLSession.shared.dataTask(with: url) { data, _, _ in
                                     if let data = data,
-                                       let image = UIImage(data: data),
-                                       let idx = feedPosts.firstIndex(where: { $0.postId == postId }) {
-                                        feedPosts[idx].postImage = image
+                                       let image = UIImage(data: data) {
+                                        DispatchQueue.main.async {
+                                            if let idx = self.posts.firstIndex(where: { $0.postId == postId }) {
+                                                self.posts[idx].postImage = image
+                                                self.tableView.reloadRows(at: [IndexPath(row: idx, section: 0)], with: .automatic)
+                                            }
+                                        }
                                     }
-                                    // leave when image is done
-                                    group.leave()
                                 }.resume()
                             }
-                            // if no image, post is done
                         }
-                        // leave for privacy
-                        group.leave()
                     }
 
-                    // privacy cache
                     if let cachedPrivacy = userPrivacyCache[postUserId] {
                         processPostIfAllowed(isPrivate: cachedPrivacy)
                     } else {
@@ -126,30 +123,13 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
                     }
                 }
             }
-
-            // When ALL privacy and images finish, sort and reload
-            group.notify(queue: .main) {
-                self.finalizeLocationFeed(feedPosts)
+            DispatchQueue.main.async {
+                self.tableView.refreshControl?.endRefreshing()
             }
         }
     }
 
-    // helper function for ONE-TIME sort and reload after 
-    private func finalizeLocationFeed(_ unsorted: [FeedPost]) {
-        let sorted = unsorted.sorted { $0.timestamp > $1.timestamp }   // newest first
-        self.posts = sorted
-        self.tableView.reloadData()
-        self.tableView.refreshControl?.endRefreshing()
-    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        /*
-        if segue.identifier == "feedToProfile",
-            let vc = segue.destination as? OtherProfilePage,
-            let userId = sender as? String {
-                vc.otherUserID = userId
-        }
-         */
         if segue.identifier == "locationFeedToProfile",
            let uid = sender as? String,
            let destination = segue.destination as? OtherProfilePage {
@@ -210,7 +190,6 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
             }
         }
         
-        // performSegue(withIdentifier: "feedToProfile", sender: post.username)
     }
     
     

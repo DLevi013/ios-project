@@ -48,14 +48,31 @@ class EditProfileViewController: UIViewController {
         let currentUserID = Auth.auth().currentUser!.uid
 
         let ref = Database.database().reference().child("users").child(currentUserID)
+        
+        var message = "No New UserId or Bio Provided"
             
             if let newUsername = userIDTextField.text, !newUsername.isEmpty {
                 ref.child("username").setValue(newUsername)
+                message = "New UserId Saved"
             }
             
             if let newBio = bioTextField.text, !newBio.isEmpty {
                 ref.child("bio").setValue(newBio)
+                if message != "" {
+                    message = "New UserID and Bio Saved"
+                } else {
+                    message = "New Bio Saved"
+                }
             }
+        
+        let alertController = UIAlertController(title: "Edit Profile", message: message, preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "OK", style: .default)
+        
+        alertController.addAction(okAction)
+        
+        alertController.preferredAction = okAction
+        present(alertController, animated: true)
     }
     
 
