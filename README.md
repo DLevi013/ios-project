@@ -9,7 +9,7 @@
 
 - Ian Tran
 
-**Instructions for running the code:**
+## **Instructions for running the code:**
 
 Here’s users you can use to look at existing functionality for feeds and friend system
 
@@ -21,7 +21,7 @@ Here’s users you can use to look at existing functionality for feeds and frien
 
 - Password: 12341234
 
-**Contributions:**
+## **Contributions:**
 
 - Daniel Levi (Release: 25%, Overall: 25%)
 
@@ -202,6 +202,6 @@ Here’s users you can use to look at existing functionality for feeds and frien
     - Added functionality to redirect user to display restaurant info when checking location of post 
 
 
-**Deviations:**
+## **Deviations:**
 
 - We have a small problem with posts right now. If you make a post and then change your name, the name on that post will not reflect what you just changed it to. This is due to how we are storing posts and who posted what. This is a small issue; we just don’t have time to fix it right now. If you don’t change your name, however, the post will show the correct username of the person who posted. 
