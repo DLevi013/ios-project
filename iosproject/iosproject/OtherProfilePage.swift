@@ -69,7 +69,7 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
                            let postUserId = dict["userId"] as? String,
                            postUserId == self.otherUserID {
                             let postId = dict["postId"] as? String ?? childSnapshot.key
-                            let username = dict["username"] as? String ?? ""
+                            // let username = dict["username"] as? String ?? ""
                             let imageUrl = dict["image"] as? String ?? ""
                             let timestamp = dict["timestamp"] as? Double ?? 0
                             let likeCount = (dict["likes"] as? [String])?.count ?? 0
@@ -77,30 +77,36 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
                             let commentObjs = commentsArray.compactMap { Comment.from(dict: $0) }
                             let location = dict["location"] as? String ?? ""
                             let caption = dict["caption"] as? String ?? ""
-                            if let url = URL(string: imageUrl) {
-                                URLSession.shared.dataTask(with: url) { data, _, _ in
-                                    if let data = data, let image = UIImage(data: data) {
-                                        DispatchQueue.main.async {
-                                            let post = FeedPost(
-                                                postId: postId,
-                                                username: username,
-                                                postImage: image,
-                                                timestamp: Int(timestamp),
-                                                likeCount: likeCount,
-                                                comments: commentObjs,
-                                                location: location,
-                                                caption: caption
-                                            )
-                                            feedPosts.append(post)
-                                            self.posts = feedPosts
-                                            self.otherGridOfPosts.reloadData()
+                            
+                            UsernameCache.shared.getUsername(for: postUserId) { username in
+                                if let url = URL(string: imageUrl) {
+                                    URLSession.shared.dataTask(with: url) { data, _, _ in
+                                        if let data = data, let image = UIImage(data: data) {
+                                            DispatchQueue.main.async {
+                                                let post = FeedPost(
+                                                    postId: postId,
+                                                    userId: postUserId,
+                                                    username: username ?? "Anonymous",
+                                                    postImage: image,
+                                                    timestamp: Int(timestamp),
+                                                    likeCount: likeCount,
+                                                    comments: commentObjs,
+                                                    location: location,
+                                                    caption: caption
+                                                )
+                                                feedPosts.append(post)
+                                                self.posts = feedPosts
+                                                self.otherGridOfPosts.reloadData()
+                                            }
                                         }
-                                    }
-                                }.resume()
-                            } else {
-                                print("No post found!")
+                                    }.resume()
+                                } else {
+                                    print("No post found!")
+                                }
                             }
                         }
+                            
+                            
                     }
                     DispatchQueue.main.async {
                         self.posts = feedPosts

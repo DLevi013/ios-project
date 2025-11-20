@@ -68,7 +68,18 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
             showError(title: "Invalid comment", message: "Comment cannot be empty.")
             return
         }
-        let comment = Comment(commentId: UUID().uuidString, username: currentUserName, text: commentText, timestamp: Date())
+        
+        guard let currentUserId = Auth.auth().currentUser?.uid else {
+            showError(title: "Invalid user", message: "User not authenticated.")
+            return
+        }
+        let comment = Comment(
+            commentId: UUID().uuidString,
+            userId: currentUserId,
+            text: commentText,
+            timestamp: Date(),
+            username: currentUserName
+        )
         self.comments.append(comment)
         let ref = Database.database().reference()
         let postRef = ref.child("posts").child(post!.postId)

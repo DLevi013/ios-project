@@ -58,6 +58,9 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
     func fetchPosts() {
         posts = []
         tableView.reloadData()
+        var tempPosts: [FeedPost] = []
+        let dispatchGroup = DispatchGroup()
+        
         ref.child("posts").observeSingleEvent(of: .value) { snapshot, _ in
             var userPrivacyCache: [String: Bool] = [:]
 
@@ -66,10 +69,11 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
                    let dict = childSnapshot.value as? [String: Any],
                    let postUserId = dict["userId"] as? String {
 
+                    dispatchGroup.enter()
                     func processPostIfAllowed(isPrivate: Bool) {
                         if !isPrivate {
                             let postId = dict["postId"] as? String ?? ""
-                            let username = dict["username"] as? String ?? ""
+                            // let username = dict["username"] as? String ?? ""
                             let imageUrl = dict["image"] as? String ?? ""
                             let timestamp = dict["timestamp"] as? Double ?? 0
                             let likeCount = (dict["likes"] as? [String])?.count ?? 0
@@ -78,36 +82,61 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
                             let location = dict["location"] as? String ?? ""
                             let caption = dict["caption"] as? String ?? ""
 
-                            let post = FeedPost(
-                                postId: postId,
-                                username: username,
-                                postImage: nil,
-                                timestamp: Int(timestamp),
-                                likeCount: likeCount,
-                                comments: commentObjs,
-                                location: location,
-                                caption: caption
-                            )
-                            DispatchQueue.main.async {
-                                self.posts.append(post)
-                                let insertedIndex = self.posts.count - 1
-                                let indexPath = IndexPath(row: insertedIndex, section: 0)
-                                self.tableView.insertRows(at: [indexPath], with: .automatic)
-                            }
-
-                            if let url = URL(string: imageUrl), !imageUrl.isEmpty {
-                                URLSession.shared.dataTask(with: url) { data, _, _ in
-                                    if let data = data,
-                                       let image = UIImage(data: data) {
-                                        DispatchQueue.main.async {
-                                            if let idx = self.posts.firstIndex(where: { $0.postId == postId }) {
-                                                self.posts[idx].postImage = image
-                                                self.tableView.reloadRows(at: [IndexPath(row: idx, section: 0)], with: .automatic)
-                                            }
+                            UsernameCache.shared.getUsername(for: postUserId) { username in
+                                let post = FeedPost(
+                                    postId: postId,
+                                    userId: postUserId,
+                                    username: username ?? "Anon",
+                                    postImage: nil,
+                                    timestamp: Int(timestamp),
+                                    likeCount: likeCount,
+                                    comments: commentObjs,
+                                    location: location,
+                                    caption: caption
+                                )
+                                
+                                /*DispatchQueue.main.async {
+                                    self.posts.append(post)
+                                    let insertedIndex = self.posts.count - 1
+                                    let indexPath = IndexPath(row: insertedIndex, section: 0)
+                                    self.tableView.insertRows(at: [indexPath], with: .automatic)
+                                }
+                                */
+                                tempPosts.append(post)
+                                
+                                
+                                // username for comments
+                                let commentUserIds = Set(commentObjs.map { $0.userId})
+                                UsernameCache.shared.getUsernames(for: Array(commentUserIds)) { usernames in
+                                    if let idx = tempPosts.firstIndex(where: {$0.postId == postId}) {
+                                        for (commentIdx, var comment) in tempPosts[idx].comments.enumerated() {
+                                            comment.username = usernames[comment.userId]
+                                            tempPosts[idx].comments[commentIdx] = comment
                                         }
                                     }
-                                }.resume()
+                                }
+                                if let url = URL(string: imageUrl), !imageUrl.isEmpty {
+                                    URLSession.shared.dataTask(with: url) { data, _, _ in
+                                        if let data = data,
+                                           let image = UIImage(data: data) {
+                                            if let idx = tempPosts.firstIndex(where: { $0.postId == postId }) {
+                                                tempPosts[idx].postImage = image
+                                                DispatchQueue.main.async {
+                                                    if let displayIdx = self.posts.firstIndex(where: { $0.postId == postId}) {
+                                                        self.posts[displayIdx].postImage = image
+                                                        self.tableView.reloadRows(at: [IndexPath(row: idx, section: 0)], with: .automatic)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }.resume()
+                                }
+                                // inside the post, if privacy check passed
+                                dispatchGroup.leave()
                             }
+                        } else {
+                            // privacy check failed, leave group without adding post
+                            dispatchGroup.leave()
                         }
                     }
 
@@ -123,7 +152,9 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
                     }
                 }
             }
-            DispatchQueue.main.async {
+            dispatchGroup.notify(queue: .main) {
+                self.posts = tempPosts.sorted { $0.timestamp > $1.timestamp }
+                self.tableView.reloadData()
                 self.tableView.refreshControl?.endRefreshing()
             }
         }
@@ -175,6 +206,8 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
     func didTapProfileButton(on cell: PostTableViewCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         let post = posts[indexPath.row]
+        let userId = post.userId
+        /*
         let username = post.username
         
         let usersRef = Database.database().reference().child("users")
@@ -184,10 +217,9 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
                 return
             }
             let uid = firstChild.key
-            print("FOUND UID: \(uid)")
-            DispatchQueue.main.async {
-                self.performSegue(withIdentifier: "locationFeedToProfile", sender: uid)
-            }
+            print("FOUND UID: \(uid)")*/
+        DispatchQueue.main.async {
+            self.performSegue(withIdentifier: "locationFeedToProfile", sender: userId)
         }
         
     }

@@ -9,7 +9,8 @@ import UIKit
 
 struct FeedPost {
     let postId: String
-    let username: String
+    let userId: String
+    var username: String?
     var postImage: UIImage?
     let timestamp: Int
     var likeCount: Int

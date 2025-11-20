@@ -132,7 +132,7 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
         let locationId = makeLocationId(lat: self.longitude!, lon: self.latitude!, name: self.locationName)
         
         let ref = Database.database().reference()
-        ref.child("users").child(curUser).child("username").observeSingleEvent(of: .value) { snapshot in
+        /*ref.child("users").child(curUser).child("username").observeSingleEvent(of: .value) { snapshot in
             guard let userName = snapshot.value as? String else {
                 let controller = UIAlertController(title: "Error", message: "Could not fetch username.", preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "OK", style: .default)
@@ -140,7 +140,7 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
                 controller.preferredAction = okAction
                 self.present(controller, animated:true)
                 return
-            }
+            }*/
             let postsRef = ref.child("posts").childByAutoId()
             let postId = postsRef.key ?? UUID().uuidString
             let timestamp = Date().timeIntervalSince1970
@@ -148,7 +148,6 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
             let postData: [String: Any] = [
                 "postId": postId,
                 "userId": self.curUser,
-                "username": userName,
                 "image": imageLink,
                 "timestamp": timestamp,
                 "caption": caption,
@@ -191,8 +190,6 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
                 self.present(controller, animated:true)
             }
         }
-
-    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "postToDiscoverSegue" {

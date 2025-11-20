@@ -76,7 +76,7 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
                        let postUserId = dict["userId"] as? String,
                        postUserId == curUser {
                         let postId = dict["postId"] as? String ?? childSnapshot.key
-                        let username = dict["username"] as? String ?? ""
+                        // let username = dict["username"] as? String ?? ""
                         let imageUrl = dict["image"] as? String ?? ""
                         let timestamp = dict["timestamp"] as? Double ?? 0
                         let likeCount = (dict["likes"] as? [String])?.count ?? 0
@@ -86,32 +86,35 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
 
                         let location = dict["location"] as? String ?? ""
                         let caption = dict["caption"] as? String ?? ""
-
-                        if let url = URL(string: imageUrl) {
-                            URLSession.shared.dataTask(with: url) { data, _, _ in
-                                if let data = data, let image = UIImage(data: data) {
-                                    DispatchQueue.main.async {
-                                        let post = FeedPost(
-                                            postId: postId,
-                                            username: username,
-                                            postImage: image,
-                                            timestamp: Int(timestamp),
-                                            likeCount: likeCount,
-                                            comments: commentObjs,
-                                            location: location,
-                                            caption: caption
-                                        )
-                                        feedPosts.append(post)
-                                        self.posts = feedPosts
-                                        self.gridOfPosts.reloadData()
+                        
+                        UsernameCache.shared.getUsername(for: postUserId) {username in
+                            if let url = URL(string: imageUrl) {
+                                URLSession.shared.dataTask(with: url) { data, _, _ in
+                                    if let data = data, let image = UIImage(data: data) {
+                                        DispatchQueue.main.async {
+                                            let post = FeedPost(
+                                                postId: postId,
+                                                userId: postUserId,
+                                                postImage: image,
+                                                timestamp: Int(timestamp),
+                                                likeCount: likeCount,
+                                                comments: commentObjs,
+                                                location: location,
+                                                caption: caption
+                                            )
+                                            feedPosts.append(post)
+                                            self.posts = feedPosts
+                                            self.gridOfPosts.reloadData()
+                                        }
                                     }
-                                }
-                            }.resume()
-                        } else {
-                            print("No post found!")
-                            
+                                }.resume()
+                            } else {
+                                print("No post found!")
+                                
+                            }
                         }
                     }
+                        
                 }
 
                 DispatchQueue.main.async {
