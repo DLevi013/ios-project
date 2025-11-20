@@ -30,6 +30,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
     override func viewWillAppear(_ animated: Bool) {
         posts = []
         tableView.reloadData()
+        UsernameCache.shared.clearCache()
         fetchPosts()
     }
     
@@ -50,6 +51,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
     @objc func handleRefresh() {
         posts = []
         tableView.reloadData()
+        UsernameCache.shared.clearCache()
         fetchPosts()
     }
     

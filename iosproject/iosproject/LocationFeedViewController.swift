@@ -32,6 +32,7 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
         super.viewWillAppear(animated)
         posts.removeAll()
         tableView.reloadData()
+        UsernameCache.shared.clearCache()
         fetchPosts()
     }
     
@@ -52,6 +53,7 @@ class LocationFeedViewController: ModeViewController, UITableViewDataSource, UIT
     @objc func handleRefresh() {
         posts.removeAll()
         tableView.reloadData()
+        UsernameCache.shared.clearCache()
         fetchPosts()
     }
     
