@@ -1,15 +1,16 @@
 //
-//  SettingsPage.swift
+//  ModeTableViewController.swift
 //  iosproject
 //
-//  Created by Daniel Levi on 10/17/25.
+//  Created by Isaac Thomas on 11/20/25.
 //
 
 import UIKit
 import FirebaseAuth
 import FirebaseDatabase
 
-class SettingsPage: ModeViewController {
+class ModeTableViewController: UITableViewController {
+
     var isPrivate: Bool = false
     var isDark: Bool = false
     var isNotif: Bool = false
@@ -17,7 +18,9 @@ class SettingsPage: ModeViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        applyTheme()
+        NotificationCenter.default.addObserver(self, selector: #selector(applyTheme), name: .themeChanged, object: nil)
+        // Settings logic from former SettingsPage
         var ref: DatabaseReference!
         ref = Database.database().reference()
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -38,6 +41,39 @@ class SettingsPage: ModeViewController {
             }
         }
     }
+    
+    @objc func applyTheme() {
+        view.backgroundColor = AppColors.screen
+        applyThemeRecursively(to: view)
+    }
+
+    private func applyThemeRecursively(to view: UIView) {
+        for subview in view.subviews {
+            switch subview {
+            case let label as UILabel:
+                label.textColor = AppColors.text
+            case let button as UIButton:
+                button.tintColor = AppColors.text
+            case let table as UITableView:
+                table.backgroundColor = AppColors.secondaryBackground
+            case let tableCell as UITableViewCell:
+                tableCell.backgroundColor = AppColors.secondaryBackground
+            case let searchBarUI as UISearchBar:
+                searchBarUI.barTintColor = AppColors.secondaryBackground
+            case let collectionView as UICollectionView:
+                collectionView.backgroundColor = AppColors.screen
+            case let collectionViewCell as UICollectionViewCell:
+                collectionViewCell.backgroundColor = AppColors.screen
+            case let selectedSegmentedControl as UISegmentedControl:
+                selectedSegmentedControl.selectedSegmentTintColor = AppColors.segmentedControlIndex
+            default:
+                if subview.tag == 100 {
+                    subview.backgroundColor = AppColors.banner
+                }
+            }
+            applyThemeRecursively(to: subview)
+        }
+    }
 
     @IBAction func pressedProfileButton(_ sender: Any) {
         self.performSegue(withIdentifier: "settingsToProfileSegue", sender: nil)
@@ -45,7 +81,6 @@ class SettingsPage: ModeViewController {
 
     @IBAction func darkSwitch(_ sender: UISwitch) {
         isDark = sender.isOn
-        // print("Darkmode: \(isDark)")
         ThemeManager.shared.toggleMode(isDark: isDark)
     }
 
@@ -59,17 +94,14 @@ class SettingsPage: ModeViewController {
         print("Private: \(isPrivate)")
         let ref = Database.database().reference()
         guard let uid = Auth.auth().currentUser?.uid else {
-            // if in here, something seriously went wrong (inside a session without UID)
             self.showError(title: "Bad User", message: "Invalid Session")
             self.performSegue(withIdentifier: "settingsLogoutSegue", sender: nil)
-            // might be overkill, but just make the user log out, and have them login with a new session
             return
         }
         ref.child("users").child(uid).child("isPrivate").setValue(isPrivate) { error, _ in
             if let error = error {
                 self.showError(title: "Error updating private", message: "error: \(error.localizedDescription)")
             } else {
-                // for debugging only
                 print("Successfully set isPrivate to \(self.isPrivate) in firebase.")
             }
         }
@@ -86,7 +118,6 @@ class SettingsPage: ModeViewController {
             try Auth.auth().signOut()
             self.performSegue(withIdentifier: "settingsLogoutSegue", sender: nil)
         } catch _ as NSError {
-            // this shouldn't happen
             print("No signin detected.")
         }
     }
