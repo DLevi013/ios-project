@@ -575,8 +575,8 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view tag="100" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lrv-uh-CBa">
-                                <rect key="frame" x="-75" y="0.0" width="553" height="102"/>
+                            <view tag="100" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lrv-uh-CBa">
+                                <rect key="frame" x="-75" y="0.0" width="515" height="102"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="white_logo_text" translatesAutoresizingMaskIntoConstraints="NO" id="gg6-GZ-Jjs">
                                         <rect key="frame" x="59" y="12" width="186" height="116"/>
@@ -584,6 +584,10 @@
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="515" id="ecP-NI-cTS"/>
+                                    <constraint firstAttribute="height" constant="102" id="m2X-dq-be2"/>
+                                </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Desciption" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kfd-hM-cjS">
                                 <rect key="frame" x="165" y="160" width="139" height="65"/>
@@ -699,8 +703,10 @@
                         <viewLayoutGuide key="safeArea" id="Blh-KC-ZaE"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="lrv-uh-CBa" firstAttribute="trailing" secondItem="Blh-KC-ZaE" secondAttribute="trailing" id="5jQ-U7-FHW"/>
                             <constraint firstItem="L4R-Es-CcX" firstAttribute="leading" secondItem="kfd-hM-cjS" secondAttribute="trailing" constant="3" id="5vh-dB-HxF"/>
                             <constraint firstItem="kfd-hM-cjS" firstAttribute="leading" secondItem="hE0-U9-sdd" secondAttribute="trailing" constant="22" id="Awi-D7-0MV"/>
+                            <constraint firstItem="lrv-uh-CBa" firstAttribute="top" secondItem="RH5-0f-bx0" secondAttribute="top" id="CCP-Hi-0in"/>
                             <constraint firstItem="kfd-hM-cjS" firstAttribute="leading" secondItem="H82-UR-Chq" secondAttribute="leading" id="FqO-Za-PUT"/>
                             <constraint firstItem="hE0-U9-sdd" firstAttribute="top" secondItem="lrv-uh-CBa" secondAttribute="bottom" constant="13" id="Hvh-ab-c3s"/>
                             <constraint firstItem="kfd-hM-cjS" firstAttribute="top" secondItem="H82-UR-Chq" secondAttribute="bottom" constant="8" id="IQN-mk-7j6"/>
@@ -1539,8 +1545,8 @@
         <segue reference="cXD-TO-S7o"/>
         <segue reference="xCa-pO-K31"/>
         <segue reference="Ww1-1g-ExL"/>
-        <segue reference="Wcn-2n-62O"/>
-        <segue reference="xv7-d8-adJ"/>
+        <segue reference="GaF-N1-Ow1"/>
+        <segue reference="Bic-WB-kOL"/>
         <segue reference="c0R-CK-ZJv"/>
     </inferredMetricsTieBreakers>
     <resources>
