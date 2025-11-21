@@ -15,6 +15,7 @@ var idCounter = 4
 
 class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LocationSelectionDelegate{
     
+    @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var captionTextField: UITextField!
     @IBOutlet weak var postButton: UIButton!
     
@@ -38,9 +39,15 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
                 self.curUserName = username
             }
         }
+        
+        imageView.isUserInteractionEnabled = true
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(recognizeTapGesture(recognizer:)))
+        imageView.addGestureRecognizer(tapRecognizer)
+        
+        imageView.image = UIImage(named: "placeholder-square")
     }
     
-    @IBAction func addImagePressed(_ sender: Any) {
+    @IBAction func recognizeTapGesture(recognizer: UITapGestureRecognizer){
         let photoPicker = UIImagePickerController()
         photoPicker.delegate = self
         photoPicker.sourceType = .photoLibrary
@@ -49,6 +56,7 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let selectedImage = info[.originalImage] as? UIImage {
+            imageView.image = selectedImage
             guard let imageData = selectedImage.jpegData(compressionQuality: 0.8) else {
                 dismiss(animated: true, completion: nil)
                 return
