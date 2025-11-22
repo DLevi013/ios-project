@@ -59,6 +59,7 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
         } else {
             imageView.image = UIImage(named: "placeholder-square")
         }
+        imageLink = ""
     }
     
     @IBAction func recognizeTapGesture(recognizer: UITapGestureRecognizer){
@@ -101,12 +102,6 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
 
                     self.imageLink = downloadURL.absoluteString
                     self.postButton.isEnabled = true
-                    
-                    let controller = UIAlertController(title: "Add Image", message: "Image successfully added.", preferredStyle: .alert)
-                    let okAction = UIAlertAction(title: "OK", style: .default)
-                    controller.addAction(okAction)
-                    controller.preferredAction = okAction
-                    self.present(controller, animated:true)
                 }
             }
             
@@ -154,15 +149,6 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
         let locationId = makeLocationId(lat: self.longitude!, lon: self.latitude!, name: self.locationName)
         
         let ref = Database.database().reference()
-        /*ref.child("users").child(curUser).child("username").observeSingleEvent(of: .value) { snapshot in
-            guard let userName = snapshot.value as? String else {
-                let controller = UIAlertController(title: "Error", message: "Could not fetch username.", preferredStyle: .alert)
-                let okAction = UIAlertAction(title: "OK", style: .default)
-                controller.addAction(okAction)
-                controller.preferredAction = okAction
-                self.present(controller, animated:true)
-                return
-            }*/
             let postsRef = ref.child("posts").childByAutoId()
             let postId = postsRef.key ?? UUID().uuidString
             let timestamp = Date().timeIntervalSince1970

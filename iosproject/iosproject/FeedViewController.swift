@@ -18,6 +18,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
     var posts: [FeedPost] = []
     let postTableViewCellIdentifier = "PostCell"
     let ref = Database.database().reference()
+    let imageCache = NSCache<NSString, UIImage>()
     var selectedIndex: Int?
     
     override func viewDidLoad() {
@@ -87,8 +88,6 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
                        friendUIDs.contains(postUserId) {
                         dispatchGroup.enter()
                         let postId = dict["postId"] as? String ?? ""
-                        // let username = dict["username"] as? String ?? ""
-                        let imageUrl = dict["image"] as? String ?? ""
                         let timestamp = dict["timestamp"] as? Double ?? 0
                         let likeCount = (dict["likes"] as? [String])?.count ?? 0
                         
@@ -112,12 +111,6 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
                             )
                             tempPosts.append(post)
                             dispatchGroup.leave()
-                            /*
-                            DispatchQueue.main.async {
-                                self.posts.append(post)
-                                let newIndexPath = IndexPath(row: self.posts.count - 1, section: 0)
-                                self.tableView.insertRows(at: [newIndexPath], with: .automatic)
-                            }*/
                         }
                         
                         // Get usernames for comments
@@ -129,27 +122,6 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
                                     self.posts[idx].comments[commentIdx] = comment
                                 }
                             }
-                        }
-
-                        
-                        if let url = URL(string: imageUrl), !imageUrl.isEmpty {
-                            URLSession.shared.dataTask(with: url) { data, _, _ in
-                                if let data = data,
-                                   let image = UIImage(data: data) {
-                                    if let idx = tempPosts.firstIndex(where: { $0.postId == postId }) {
-                                        tempPosts[idx].postImage = image
-                                        // Update UI if posts are already sorted and displayed
-                                        DispatchQueue.main.async {
-                                            if let displayIdx = self.posts.firstIndex(where: { $0.postId == postId }) {
-                                                self.posts[displayIdx].postImage = image
-                                                let indexPath = IndexPath(row: displayIdx, section: 0)
-                                                self.tableView.reloadRows(at: [indexPath], with: .none)
-                                            }
-                                        }
-
-                                    }
-                                }
-                            }.resume()
                         }
                     }
                 }
@@ -197,20 +169,127 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         let post = posts[indexPath.row]
         cell.usernameLabel.text = post.username
         
-        // IMPLEMENT DATE/TIME SHOWING LATER(like time only if its current day, yesterday, then month and days without year for current year, then full date after that.
-        let dateFormatter = DateFormatter()
-        let date = Date(timeIntervalSince1970: TimeInterval(post.timestamp))
-        dateFormatter.dateStyle = .medium
-        cell.dateLabel.text = dateFormatter.string(from: date)
+        cell.dateLabel.text = formattedPostDate(timestamp: post.timestamp)
         
         cell.likeCountLabel.text = String(post.likeCount)
         cell.commentCountLabel.text = String(post.comments.count)
         
-        cell.postImageView.image = post.postImage
         cell.captionLabel.text = String(post.caption)
         cell.commentButton.tag = indexPath.row
         cell.delegate = self
+        
+        // Placeholder image while loading
+        let isDark = traitCollection.userInterfaceStyle == .dark
+        let placeholderName = isDark ? "dark-placeholder" : "placeholder-square"
+        cell.postImageView.image = UIImage(named: placeholderName)
+        
+        // Load image if not already loaded
+        if let existingImage = post.postImage {
+            cell.postImageView.image = existingImage
+        } else {
+            // Need to get imageUrl from Firebase for this postId
+            loadImageForPost(postId: post.postId) { [weak self] image in
+                guard let self = self else { return }
+                DispatchQueue.main.async {
+                    if let image = image {
+                        if let idx = self.posts.firstIndex(where: { $0.postId == post.postId }) {
+                            self.posts[idx].postImage = image
+                            // Update cell image only if the cell is still visible and corresponds to the same postId
+                            if let visibleCell = self.tableView.cellForRow(at: IndexPath(row: idx, section: 0)) as? PostTableViewCell {
+                                visibleCell.postImageView.image = image
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
         return cell
+    }
+    
+    func loadImageForPost(postId: String, completion: @escaping (UIImage?) -> Void) {
+        // Check if postId is valid and find the post in posts array to avoid mismatch
+        guard let postIndex = posts.firstIndex(where: { $0.postId == postId }) else {
+            completion(nil)
+            return
+        }
+        
+        // If post already has image, return it immediately
+        if let cachedImage = posts[postIndex].postImage {
+            completion(cachedImage)
+            return
+        }
+        
+        // Fetch image URL from Firebase
+        let postRef = ref.child("posts").child(postId).child("image")
+        postRef.observeSingleEvent(of: .value) { [weak self] snapshot, _ in
+            guard let self = self else {
+                completion(nil)
+                return
+            }
+            guard let imageUrl = snapshot.value as? String, !imageUrl.isEmpty else {
+                completion(nil)
+                return
+            }
+            
+            let cacheKey = imageUrl as NSString
+            if let cachedImage = self.imageCache.object(forKey: cacheKey) {
+                completion(cachedImage)
+                return
+            }
+            
+            // Download image from URL
+            guard let url = URL(string: imageUrl) else {
+                completion(nil)
+                return
+            }
+            
+            URLSession.shared.dataTask(with: url) { data, _, _ in
+                if let data = data, let image = UIImage(data: data) {
+                    self.imageCache.setObject(image, forKey: cacheKey)
+                    completion(image)
+                } else {
+                    completion(nil)
+                }
+            }.resume()
+        }
+    }
+    
+    private func formattedPostDate(timestamp: Int) -> String {
+        let postDate = Date(timeIntervalSince1970: TimeInterval(timestamp))
+        let now = Date()
+        let calendar = Calendar.current
+        
+        let secondsAgo = Int(now.timeIntervalSince(postDate))
+        
+        if secondsAgo < 60 {
+            return "Just now"
+        }
+        
+        let minutesAgo = secondsAgo / 60
+        if minutesAgo < 60 {
+            return "\(minutesAgo) min ago"
+        }
+        
+        let hoursAgo = minutesAgo / 60
+        if hoursAgo < 24 && calendar.isDate(postDate, equalTo: now, toGranularity: .day) {
+            return "\(hoursAgo) hr ago"
+        }
+        
+        if calendar.isDateInYesterday(postDate) {
+            return "Yesterday"
+        }
+        
+        // Days ago calculation
+        if let daysAgo = calendar.dateComponents([.day], from: postDate, to: now).day, daysAgo < 7 {
+            return "\(daysAgo) days ago"
+        }
+        
+        // Fallback to full date format
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        return dateFormatter.string(from: postDate)
     }
     
     func didTapProfileButton(on cell: PostTableViewCell) {
@@ -218,21 +297,11 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         let post = posts[indexPath.row]
         let userId = post.userId
         
-        /*let usersRef = Database.database().reference().child("users")
-        usersRef.queryOrdered(byChild: "username").queryEqual(toValue:username).observeSingleEvent(of: .value) { snapshot in
-            guard let firstChild = snapshot.children.allObjects.first as? DataSnapshot else {
-                print("DEBUG: NO USER \(username ?? "ANON") FOUND")
-                return
-            }
-            let uid = firstChild.key
-            print("FOUND UID: \(uid)")
-         */
             DispatchQueue.main.async {
                 self.performSegue(withIdentifier: "feedToProfile", sender: userId)
             }
         }
         
-        // performSegue(withIdentifier: "feedToProfile", sender: post.username)
     
     func didTapLikeButton(on cell: PostTableViewCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
