@@ -16,6 +16,10 @@ class EditProfileViewController: UIViewController {
     @IBOutlet weak var bioTextField: UITextField!
     @IBOutlet weak var saveChangesButton: UIButton!
 
+    @IBOutlet weak var oldUserIDField: UITextField!
+    
+    @IBOutlet weak var oldBioField: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loadCurrentUserData()
@@ -28,10 +32,12 @@ class EditProfileViewController: UIViewController {
         let ref = Database.database().reference().child("users").child(curUser)
         ref.observeSingleEvent(of: .value) { snapshot in
             if let username = snapshot.childSnapshot(forPath: "username").value as? String {
-                self.userIDTextField.placeholder = username
+                self.oldUserIDField.placeholder = username
+                self.oldUserIDField.isUserInteractionEnabled = false
             }
             if let bio = snapshot.childSnapshot(forPath: "bio").value as? String {
-                self.bioTextField.placeholder = bio
+                self.oldBioField.placeholder = bio
+                self.oldBioField.isUserInteractionEnabled = false
             }
         }
     }
