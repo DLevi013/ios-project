@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 import MapKit
 import Firebase
@@ -87,34 +88,19 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
                         let location = dict["location"] as? String ?? ""
                         let caption = dict["caption"] as? String ?? ""
                         
-                        UsernameCache.shared.getUsername(for: postUserId) {username in
-                            if let url = URL(string: imageUrl) {
-                                URLSession.shared.dataTask(with: url) { data, _, _ in
-                                    if let data = data, let image = UIImage(data: data) {
-                                        DispatchQueue.main.async {
-                                            let post = FeedPost(
-                                                postId: postId,
-                                                userId: postUserId,
-                                                postImage: image,
-                                                timestamp: Int(timestamp),
-                                                likeCount: likeCount,
-                                                comments: commentObjs,
-                                                location: location,
-                                                caption: caption
-                                            )
-                                            feedPosts.append(post)
-                                            self.posts = feedPosts
-                                            self.gridOfPosts.reloadData()
-                                        }
-                                    }
-                                }.resume()
-                            } else {
-                                print("No post found!")
-                                
-                            }
-                        }
+                        // Store imageUrl in FeedPost; do NOT download image here
+                        let post = FeedPost(
+                            postId: postId,
+                            userId: postUserId,
+                            imageUrl: imageUrl, // Assuming FeedPost now has an imageUrl property
+                            timestamp: Int(timestamp),
+                            likeCount: likeCount,
+                            comments: commentObjs,
+                            location: location,
+                            caption: caption
+                        )
+                        feedPosts.append(post)
                     }
-                        
                 }
 
                 DispatchQueue.main.async {
@@ -183,7 +169,15 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = gridOfPosts.dequeueReusableCell(withReuseIdentifier: "PostCell", for: indexPath) as! Post
-        cell.singlePost.image = posts[indexPath.item].postImage
+        
+        // Use SDWebImage to load images asynchronously from URL with placeholder
+        let imageUrlString = posts[indexPath.item].imageUrl
+        if let imageUrlString = imageUrlString, let url = URL(string: imageUrlString) {
+            cell.singlePost.sd_setImage(with: url, placeholderImage: UIImage(named: "dark-placeholder"))
+        } else {
+            cell.singlePost.image = UIImage(named: "dark-placeholder")
+        }
+        
         return cell
     }
 

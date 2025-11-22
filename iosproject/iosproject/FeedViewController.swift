@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseDatabase
 import FirebaseAuth
+import SDWebImage
 
 class FeedViewController: ModeViewController, UITableViewDataSource, UITableViewDelegate, PostTableViewCellDelegate {
     
@@ -18,7 +19,6 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
     var posts: [FeedPost] = []
     let postTableViewCellIdentifier = "PostCell"
     let ref = Database.database().reference()
-    let imageCache = NSCache<NSString, UIImage>()
     var selectedIndex: Int?
     
     override func viewDidLoad() {
@@ -97,17 +97,21 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
                         let location = dict["locationId"] as? String ?? ""
                         let caption = dict["caption"] as? String ?? ""
                         
+                        let imageUrlString = dict["image"] as? String
+                        
                         UsernameCache.shared.getUsername(for: postUserId) { username in
                             let post = FeedPost(
                                 postId: postId,
                                 userId: postUserId,
                                 username: username ?? "Anon",
                                 postImage: nil,
+                                imageUrl: imageUrlString,
                                 timestamp: Int(timestamp),
                                 likeCount: likeCount,
                                 comments: commentObjs,
                                 location: location,
-                                caption: caption
+                                caption: caption,
+                
                             )
                             tempPosts.append(post)
                             dispatchGroup.leave()
@@ -181,78 +185,15 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         // Placeholder image while loading
         let isDark = traitCollection.userInterfaceStyle == .dark
         let placeholderName = isDark ? "dark-placeholder" : "placeholder-square"
-        cell.postImageView.image = UIImage(named: placeholderName)
+        let placeholderImage = UIImage(named: placeholderName)
         
-        // Load image if not already loaded
-        if let existingImage = post.postImage {
-            cell.postImageView.image = existingImage
+        if let imageUrlString = post.imageUrl, let url = URL(string: imageUrlString) {
+            cell.postImageView.sd_setImage(with: url, placeholderImage: placeholderImage)
         } else {
-            // Need to get imageUrl from Firebase for this postId
-            loadImageForPost(postId: post.postId) { [weak self] image in
-                guard let self = self else { return }
-                DispatchQueue.main.async {
-                    if let image = image {
-                        if let idx = self.posts.firstIndex(where: { $0.postId == post.postId }) {
-                            self.posts[idx].postImage = image
-                            // Update cell image only if the cell is still visible and corresponds to the same postId
-                            if let visibleCell = self.tableView.cellForRow(at: IndexPath(row: idx, section: 0)) as? PostTableViewCell {
-                                visibleCell.postImageView.image = image
-                            }
-                        }
-                    }
-                }
-            }
+            cell.postImageView.image = placeholderImage
         }
         
         return cell
-    }
-    
-    func loadImageForPost(postId: String, completion: @escaping (UIImage?) -> Void) {
-        // Check if postId is valid and find the post in posts array to avoid mismatch
-        guard let postIndex = posts.firstIndex(where: { $0.postId == postId }) else {
-            completion(nil)
-            return
-        }
-        
-        // If post already has image, return it immediately
-        if let cachedImage = posts[postIndex].postImage {
-            completion(cachedImage)
-            return
-        }
-        
-        // Fetch image URL from Firebase
-        let postRef = ref.child("posts").child(postId).child("image")
-        postRef.observeSingleEvent(of: .value) { [weak self] snapshot, _ in
-            guard let self = self else {
-                completion(nil)
-                return
-            }
-            guard let imageUrl = snapshot.value as? String, !imageUrl.isEmpty else {
-                completion(nil)
-                return
-            }
-            
-            let cacheKey = imageUrl as NSString
-            if let cachedImage = self.imageCache.object(forKey: cacheKey) {
-                completion(cachedImage)
-                return
-            }
-            
-            // Download image from URL
-            guard let url = URL(string: imageUrl) else {
-                completion(nil)
-                return
-            }
-            
-            URLSession.shared.dataTask(with: url) { data, _, _ in
-                if let data = data, let image = UIImage(data: data) {
-                    self.imageCache.setObject(image, forKey: cacheKey)
-                    completion(image)
-                } else {
-                    completion(nil)
-                }
-            }.resume()
-        }
     }
     
     private func formattedPostDate(timestamp: Int) -> String {

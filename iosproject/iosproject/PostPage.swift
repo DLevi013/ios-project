@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseDatabase
 import FirebaseAuth
+import SDWebImage
 
 class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
  
@@ -35,9 +36,12 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
         getUserName()
         guard let post = post else { return }
 
-        if let image = post.postImage {
-            postImages.image = image
+        if let imageUrlString = post.imageUrl, let url = URL(string: imageUrlString) {
+            postImages.sd_setImage(with: url, placeholderImage: UIImage(named: "dark-placeholder"))
+        } else {
+            postImages.image = UIImage(named: "dark-placeholder")
         }
+
         print("\(post.caption)")
         userIDField.text = post.username
         captionLabel.text = post.caption
