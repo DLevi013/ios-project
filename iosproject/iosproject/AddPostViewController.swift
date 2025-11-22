@@ -44,7 +44,21 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(recognizeTapGesture(recognizer:)))
         imageView.addGestureRecognizer(tapRecognizer)
         
-        imageView.image = UIImage(named: "placeholder-square")
+        let isDarkMode = UserDefaults.standard.bool(forKey: "mode")
+        if isDarkMode {
+            imageView.image = UIImage(named: "dark_placeholder")
+        } else {
+            imageView.image = UIImage(named: "placeholder-square")
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        let isDarkMode = UserDefaults.standard.bool(forKey: "mode")
+        if isDarkMode {
+            imageView.image = UIImage(named: "dark_placeholder")
+        } else {
+            imageView.image = UIImage(named: "placeholder-square")
+        }
     }
     
     @IBAction func recognizeTapGesture(recognizer: UITapGestureRecognizer){

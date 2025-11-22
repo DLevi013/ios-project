@@ -169,6 +169,7 @@
 				DEVELOPMENT_TEAM = 4WX622X94T;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iosproject/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Foocation;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -201,6 +202,7 @@
 				DEVELOPMENT_TEAM = PQXG623M25;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iosproject/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Foocation;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
