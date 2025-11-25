@@ -17,7 +17,12 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var captionTextField: UITextField!
-    @IBOutlet weak var postButton: UIButton!
+//    @IBOutlet weak var postButton: UIButton!
+    
+    @IBOutlet weak var betterLocationButton: UIButton!
+    @IBOutlet weak var betterPostButton: UIButton!
+    
+    
     
     let curUser = Auth.auth().currentUser!.uid
     var curUserName = ""
@@ -31,6 +36,21 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        betterLocationButton.layer.shadowColor = UIColor.black.cgColor
+        betterLocationButton.layer.shadowRadius = 5.0
+        betterLocationButton.layer.shadowOpacity = 0.4
+        betterLocationButton.layer.shadowOffset = CGSize(width: 2, height: 4)
+        
+        
+        betterPostButton.layer.shadowColor = UIColor.black.cgColor
+        betterPostButton.layer.shadowRadius = 5.0
+        betterPostButton.layer.shadowOpacity = 0.4
+        betterPostButton.layer.shadowOffset = CGSize(width: 2, height: 4)
+        
+        
+        
+//        captionTextField.lineLimit(1...)
         
         var ref: DatabaseReference!
         ref = Database.database().reference().child("users").child(curUser)
@@ -50,6 +70,7 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
         } else {
             imageView.image = UIImage(named: "placeholder-square")
         }
+        betterPostButton.isEnabled = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -101,7 +122,7 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
                     }
 
                     self.imageLink = downloadURL.absoluteString
-                    self.postButton.isEnabled = true
+                    self.betterPostButton.isEnabled = true
                 }
             }
             
@@ -112,8 +133,14 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
     }
     
     @IBAction func addLocationPressed(_ sender: Any) {
+        print("Old BUtton Pressed")
+    }
+    
+    
+    @IBAction func betterAddLocationPressed(_ sender: Any) {
         performSegue(withIdentifier: "postToDiscoverSegue", sender: self)
     }
+    
     
     func didSelectLocation(selectedLatitude: Double, selectedLongitude: Double, selectedName: String, address: String) {
         self.latitude = selectedLatitude
@@ -130,6 +157,11 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
     }
     
     @IBAction func postButtonPressed(_ sender: Any) {
+        print("Old Post button pressed")
+        }
+    
+    
+    @IBAction func betterPostButtonPressed(_ sender: Any) {
         guard let caption = captionTextField.text,
             !caption.isEmpty,
             !locationName.isEmpty,
@@ -197,7 +229,11 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
                 controller.preferredAction = okAction
                 self.present(controller, animated:true)
             }
-        }
+    }
+    
+    
+
+    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "postToDiscoverSegue" {
