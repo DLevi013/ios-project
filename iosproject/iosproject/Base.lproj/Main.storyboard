@@ -1149,17 +1149,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dIR-jJ-2Xo">
-                                <rect key="frame" x="142.66666666666666" y="515" width="154.99999999999997" height="38"/>
-                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Save Changes!">
-                                    <fontDescription key="titleFontDescription" type="system" pointSize="20"/>
-                                </buttonConfiguration>
-                                <connections>
-                                    <action selector="saveChangesPressed:" destination="T3A-jt-ad7" eventType="touchUpInside" id="Go4-Dd-SHP"/>
-                                </connections>
-                            </button>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rec-tI-76J">
                                 <rect key="frame" x="208" y="381" width="205" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1192,26 +1181,31 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ovi-AH-O1X">
+                                <rect key="frame" x="20" y="546" width="400" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Save Changes!"/>
+                                <connections>
+                                    <action selector="newSaveChangesPressed:" destination="T3A-jt-ad7" eventType="touchUpInside" id="xgw-KY-Qya"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Nv3-Uo-b4Z"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="dIR-jJ-2Xo" firstAttribute="centerX" secondItem="cY0-8W-NNX" secondAttribute="centerX" id="2yc-f3-7Cq"/>
-                            <constraint firstItem="Nv3-Uo-b4Z" firstAttribute="bottom" secondItem="dIR-jJ-2Xo" secondAttribute="bottom" constant="148" id="DKj-r0-l3G"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Xbs-pv-S9w"/>
                     <connections>
                         <outlet property="bioTextField" destination="rec-tI-76J" id="Q6f-vl-PYo"/>
+                        <outlet property="newSaveChangesButton" destination="ovi-AH-O1X" id="Hh4-Of-yBe"/>
                         <outlet property="oldBioField" destination="0i1-y5-6pf" id="fZZ-8L-qrC"/>
                         <outlet property="oldUserIDField" destination="rzN-ke-Ndf" id="jtq-BY-ZEH"/>
-                        <outlet property="saveChangesButton" destination="dIR-jJ-2Xo" id="dra-8U-g3R"/>
                         <outlet property="userIDTextField" destination="Ls1-xc-4ZP" id="yt5-cx-6kT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gqT-k6-Awa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1005.0000000000001" y="2367.9916317991633"/>
+            <point key="canvasLocation" x="1005.0000000000001" y="2367.6778242677824"/>
         </scene>
         <!--Food Location View Controller-->
         <scene sceneID="eMK-O0-6ln">

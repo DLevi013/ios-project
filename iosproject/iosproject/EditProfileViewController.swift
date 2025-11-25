@@ -16,6 +16,9 @@ class EditProfileViewController: UIViewController {
     @IBOutlet weak var bioTextField: UITextField!
     @IBOutlet weak var saveChangesButton: UIButton!
 
+    @IBOutlet weak var newSaveChangesButton: UIButton!
+    
+    
     @IBOutlet weak var oldUserIDField: UITextField!
     
     @IBOutlet weak var oldBioField: UITextField!
@@ -23,8 +26,16 @@ class EditProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         loadCurrentUserData()
+        newSaveChangesButton.layer.shadowColor = UIColor.black.cgColor
+        newSaveChangesButton.layer.shadowRadius = 5.0
+        newSaveChangesButton.layer.shadowOpacity = 0.4
+        newSaveChangesButton.layer.shadowOffset = CGSize(width: 2, height: 4)
         // Do any additional setup after loading the view.
     }
+    
+//    override func viewWillAppear(_ animated: Bool) {
+//        loadCurrentUserData()
+//    }
 
     func loadCurrentUserData() {
         let curUser = Auth.auth().currentUser!.uid
@@ -42,7 +53,8 @@ class EditProfileViewController: UIViewController {
         }
     }
 
-    @IBAction func saveChangesPressed(_ sender: Any) {
+    @IBAction func newSaveChangesPressed(_ sender: Any) {
+        
         let currentUserID = Auth.auth().currentUser!.uid
 
         let ref = Database.database().reference().child("users").child(currentUserID)
@@ -71,5 +83,12 @@ class EditProfileViewController: UIViewController {
 
         alertController.preferredAction = okAction
         present(alertController, animated: true)
+        
+        
+    }
+    
+    @IBAction func saveChangesPressed(_ sender: Any) {
+        print("old Button Pressed!")
+        
     }
 }
