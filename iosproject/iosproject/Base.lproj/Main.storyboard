@@ -1034,7 +1034,7 @@
             <objects>
                 <viewController id="Mf7-pK-mys" customClass="DiscoverPage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iBE-pp-T5c">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="884"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view tag="100" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vlB-vG-51R">
@@ -1101,6 +1101,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="mappin.and.ellipse" catalog="system" selectedImage="mappin.and.ellipse" id="2YT-eQ-ls5"/>
+                    <navigationItem key="navigationItem" id="Jfs-Ss-3sk"/>
                     <connections>
                         <outlet property="confirmLocationButton" destination="YBo-Wn-bjR" id="mFo-yC-PEG"/>
                         <outlet property="mapView" destination="Dz1-5P-aEG" id="1E8-pW-v5n"/>
@@ -1362,6 +1363,7 @@
                         <outlet property="betterPostButton" destination="0Gz-vu-x5g" id="6El-kO-ve8"/>
                         <outlet property="captionTextField" destination="rfP-AC-tSF" id="NEO-nM-Z9e"/>
                         <outlet property="imageView" destination="LAa-le-rmL" id="3pE-jT-2ed"/>
+                        <segue destination="Mf7-pK-mys" kind="show" identifier="postToDiscoverSegue" id="98C-et-lhs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ita-lM-fgI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1585,6 +1587,7 @@
         <segue reference="R97-3n-0RC"/>
         <segue reference="cXD-TO-S7o"/>
         <segue reference="m82-vQ-OZr"/>
+        <segue reference="98C-et-lhs"/>
         <segue reference="GaF-N1-Ow1"/>
         <segue reference="Bic-WB-kOL"/>
         <segue reference="s7M-p6-3ga"/>

@@ -10,6 +10,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseStorage
 import FirebaseDatabase
+import Vision
 
 var idCounter = 4
 
@@ -92,6 +93,8 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let selectedImage = info[.originalImage] as? UIImage {
+//            self.analyzeImageForFood(image: selectedImage)
+            
             imageView.image = selectedImage
             guard let imageData = selectedImage.jpegData(compressionQuality: 0.8) else {
                 dismiss(animated: true, completion: nil)
@@ -131,6 +134,9 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
             dismiss(animated: true, completion: nil)
         }
     }
+    
+    
+
     
     @IBAction func addLocationPressed(_ sender: Any) {
         print("Old BUtton Pressed")
@@ -248,4 +254,120 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
 protocol LocationSelectionDelegate: AnyObject {
     func didSelectLocation(selectedLatitude: Double, selectedLongitude: Double, selectedName: String, address: String)
 }
+
+
+// STORING HERE FOR LATER MAYBE??
+
+//    func analyzeImageForFood(image: UIImage) {
+//        guard let ciImage = CIImage(image: image) else {
+//            print("Could not convert UIImage to CIImage.")
+//            return
+//        }
+//
+//        // 1. Load the Model
+//        guard let model = try? VNCoreMLModel(for: MobileNetV2().model) else {
+//            fatalError("Failed to load Vision ML model.")
+//        }
+//
+//        // 2. Create the Request
+//        // FIX: Explicitly tell Swift that 'request' is VNRequest and 'error' is Error?
+//        let request = VNCoreMLRequest(model: model) { [weak self] (request: VNRequest, error: Error?) in
+//            self?.processClassificationResults(request, error: error, originalImage: image)
+//        }
+//
+//        // 3. Perform the Request
+//        let handler = VNImageRequestHandler(ciImage: ciImage, orientation: .up)
+//
+//        DispatchQueue.global(qos: .userInitiated).async {
+//            do {
+//                try handler.perform([request])
+//            } catch {
+//                print("Failed to perform classification: \(error)")
+//            }
+//        }
+//    }
+//
+    
+    // Inside your AddPostViewController class
+
+//    func processClassificationResults(_ request: VNRequest, error: Error?, originalImage: UIImage) {
+//        guard let results = request.results as? [VNClassificationObservation] else {
+//            print("Classification failed: \(error?.localizedDescription ?? "Unknown error")")
+//            return
+//        }
+//
+//        // 1. Find the best classification result
+//        let topClassification = results.prefix(3) // Look at the top 3 results
+//
+//        // Check if any of the top results are related to food
+//        let isFood = topClassification.contains { observation in
+//            // IMPORTANT: The exact string depends on the model you use.
+//            // For general-purpose models, look for 'food', 'plate', 'dish', etc.
+//            // If using a dedicated food model (like Food101), check its specific class labels.
+//            let identifier = observation.identifier.lowercased()
+//            let confidence = observation.confidence
+//
+//            // This is a simple, broad check. You'll need to refine the keywords and confidence threshold.
+//            let confidenceThreshold: Float = 0.50 // 50% confidence required
+//
+//            return confidence > confidenceThreshold &&
+//                   (identifier.contains("food") ||
+//                    identifier.contains("dish") ||
+//                    identifier.contains("plate") ||
+//                    identifier.contains("meal"))
+//        }
+//
+//        // 2. Handle the result on the main thread
+//        DispatchQueue.main.async {
+//            if isFood {
+//                // Food detected: Continue with image upload and posting logic
+//                self.startImageUploadAndEnablePost(selectedImage: originalImage)
+//            } else {
+//                // No food detected: Show an alert and reset the image view
+//                self.imageView.image = nil // or reset to placeholder
+//                self.imageLink = nil
+//                self.betterPostButton.isEnabled = false
+//
+//                let controller = UIAlertController(title: "Not Food", message: "That doesn't look like food! Please select a photo of a dish.", preferredStyle: .alert)
+//                let okAction = UIAlertAction(title: "OK", style: .default)
+//                controller.addAction(okAction)
+//                self.present(controller, animated: true)
+//            }
+//        }
+//    }
+//
+//
+//    // Inside your AddPostViewController class
+//
+//    func startImageUploadAndEnablePost(selectedImage: UIImage) {
+//        self.imageView.image = selectedImage
+//
+//        // Your existing Firebase Storage Upload Logic starts here
+//        guard let imageData = selectedImage.jpegData(compressionQuality: 0.8) else {
+//            // ... handle error ...
+//            return
+//        }
+//
+//        // Show a loading indicator here (recommended)
+//
+//        let storageRef = Storage.storage().reference().child("postImages/\(UUID().uuidString).jpg")
+//        storageRef.putData(imageData, metadata: nil) { metadata, error in
+//            // Hide loading indicator here
+//            guard error == nil else {
+//                // ... handle upload failed alert ...
+//                return
+//            }
+//            storageRef.downloadURL { url, error in
+//                guard let downloadURL = url else {
+//                    // ... handle download URL failed alert ...
+//                    return
+//                }
+//
+//                self.imageLink = downloadURL.absoluteString
+//                self.betterPostButton.isEnabled = true
+//            }
+//        }
+//        // Dismiss the picker immediately
+//        dismiss(animated: true, completion: nil)
+//    }
 
