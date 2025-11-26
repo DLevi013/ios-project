@@ -21,6 +21,8 @@ class Post: UICollectionViewCell {
 
 class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UITableViewDelegate, UITableViewDataSource, MKMapViewDelegate {
     
+    @IBOutlet weak var profilePicture: UIImageView!
+    
     @IBOutlet weak var userNameField: UILabel!
     
     @IBOutlet weak var bioField: UILabel!
@@ -52,6 +54,11 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
  
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        profilePicture.layer.cornerRadius = profilePicture.bounds.width / 2.0
+        profilePicture.clipsToBounds = true
+        profilePicture.image = UIImage(named: "default_profile_pic.jpg")
+        
         gridOfPosts.dataSource = self
         gridOfPosts.delegate = self
         friendsList.dataSource = self
@@ -67,6 +74,9 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
             }
             if let bio = snapshot.childSnapshot(forPath: "bio").value as? String {
                 self.bioField.text = bio
+            }
+            if let profilePic = snapshot.childSnapshot(forPath: "profileImageURL").value as? String, let url = URL(string: profilePic) {
+                self.profilePicture.sd_setImage(with: url, placeholderImage: UIImage(named: "default_profile_pic.jpg"))
             }
         }
         
