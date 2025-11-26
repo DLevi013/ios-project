@@ -19,7 +19,7 @@ class Post: UICollectionViewCell {
     @IBOutlet weak var singlePost: UIImageView!
 }
 
-class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UITableViewDelegate, UITableViewDataSource {
+class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UITableViewDelegate, UITableViewDataSource, MKMapViewDelegate {
     
     @IBOutlet weak var userNameField: UILabel!
     
@@ -32,6 +32,8 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
     @IBOutlet weak var gridOfPosts: UICollectionView!
     
     @IBOutlet weak var mapView: MKMapView!
+        
+    var currentMapPost: FeedPost?
     
     @IBOutlet weak var friendsList: UITableView!
     
@@ -54,6 +56,7 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
         gridOfPosts.delegate = self
         friendsList.dataSource = self
         friendsList.delegate = self
+        mapView.delegate = self
         
         let curUser = Auth.auth().currentUser!.uid
         var ref : DatabaseReference!
@@ -70,6 +73,7 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
         ref = Database.database().reference().child("posts")
             ref.observeSingleEvent(of: .value) { snapshot in
                 var feedPosts: [FeedPost] = []
+                var locationPins: [String : FeedPost] = [:]
 
                 for child in snapshot.children {
                     if let childSnapshot = child as? DataSnapshot,
@@ -85,7 +89,7 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
                         let commentsArray = dict["comments"] as? [[String: Any]] ?? []
                         let commentObjs = commentsArray.compactMap { Comment.from(dict: $0) }
 
-                        let location = dict["location"] as? String ?? ""
+                        let location = dict["locationId"] as? String ?? ""
                         let caption = dict["caption"] as? String ?? ""
                         
                         // Store imageUrl in FeedPost; do NOT download image here
@@ -100,12 +104,14 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
                             caption: caption
                         )
                         feedPosts.append(post)
+                        locationPins[location] = post
                     }
                 }
 
                 DispatchQueue.main.async {
                     self.posts = feedPosts
                     self.gridOfPosts.reloadData()
+                    self.loadAnnotations(locationIds: locationPins)
                 }
             }
         
@@ -203,6 +209,10 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
             vc.otherUserNameText = "THIS IS THE TEMP PAGE FOR THE OTHER PROFILES"
             vc.otherUserID = friendUIDs[chosenFriendIndex]
         }
+        
+        if segue.identifier == "profileMapToPost", let vc = segue.destination as? PostPage {
+            vc.post = currentMapPost
+        }
 //        if segue.identifier == "profileToEditProfile", let vc = segue.destination as? EditProfileViewController {
 //        }
         
@@ -293,4 +303,87 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
         
     }
     
+    func loadAnnotations(locationIds: [String: FeedPost]) {
+        
+        var ref: DatabaseReference!
+        for (locationId, FeedPost) in locationIds {
+            
+            if locationId == "" {
+                continue
+            }
+            ref = Database.database().reference().child("locations").child(locationId)
+            ref.observeSingleEvent(of: .value) { snapshot in
+                guard let name = snapshot.childSnapshot(forPath: "name").value as? String,
+                      let address = snapshot.childSnapshot(forPath: "address").value as? String,
+                      let coordDict = snapshot.childSnapshot(forPath: "coordinates").value as? [String: Double],
+                      let lat = coordDict["latitude"],
+                      let lon = coordDict["longitude"] else { return }
+
+                let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+
+                DispatchQueue.main.async {
+                    let locationAnnot = LocationPin(
+                        coordinate: coordinate,
+                        title: name,
+                        subtitle: address,
+                        address: address,
+                        locationId: locationId,
+                        FeedPost: FeedPost
+                    )
+                    self.mapView.addAnnotation(locationAnnot)
+                }
+            }
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation is MKUserLocation { return nil }
+        
+        let identifier = "LocationPin"
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        
+        if annotationView == nil {
+            annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
+            annotationView?.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+        } else {
+            annotationView?.annotation = annotation
+        }
+        
+        return annotationView
+    }
+
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        if let annotation = view.annotation as? LocationPin {
+            self.currentMapPost = annotation.Post
+            performSegue(withIdentifier: "profileMapToPost", sender: annotation)
+        }
+    }
+    
+}
+
+class LocationPin: NSObject, MKAnnotation {
+    var coordinate: CLLocationCoordinate2D
+    var title: String?
+    var subtitle: String? // same as address
+    
+    var address: String?
+    var locationId: String?
+    
+    var Post: FeedPost?
+    
+    init(coordinate: CLLocationCoordinate2D,
+         title: String?,
+         subtitle: String?,
+         address: String?,
+         locationId: String?,
+         FeedPost: FeedPost?) {
+        self.coordinate = coordinate
+        self.title = title
+        self.subtitle = subtitle
+        self.address = address
+        self.locationId = locationId
+        self.Post = FeedPost
+       
+    }
 }

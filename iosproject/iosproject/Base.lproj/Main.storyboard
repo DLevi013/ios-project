@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eEQ-TE-gdZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24128" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eEQ-TE-gdZ">
     <device id="retina6_9" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
         <capability name="Map view configurations" minToolsVersion="14.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -556,6 +556,7 @@
                         <outlet property="otherOptionsBar" destination="gei-Ih-PTx" id="Vl2-OM-ka1"/>
                         <outlet property="otherUserName" destination="nGr-YE-VrW" id="bGO-qe-aCc"/>
                         <segue destination="diZ-9n-Pv5" kind="presentation" identifier="otherProfileToPost" id="CrI-Dp-VLO"/>
+                        <segue destination="diZ-9n-Pv5" kind="presentation" identifier="otherProfileMapToPost" id="1aX-Sy-1fZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eEt-JS-xMd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -735,6 +736,7 @@
                         <segue destination="diZ-9n-Pv5" kind="presentation" identifier="profileToPost" id="GaF-N1-Ow1"/>
                         <segue destination="gBh-e3-1bW" kind="show" identifier="toOtherProfile" id="Bic-WB-kOL"/>
                         <segue destination="T3A-jt-ad7" kind="show" identifier="profileToEditProfile" id="xCa-pO-K31"/>
+                        <segue destination="diZ-9n-Pv5" kind="presentation" identifier="profileMapToPost" id="OW5-HH-Bqh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ksn-NO-dUu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1119,7 +1121,7 @@
             <objects>
                 <viewController id="T3A-jt-ad7" customClass="EditProfileViewController" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cY0-8W-NNX">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="701"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="884"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Edit Profile Below:" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4c4-Np-7KS">
@@ -1580,9 +1582,9 @@
     <inferredMetricsTieBreakers>
         <segue reference="R97-3n-0RC"/>
         <segue reference="cXD-TO-S7o"/>
-        <segue reference="m82-vQ-OZr"/>
+        <segue reference="xCa-pO-K31"/>
         <segue reference="98C-et-lhs"/>
-        <segue reference="GaF-N1-Ow1"/>
+        <segue reference="1aX-Sy-1fZ"/>
         <segue reference="Bic-WB-kOL"/>
         <segue reference="s7M-p6-3ga"/>
     </inferredMetricsTieBreakers>

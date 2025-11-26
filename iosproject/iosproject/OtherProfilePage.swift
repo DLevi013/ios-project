@@ -12,7 +12,7 @@ import FirebaseFirestore
 import FirebaseAuth
 import FirebaseDatabase
 
-class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
+class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource, MKMapViewDelegate {
     
     @IBOutlet weak var otherUserName: UILabel!
     @IBOutlet weak var otherBio: UILabel!
@@ -33,6 +33,7 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
     var posts: [FeedPost] = []
     var otherSelectedPostImage: UIImage?
     var otherSelectedPostIndex: Int = 0
+    var otherMapPost: FeedPost?
     var isPrivate: Bool = false
 
     override func viewDidLoad() {
@@ -42,10 +43,12 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
         otherGridOfPosts.delegate = self
         otherFriendsList.delegate = self
         otherFriendsList.dataSource = self
+        otherMapView.delegate = self
 
         var ref: DatabaseReference!
         ref = Database.database().reference().child("users").child(otherUserID)
         ref.observeSingleEvent(of: .value) { snapshot in
+            var locationPins: [String : FeedPost] = [:]
             if let username = snapshot.childSnapshot(forPath: "username").value as? String {
                 self.otherUserName.text = username
             }
@@ -75,7 +78,7 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
                             let likeCount = (dict["likes"] as? [String])?.count ?? 0
                             let commentsArray = dict["comments"] as? [[String: Any]] ?? []
                             let commentObjs = commentsArray.compactMap { Comment.from(dict: $0) }
-                            let location = dict["location"] as? String ?? ""
+                            let location = dict["locationId"] as? String ?? ""
                             let caption = dict["caption"] as? String ?? ""
                             
                             UsernameCache.shared.getUsername(for: postUserId) { username in
@@ -97,6 +100,9 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
                                                 feedPosts.append(post)
                                                 self.posts = feedPosts
                                                 self.otherGridOfPosts.reloadData()
+                                                locationPins[location] = post
+                                                print("locations pins updated")
+                                                self.loadAnnotations(locationIds: locationPins)
                                             }
                                         }
                                     }.resume()
@@ -105,8 +111,6 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
                                 }
                             }
                         }
-                            
-                            
                     }
                     DispatchQueue.main.async {
                         self.posts = feedPosts
@@ -179,6 +183,10 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
         if segue.identifier == "otherProfileToPost", let vc = segue.destination as? PostPage {
             vc.post = posts[otherSelectedPostIndex]
         }
+        if segue.identifier == "otherProfileMapToPost", let vc = segue.destination as? PostPage {
+            vc.post = otherMapPost
+        }
+
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -279,6 +287,64 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
                     self.addFriendButton.isHidden = false
                 }
             }
+        }
+    }
+    
+    func loadAnnotations(locationIds: [String: FeedPost]) {
+        
+        var ref: DatabaseReference!
+        for (locationId, FeedPost) in locationIds {
+            
+            if locationId == "" {
+                continue
+            }
+            ref = Database.database().reference().child("locations").child(locationId)
+            ref.observe(.value, with: { snapshot in
+                guard let name = snapshot.childSnapshot(forPath: "name").value as? String,
+                      let address = snapshot.childSnapshot(forPath: "address").value as? String,
+                      let coordDict = snapshot.childSnapshot(forPath: "coordinates").value as? [String: Double],
+                      let lat = coordDict["latitude"],
+                      let lon = coordDict["longitude"] else { return }
+                let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+                
+                print(locationId)
+                
+                DispatchQueue.main.async {
+                    let locationAnnot = LocationPin(
+                        coordinate: coordinate,
+                        title: name,
+                        subtitle: address,
+                        address: address,
+                        locationId: locationId,
+                        FeedPost: FeedPost
+                    )
+                    self.otherMapView.addAnnotation(locationAnnot)
+                }
+            })
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation is MKUserLocation { return nil }
+        
+        let identifier = "LocationPin"
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        
+        if annotationView == nil {
+            annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
+            annotationView?.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+        } else {
+            annotationView?.annotation = annotation
+        }
+        
+        return annotationView
+    }
+
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        if let annotation = view.annotation as? LocationPin {
+            self.otherMapPost = annotation.Post
+            performSegue(withIdentifier: "otherProfileMapToPost", sender: annotation)
         }
     }
 }
