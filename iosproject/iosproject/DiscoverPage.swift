@@ -10,27 +10,54 @@ import MapKit
 import CoreLocation
 import FirebaseDatabase
 
-class LocationAnnotation: NSObject, MKAnnotation {
+//class LocationAnnotation: NSObject, MKAnnotation {
+//    var coordinate: CLLocationCoordinate2D
+//    var title: String?
+//    var subtitle: String? // same as address
+//    
+//    var address: String?
+//    var locationId: String?
+//    
+//    init(coordinate: CLLocationCoordinate2D,
+//         title: String?,
+//         subtitle: String?,
+//         address: String?,
+//         locationId: String?) {
+//        self.coordinate = coordinate
+//        self.title = title
+//        self.subtitle = subtitle
+//        self.address = address
+//        self.locationId = locationId
+//       
+//    }
+//}
+
+
+class DiscoverPin: NSObject, MKAnnotation {
     var coordinate: CLLocationCoordinate2D
     var title: String?
     var subtitle: String? // same as address
-    
     var address: String?
     var locationId: String?
+    
+    var PostId: String?
     
     init(coordinate: CLLocationCoordinate2D,
          title: String?,
          subtitle: String?,
          address: String?,
-         locationId: String?) {
+         locationId: String?,
+         PostId: String?) {
         self.coordinate = coordinate
         self.title = title
         self.subtitle = subtitle
         self.address = address
         self.locationId = locationId
+        self.PostId = PostId
        
     }
 }
+
 
 class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
     
@@ -39,22 +66,23 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     @IBOutlet weak var searchField: UISearchBar!
     @IBOutlet weak var searchResults: UITableView!
     var searchText:String = ""
+    
     // stores search results, may be empty
-    var searchFieldLocations: [LocationAnnotation] = []
+    var searchFieldLocations: [DiscoverPin] = []
     
     var discoverDelegate: AddPostViewController?
     var isSelectingLocation: Bool = false
-    var selectedAnnot: LocationAnnotation?
+    var selectedAnnot: DiscoverPin?
 
     var locationId: String?
     @IBOutlet weak var confirmLocationButton: UIButton!
 
-    var locations:[LocationAnnotation] = []
+    var locations:[DiscoverPin] = []
     var viewSize:Double = 500
     var currentView: MKAnnotationView?
         
     let ref = Database.database().reference()
-    @IBOutlet weak var moreInfoButton: UIButton!
+    //@IBOutlet weak var moreInfoButton: UIButton!
     
     override func viewDidLoad(){
         super.viewDidLoad()
@@ -63,15 +91,18 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         searchResults.delegate = self
         searchResults.dataSource = self
         searchResults.rowHeight = UITableView.automaticDimension
-        
         searchResults.isHidden = true
+        
+        
         if self.isSelectingLocation {
             confirmLocationButton.isHidden = false
         } else {
             confirmLocationButton.isHidden = true
         }
-        moreInfoButton.isEnabled = false
-        loadLocations()
+        // moreInfoButton.isEnabled = false
+        //        loadLocations()
+        
+        loadPins()
     }
     
     func searchBar(_ searchField: UISearchBar, textDidChange text: String) {
@@ -118,7 +149,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
                 // need to filter out names with weird characters
                 let coordinate = item.location.coordinate
                 let locationId = makeLocationId(lat: coordinate.latitude, lon: coordinate.longitude, name: name)
-                let result = LocationAnnotation(coordinate: item.location.coordinate, title: name, subtitle: item.address?.fullAddress, address: item.address?.fullAddress, locationId: locationId)
+                let result = DiscoverPin(coordinate: item.location.coordinate, title: name, subtitle: item.address?.fullAddress, address: item.address?.fullAddress, locationId: locationId, PostId: "NoPostAssociated")
                
                 self.searchFieldLocations.append(result)
             }
@@ -162,35 +193,35 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         mapView.setRegion(region, animated: true)
         searchResults.isHidden = true
         //moreInfoButton.isEnabled = true
-        view.bringSubviewToFront(moreInfoButton)
+        //view.bringSubviewToFront(moreInfoButton)
     }
     
-    func loadLocations() {
-        ref.child("locations").observeSingleEvent(of: .value) { snapshot in
-            for child in snapshot.children {
-                if let childSnapshot = child as? DataSnapshot,
-                   let dict = childSnapshot.value as? [String: Any] {
-                    
-                    self.locationId = childSnapshot.key
-                    let name = dict["name"] as? String ?? ""
-                    let address = dict["address"] as? String ?? ""
-                    if let coords = dict["coordinates"] as? [String: Any],
-                       let lat = coords["latitude"] as? Double,
-                       let lon = coords["longitude"] as? Double {
-                        let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-                        
-                                             
-                        let locationAnnot = LocationAnnotation(coordinate: coordinate, title: name, subtitle: address, address: address, locationId: self.locationId)
-                       
-                        
-                        self.mapView.addAnnotation(locationAnnot)
-                    }
-                }
-            }
-        }
-    }
+//    func loadLocations() {
+//        ref.child("locations").observeSingleEvent(of: .value) { snapshot in
+//            for child in snapshot.children {
+//                if let childSnapshot = child as? DataSnapshot,
+//                   let dict = childSnapshot.value as? [String: Any] {
+//                    
+//                    self.locationId = childSnapshot.key
+//                    let name = dict["name"] as? String ?? ""
+//                    let address = dict["address"] as? String ?? ""
+//                    if let coords = dict["coordinates"] as? [String: Any],
+//                       let lat = coords["latitude"] as? Double,
+//                       let lon = coords["longitude"] as? Double {
+//                        let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+//                        
+//                                             
+//                        let locationAnnot = DiscoverPin(coordinate: coordinate, title: name, subtitle: address, address: address, locationId: self.locationId, PostId: "NoPostAssociated")
+//                       
+//                        
+//                        self.mapView.addAnnotation(locationAnnot)
+//                    }
+//                }
+//            }
+//        }
+//    }
     
-    private func mapView(_ mapView: MKMapView, didSelect view: LocationAnnotation) {
+    private func mapView(_ mapView: MKMapView, didSelect view: DiscoverPin) {
         selectedAnnot = view
         
         viewSize = 500
@@ -206,7 +237,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
     
-        guard let annotation = view.annotation as? LocationAnnotation else { return }
+        guard let annotation = view.annotation as? DiscoverPin else { return }
         self.selectedAnnot = annotation
         viewSize = 500
         
@@ -237,6 +268,108 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         dismiss(animated: true)
     }
     
+    func loadPins() {
+        var publicUsers: [String] = []
+        var privateUsers: [String] = []
+        
+        var DiscoverPins: [DiscoverPin] = []
+        
+        var ref: DatabaseReference!
+        ref = Database.database().reference().child("users")
+        ref.observeSingleEvent(of: .value) { snapshot in
+            
+            for child in snapshot.children {
+                if let childSnapshot = child as? DataSnapshot,
+                   let userDict = childSnapshot.value as? [String: Any] {
+                    
+                    let isPrivateValue = userDict["isPrivate"] as? Int ?? 0
+                    let isPrivate = isPrivateValue != 0
+                    
+                    if !isPrivate {
+                        publicUsers.append(childSnapshot.key)
+                    }
+                    privateUsers.append(childSnapshot.key)
+                }
+            }
+            
+            print("Public users: \(publicUsers)")
+        }
+        
+        ref = Database.database().reference().child("posts")
+        ref.observeSingleEvent(of: .value) { snapshot in
+            
+            for child in snapshot.children {
+                if let childSnapshot = child as? DataSnapshot,
+                   let dict = childSnapshot.value as? [String: Any],
+                   let postId = dict["postId"] as? String,
+                   let userId = dict["userId"] as? String,
+                   let locationId = dict["locationId"] as? String {
+                    
+                    if publicUsers.contains(userId) {
+                        let locationRef = Database.database().reference().child("locations").child(locationId)
+                        locationRef.observeSingleEvent(of: .value) { locationSnap in
+                            if let dict = locationSnap.value as? [String: Any],
+                               let address = dict["address"] as? String,
+                               let name = dict["name"] as? String,
+                               let coordinates = dict["coordinates"] as? [String: Double],
+                               let lat = coordinates["latitude"],
+                               let lon = coordinates["longitude"] {
+                                
+                                
+                                DispatchQueue.main.async {
+                                    let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+                                    let pin = DiscoverPin(coordinate: coordinate, title: name, subtitle: address, address: address, locationId: locationId, PostId: postId)
+                                    DiscoverPins.append(pin)
+                                    print(pin)
+                                    for Pin in DiscoverPins {
+                                        self.mapView.addAnnotation(Pin)
+                                    }
+                                    
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        
+    }
+    
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation is MKUserLocation { return nil }
+        
+        let identifier = "LocationPin"
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        
+        if annotationView == nil {
+            annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
+            annotationView?.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+        } else {
+            annotationView?.annotation = annotation
+        }
+        
+        return annotationView
+    }
+
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        if let annotation = view.annotation as? DiscoverPin {
+            print("nice try")
+            if annotation.PostId == "NoPostAssociated" || isSelectingLocation {
+                return
+            } else {
+                self.selectedAnnot = annotation
+                performSegue(withIdentifier: "discoverToLocation", sender: annotation)
+            }
+            
+        }
+    }
+
+
+    
     func makeLocationId(lat: Double, lon: Double, name: String) -> String {
         let lat = String(format: "%.4f", lat).replacingOccurrences(of: ".", with: "_")
         let lon = String(format: "%.4f", lon).replacingOccurrences(of: ".", with: "_")
@@ -255,3 +388,5 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         }
     }
 }
+
+

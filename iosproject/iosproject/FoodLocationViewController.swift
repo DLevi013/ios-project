@@ -17,7 +17,7 @@ class FoodLocationViewController: UIViewController, MKMapViewDelegate {
 
     var delegate: UIViewController?
     var locationId: String?
-    var currentAnnotation: LocationAnnotation?
+    var currentAnnotation: DiscoverPin?
     let ref = Database.database().reference()
 
     override func viewDidLoad() {
@@ -58,12 +58,13 @@ class FoodLocationViewController: UIViewController, MKMapViewDelegate {
             let address = dict["address"] as? String ?? "No Address"
             let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
 
-            let annotation = LocationAnnotation(
+            let annotation = DiscoverPin(
                 coordinate: coordinate,
                 title: name,
                 subtitle: address,
                 address: address,
-                locationId: paramId
+                locationId: paramId,
+                PostId: "Placeholder"
             )
 
             DispatchQueue.main.async {

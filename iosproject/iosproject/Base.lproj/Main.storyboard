@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eEQ-TE-gdZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24128" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eEQ-TE-gdZ">
     <device id="retina6_9" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
         <capability name="Map view configurations" minToolsVersion="14.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -1050,16 +1050,6 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </view>
-                            <button opaque="NO" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kYO-5o-zEG">
-                                <rect key="frame" x="38" y="771" width="360" height="34.333333333333371"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="More Info"/>
-                                <connections>
-                                    <action selector="moreInfoPressed:" destination="Mf7-pK-mys" eventType="touchUpInside" id="ViK-lF-PUl"/>
-                                    <segue destination="Fo0-96-Aug" kind="presentation" identifier="discoverToLocation" id="14c-jo-nUE"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YBo-Wn-bjR">
                                 <rect key="frame" x="98" y="716" width="240" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1107,9 +1097,9 @@
                     <connections>
                         <outlet property="confirmLocationButton" destination="YBo-Wn-bjR" id="mFo-yC-PEG"/>
                         <outlet property="mapView" destination="Dz1-5P-aEG" id="1E8-pW-v5n"/>
-                        <outlet property="moreInfoButton" destination="kYO-5o-zEG" id="q4f-c2-Wkh"/>
                         <outlet property="searchField" destination="qM8-S4-pDV" id="EMT-Ga-795"/>
                         <outlet property="searchResults" destination="hop-4v-nCa" id="Ifa-rM-aEG"/>
+                        <segue destination="Fo0-96-Aug" kind="presentation" identifier="discoverToLocation" id="hdK-xT-G1A"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qzs-Da-XVi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1586,10 +1576,10 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="R97-3n-0RC"/>
-        <segue reference="cXD-TO-S7o"/>
+        <segue reference="hdK-xT-G1A"/>
         <segue reference="m82-vQ-OZr"/>
         <segue reference="98C-et-lhs"/>
-        <segue reference="OW5-HH-Bqh"/>
+        <segue reference="1aX-Sy-1fZ"/>
         <segue reference="Bic-WB-kOL"/>
         <segue reference="s7M-p6-3ga"/>
     </inferredMetricsTieBreakers>
