@@ -17,9 +17,9 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var postImages: UIImageView!
     @IBOutlet weak var commentTableView: UITableView!
     @IBOutlet weak var userIDField: UILabel!
-    @IBOutlet weak var commentLabel: UILabel!
     @IBOutlet weak var likeLabel: UILabel!
     @IBOutlet weak var captionLabel: UILabel!
+    @IBOutlet weak var commentTextLabel: UILabel!
     @IBOutlet weak var commentTextField: UITextField!
 
     var comments: [Comment] = []
@@ -70,7 +70,7 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
 
         captionLabel.text = post.caption
         likeLabel.text = post.likeCount.description
-        commentLabel.text = post.comments.count.description
+        commentTextLabel.text = "Comments (\(post.comments.count.description))"
 
         commentTableView.dataSource = self
         commentTableView.delegate = self
