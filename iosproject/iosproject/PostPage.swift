@@ -29,6 +29,8 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
     var selectedPostImage: UIImage?
     var selectedPostIndex: Int = 0
     var currentUserName = ""
+    
+    var selectedCommentUserId: String?
 
     let ref = Database.database().reference().child("posts")
     var userNameRef: DatabaseReference!
@@ -215,6 +217,9 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
             }
         }
         
+        cell.profilePicture.tag = indexPath.row
+        cell.profilePicture.addTarget(self, action: #selector(commentProfileTapped(_:)), for: .touchUpInside)
+        
         return cell
     }
 
@@ -235,12 +240,25 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
         }
     }
 
+    @objc func commentProfileTapped(_ sender: UIButton) {
+        let row = sender.tag
+        guard comments.indices.contains(row) else { return }
+        selectedCommentUserId = comments[row].userId
+        performSegue(withIdentifier: "commentToOtherProfile", sender: self)
+    }
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "postToLocation",
            let destination = segue.destination as? FoodLocationViewController,
            let locationId = self.post?.location {
             destination.locationId = locationId
             destination.delegate = self
+        }
+        
+        if segue.identifier == "commentToOtherProfile",
+           let destination = segue.destination as? OtherProfilePage,
+           let userId = selectedCommentUserId {
+            destination.otherUserID = userId
         }
     }
 }

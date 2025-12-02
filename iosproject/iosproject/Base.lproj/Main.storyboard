@@ -428,7 +428,7 @@
             <objects>
                 <viewController storyboardIdentifier="OtherProfilePage" id="gBh-e3-1bW" customClass="OtherProfilePage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nvO-A0-pAE">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="884"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="894"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="bio" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0gp-cj-XmZ">
@@ -1041,18 +1041,19 @@
                         <outlet property="profilePicture" destination="FH1-wm-fWf" id="ww3-gM-pQa"/>
                         <outlet property="userIDField" destination="0OI-jT-Kff" id="5cb-Yl-Axq"/>
                         <segue destination="Fo0-96-Aug" kind="presentation" identifier="postToLocation" id="b39-WX-GwF"/>
+                        <segue destination="gBh-e3-1bW" kind="show" identifier="commentToOtherProfile" id="aws-k0-Mnd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sXJ-eW-zRB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="9.5454545454545467" y="2389.9581589958161"/>
+            <point key="canvasLocation" x="-57" y="2411"/>
         </scene>
         <!--Discover Page-->
         <scene sceneID="XPJ-t8-7Yw">
             <objects>
                 <viewController id="Mf7-pK-mys" customClass="DiscoverPage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iBE-pp-T5c">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="884"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view tag="100" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vlB-vG-51R">
@@ -1225,7 +1226,7 @@
             <objects>
                 <viewController id="Fo0-96-Aug" customClass="FoodLocationViewController" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3Gk-JI-RhM">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="884"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="894"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view tag="100" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bD9-Cb-o7N">
@@ -1345,9 +1346,7 @@
                                 <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Post to Foodcation" cornerStyle="fixed">
-                                    <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </buttonConfiguration>
+                                <buttonConfiguration key="configuration" style="plain" title="Post to Foodcation" cornerStyle="fixed"/>
                                 <connections>
                                     <action selector="betterPostButtonPressed:" destination="7Y2-4b-ByA" eventType="touchUpInside" id="PW6-Y3-9tP"/>
                                 </connections>
@@ -1587,9 +1586,9 @@
         <segue reference="R97-3n-0RC"/>
         <segue reference="b39-WX-GwF"/>
         <segue reference="xCa-pO-K31"/>
-        <segue reference="swg-nk-JWB"/>
-        <segue reference="Wcn-2n-62O"/>
-        <segue reference="xv7-d8-adJ"/>
+        <segue reference="98C-et-lhs"/>
+        <segue reference="1aX-Sy-1fZ"/>
+        <segue reference="aws-k0-Mnd"/>
         <segue reference="s7M-p6-3ga"/>
     </inferredMetricsTieBreakers>
     <resources>

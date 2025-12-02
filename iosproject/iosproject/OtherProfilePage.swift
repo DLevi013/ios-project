@@ -102,6 +102,7 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
                                                     userId: postUserId,
                                                     username: username ?? "Anonymous",
                                                     postImage: image,
+                                                    imageUrl: imageUrl,
                                                     timestamp: Int(timestamp),
                                                     likeCount: likeCount,
                                                     comments: commentObjs,
