@@ -11,6 +11,7 @@ import Firebase
 import FirebaseFirestore
 import FirebaseAuth
 import FirebaseDatabase
+import SDWebImage
 
 class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource, MKMapViewDelegate {
     
@@ -36,8 +37,15 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
     var otherMapPost: FeedPost?
     var isPrivate: Bool = false
 
+    @IBOutlet weak var profilePicture: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        profilePicture.layer.cornerRadius = profilePicture.bounds.width / 2.0
+        profilePicture.clipsToBounds = true
+        profilePicture.image = UIImage(named: "default_profile_pic.jpg")
+        
         friendCheck()
         otherGridOfPosts.dataSource = self
         otherGridOfPosts.delegate = self
@@ -51,6 +59,9 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
             var locationPins: [String : FeedPost] = [:]
             if let username = snapshot.childSnapshot(forPath: "username").value as? String {
                 self.otherUserName.text = username
+            }
+            if let profilePicURL = snapshot.childSnapshot(forPath: "profileImageURL").value as? String, let url = URL(string: profilePicURL) {
+                self.profilePicture.sd_setImage(with: url, placeholderImage: UIImage(named: "default_profile_pic.jpg"))
             }
             if let isPrivate = snapshot.childSnapshot(forPath: "isPrivate").value as? Bool, isPrivate {
                 self.isPrivate = true
@@ -348,3 +359,4 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
         }
     }
 }
+

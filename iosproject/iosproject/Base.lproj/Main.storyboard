@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24128" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eEQ-TE-gdZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eEQ-TE-gdZ">
     <device id="retina6_9" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
         <capability name="Map view configurations" minToolsVersion="14.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -288,7 +288,11 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zWG-xt-pD8">
-                                                    <rect key="frame" x="0.0" y="1" width="48" height="35"/>
+                                                    <rect key="frame" x="5" y="4" width="32" height="32"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="32" id="4HN-3v-dcb"/>
+                                                        <constraint firstAttribute="height" constant="32" id="o7O-wJ-hCk"/>
+                                                    </constraints>
                                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="person" catalog="system"/>
@@ -297,7 +301,7 @@
                                                     </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0kw-XD-m5L">
-                                                    <rect key="frame" x="56" y="8" width="36" height="21"/>
+                                                    <rect key="frame" x="45" y="8" width="36" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -354,8 +358,8 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G2p-uX-MGm">
-                                                    <rect key="frame" x="392" y="345" width="48" height="35"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G2p-uX-MGm">
+                                                    <rect key="frame" x="392" y="344" width="48" height="35"/>
                                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="mappin.and.ellipse" catalog="system"/>
@@ -366,7 +370,7 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="G2p-uX-MGm" firstAttribute="top" secondItem="Lum-vT-i4m" secondAttribute="bottom" constant="-1.6666666666666856" id="0jg-GK-nbt"/>
-                                                <constraint firstItem="zWG-xt-pD8" firstAttribute="leading" secondItem="TFD-3J-s8E" secondAttribute="leading" id="67D-cz-TqS"/>
+                                                <constraint firstItem="zWG-xt-pD8" firstAttribute="leading" secondItem="TFD-3J-s8E" secondAttribute="leading" constant="5" id="67D-cz-TqS"/>
                                                 <constraint firstAttribute="trailing" secondItem="G2p-uX-MGm" secondAttribute="trailing" id="74m-b5-XMn"/>
                                                 <constraint firstItem="FQB-Vh-Cqf" firstAttribute="top" secondItem="Lum-vT-i4m" secondAttribute="bottom" constant="6.3333333333333144" id="A7A-Lg-7G3"/>
                                                 <constraint firstAttribute="trailing" secondItem="Lum-vT-i4m" secondAttribute="trailing" id="EE4-27-CeG"/>
@@ -398,6 +402,7 @@
                                             <outlet property="likeButton" destination="LM9-KO-5jF" id="POI-TZ-tRb"/>
                                             <outlet property="likeCountLabel" destination="FQB-Vh-Cqf" id="2kc-ON-paL"/>
                                             <outlet property="postImageView" destination="Lum-vT-i4m" id="fX2-9l-GoY"/>
+                                            <outlet property="profileButton" destination="zWG-xt-pD8" id="S3G-h2-SVP"/>
                                             <outlet property="usernameLabel" destination="0kw-XD-m5L" id="d3W-Fg-ImO"/>
                                         </connections>
                                     </tableViewCell>
@@ -416,7 +421,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ddM-Mr-DZ9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2000" y="872"/>
+            <point key="canvasLocation" x="1999.0909090909092" y="871.75732217573227"/>
         </scene>
         <!--Other Profile Page-->
         <scene sceneID="QdW-Py-iRy">
@@ -444,10 +449,9 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5vU-iE-z93">
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5vU-iE-z93" customClass="UIImageView">
                                 <rect key="frame" x="16" y="120" width="111" height="110"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </view>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="gei-Ih-PTx">
                                 <rect key="frame" x="108" y="263" width="195" height="32"/>
@@ -555,6 +559,7 @@
                         <outlet property="otherMapView" destination="qcY-y5-PyI" id="3Cm-pm-2v5"/>
                         <outlet property="otherOptionsBar" destination="gei-Ih-PTx" id="Vl2-OM-ka1"/>
                         <outlet property="otherUserName" destination="nGr-YE-VrW" id="bGO-qe-aCc"/>
+                        <outlet property="profilePicture" destination="5vU-iE-z93" id="jo4-SV-Ivq"/>
                         <segue destination="diZ-9n-Pv5" kind="presentation" identifier="otherProfileToPost" id="CrI-Dp-VLO"/>
                         <segue destination="diZ-9n-Pv5" kind="presentation" identifier="otherProfileMapToPost" id="1aX-Sy-1fZ"/>
                     </connections>
@@ -1036,7 +1041,7 @@
             <objects>
                 <viewController id="Mf7-pK-mys" customClass="DiscoverPage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iBE-pp-T5c">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="884"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view tag="100" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vlB-vG-51R">
@@ -1111,7 +1116,7 @@
             <objects>
                 <viewController id="T3A-jt-ad7" customClass="EditProfileViewController" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cY0-8W-NNX">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="701"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="884"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Edit Profile Below:" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4c4-Np-7KS">
@@ -1576,11 +1581,11 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="R97-3n-0RC"/>
-        <segue reference="hdK-xT-G1A"/>
-        <segue reference="m82-vQ-OZr"/>
-        <segue reference="98C-et-lhs"/>
-        <segue reference="1aX-Sy-1fZ"/>
-        <segue reference="Bic-WB-kOL"/>
+        <segue reference="b39-WX-GwF"/>
+        <segue reference="xCa-pO-K31"/>
+        <segue reference="swg-nk-JWB"/>
+        <segue reference="Wcn-2n-62O"/>
+        <segue reference="xv7-d8-adJ"/>
         <segue reference="s7M-p6-3ga"/>
     </inferredMetricsTieBreakers>
     <resources>

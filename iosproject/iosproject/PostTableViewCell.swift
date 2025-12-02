@@ -23,6 +23,7 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var postImageView: UIImageView!
     @IBOutlet weak var likeButton: UIButton!
     @IBOutlet weak var commentButton: UIButton!
+    @IBOutlet weak var profileButton: UIButton!
     
     weak var delegate: PostTableViewCellDelegate?
     

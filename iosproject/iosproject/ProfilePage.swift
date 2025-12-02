@@ -51,7 +51,9 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
     var selectedPostIndex: Int = 0
     
     @IBOutlet weak var editProfileButton: UIButton!
- 
+    
+    var refreshControl: UIRefreshControl!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -65,10 +67,40 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
         friendsList.delegate = self
         mapView.delegate = self
         
-        let curUser = Auth.auth().currentUser!.uid
-        var ref : DatabaseReference!
-        ref = Database.database().reference().child("users").child(curUser)
-        ref.observeSingleEvent(of: .value) { snapshot in
+        refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshProfileData), for: .valueChanged)
+        gridOfPosts.refreshControl = refreshControl
+        
+        loadProfileData()
+        
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 0
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        gridOfPosts.collectionViewLayout = layout
+        optionsBar.selectedSegmentIndex = 0
+
+        // Do any additional setup after loading the view.
+        mapView.isHidden = true
+        let initialLocation = CLLocationCoordinate2D(latitude: 30.2862, longitude: -97.7394)
+        let region = MKCoordinateRegion(center: initialLocation, latitudinalMeters: 1000, longitudinalMeters: 1000)
+        mapView.setRegion(region, animated: false)
+        friendsList.isHidden = true
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        loadProfileData()
+    }
+    
+    func loadProfileData() {
+        guard let curUser = Auth.auth().currentUser?.uid else { return }
+        let userRef = Database.database().reference().child("users").child(curUser)
+        
+        // Load user info: username, bio, profile picture
+        userRef.observeSingleEvent(of: .value) { snapshot in
             if let username = snapshot.childSnapshot(forPath: "username").value as? String {
                 self.userNameField.text = username
             }
@@ -77,106 +109,79 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
             }
             if let profilePic = snapshot.childSnapshot(forPath: "profileImageURL").value as? String, let url = URL(string: profilePic) {
                 self.profilePicture.sd_setImage(with: url, placeholderImage: UIImage(named: "default_profile_pic.jpg"))
+            } else {
+                self.profilePicture.image = UIImage(named: "default_profile_pic.jpg")
             }
         }
         
-        ref = Database.database().reference().child("posts")
-            ref.observeSingleEvent(of: .value) { snapshot in
-                var feedPosts: [FeedPost] = []
-                var locationPins: [String : FeedPost] = [:]
+        // Load posts for current user
+        let postsRef = Database.database().reference().child("posts")
+        postsRef.observeSingleEvent(of: .value) { snapshot in
+            var feedPosts: [FeedPost] = []
+            var locationPins: [String : FeedPost] = [:]
 
-                for child in snapshot.children {
-                    if let childSnapshot = child as? DataSnapshot,
-                       let dict = childSnapshot.value as? [String: Any],
-                       let postUserId = dict["userId"] as? String,
-                       postUserId == curUser {
-                        let postId = dict["postId"] as? String ?? childSnapshot.key
-                        // let username = dict["username"] as? String ?? ""
-                        let imageUrl = dict["image"] as? String ?? ""
-                        let timestamp = dict["timestamp"] as? Double ?? 0
-                        let likeCount = (dict["likes"] as? [String])?.count ?? 0
+            for child in snapshot.children {
+                if let childSnapshot = child as? DataSnapshot,
+                   let dict = childSnapshot.value as? [String: Any],
+                   let postUserId = dict["userId"] as? String,
+                   postUserId == curUser {
+                    let postId = dict["postId"] as? String ?? childSnapshot.key
+                    let imageUrl = dict["image"] as? String ?? ""
+                    let timestamp = dict["timestamp"] as? Double ?? 0
+                    let likeCount = (dict["likes"] as? [String])?.count ?? 0
 
-                        let commentsArray = dict["comments"] as? [[String: Any]] ?? []
-                        let commentObjs = commentsArray.compactMap { Comment.from(dict: $0) }
+                    let commentsArray = dict["comments"] as? [[String: Any]] ?? []
+                    let commentObjs = commentsArray.compactMap { Comment.from(dict: $0) }
 
-                        let location = dict["locationId"] as? String ?? ""
-                        let caption = dict["caption"] as? String ?? ""
-                        
-                        // Store imageUrl in FeedPost; do NOT download image here
-                        let post = FeedPost(
-                            postId: postId,
-                            userId: postUserId,
-                            imageUrl: imageUrl, // Assuming FeedPost now has an imageUrl property
-                            timestamp: Int(timestamp),
-                            likeCount: likeCount,
-                            comments: commentObjs,
-                            location: location,
-                            caption: caption
-                        )
-                        feedPosts.append(post)
-                        locationPins[location] = post
-                    }
-                }
-
-                DispatchQueue.main.async {
-                    self.posts = feedPosts
-                    self.gridOfPosts.reloadData()
-                    self.loadAnnotations(locationIds: locationPins)
+                    let location = dict["locationId"] as? String ?? ""
+                    let caption = dict["caption"] as? String ?? ""
+                    
+                    let post = FeedPost(
+                        postId: postId,
+                        userId: postUserId,
+                        imageUrl: imageUrl,
+                        timestamp: Int(timestamp),
+                        likeCount: likeCount,
+                        comments: commentObjs,
+                        location: location,
+                        caption: caption
+                    )
+                    feedPosts.append(post)
+                    locationPins[location] = post
                 }
             }
-        
-           ref = Database.database().reference().child("users").child(curUser)
-           ref.child("friends").observe(.value) { snapshot in
-               var loadedFriends: [String] = []
-               var friendUIDs: [String] = []
-               print("Checking friends for user: \(curUser)")
-               print("Snapshot: \(snapshot.value ?? "No friends")")
-               for child in snapshot.children {
-                   if let friendSnap = child as? DataSnapshot {
-                       let friendName = friendSnap.key
-                       let friendID = friendSnap.value as? String ?? ""
-                       loadedFriends.append(friendName)
-                       friendUIDs.append(friendID)
-                   }
-               }
-               
-               self.tempFriends = loadedFriends
-               self.friendUIDs = friendUIDs
-               DispatchQueue.main.async {
-                   self.friendsList.reloadData()
-               }
-           }
-        
-        let layout = UICollectionViewFlowLayout()
-                layout.minimumInteritemSpacing = 0
-                layout.minimumLineSpacing = 0
-                layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-                gridOfPosts.collectionViewLayout = layout
-                optionsBar.selectedSegmentIndex = 0
 
-        // Do any additional setup after loading the view.
-        mapView.isHidden = true
-                let initialLocation = CLLocationCoordinate2D(latitude: 30.2862, longitude: -97.7394)
-                let region = MKCoordinateRegion(center: initialLocation, latitudinalMeters: 1000, longitudinalMeters: 1000)
-                mapView.setRegion(region, animated: false)
-        friendsList.isHidden = true
+            DispatchQueue.main.async {
+                self.posts = feedPosts
+                self.gridOfPosts.reloadData()
+                self.loadAnnotations(locationIds: locationPins)
+            }
+        }
         
+        // Load friends list for current user
+        userRef.child("friends").observeSingleEvent(of: .value) { snapshot in
+            var loadedFriends: [String] = []
+            var friendUIDs: [String] = []
+            for child in snapshot.children {
+                if let friendSnap = child as? DataSnapshot {
+                    let friendName = friendSnap.key
+                    let friendID = friendSnap.value as? String ?? ""
+                    loadedFriends.append(friendName)
+                    friendUIDs.append(friendID)
+                }
+            }
+            self.tempFriends = loadedFriends
+            self.friendUIDs = friendUIDs
+            DispatchQueue.main.async {
+                self.friendsList.reloadData()
+            }
+        }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        let curUser = Auth.auth().currentUser!.uid
-        let ref = Database.database().reference().child("users").child(curUser)
-        
-        ref.observeSingleEvent(of: .value) { snapshot in
-            if let username = snapshot.childSnapshot(forPath: "username").value as? String {
-                self.userNameField.text = username
-            }
-            if let bio = snapshot.childSnapshot(forPath: "bio").value as? String {
-                self.bioField.text = bio
-            }
-        }
+    @objc func refreshProfileData() {
+        // Reload all profile data when pulled to refresh
+        loadProfileData()
+        refreshControl.endRefreshing()
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -199,9 +204,9 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let numberOfColumns: CGFloat = 3.0
-                let totalSpacing: CGFloat = 0.0
-                let width = (collectionView.bounds.width - totalSpacing) / numberOfColumns
-                return CGSize(width: width, height: width) 
+        let totalSpacing: CGFloat = 0.0
+        let width = (collectionView.bounds.width - totalSpacing) / numberOfColumns
+        return CGSize(width: width, height: width) 
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -291,21 +296,20 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
         switch sender.selectedSegmentIndex {
             case 0:
                 gridOfPosts.isHidden = false
-            mapView.isHidden = true
-            friendsList.isHidden = true
-            gridOfPosts.reloadData()
+                mapView.isHidden = true
+                friendsList.isHidden = true
+                gridOfPosts.reloadData()
             case 1:
-            gridOfPosts.isHidden = true
-                        mapView.isHidden = false
-            friendsList.isHidden = true
+                gridOfPosts.isHidden = true
+                mapView.isHidden = false
+                friendsList.isHidden = true
             case 2:
-            mapView.isHidden = true
-            gridOfPosts.isHidden = true
-            friendsList.isHidden = false
-            
+                mapView.isHidden = true
+                gridOfPosts.isHidden = true
+                friendsList.isHidden = false
             default:
-            gridOfPosts.isHidden = true
-            }
+                gridOfPosts.isHidden = true
+        }
     }
     
     @IBAction func editProfilePressed(_ sender: Any) {

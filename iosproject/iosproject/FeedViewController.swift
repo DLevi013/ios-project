@@ -32,6 +32,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         posts = []
         tableView.reloadData()
         UsernameCache.shared.clearCache()
+        ProfileImageCache.shared.clearCache()
         fetchPosts()
     }
     
@@ -53,6 +54,7 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         posts = []
         tableView.reloadData()
         UsernameCache.shared.clearCache()
+        ProfileImageCache.shared.clearCache()
         fetchPosts()
     }
     
@@ -182,7 +184,19 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         cell.commentButton.tag = indexPath.row
         cell.delegate = self
         
-        // Placeholder image while loading
+        let resizedPlaceholder = resizedImage(UIImage(named: "default_profile_pic.jpg"), to: CGSize(width: 32, height: 32))
+        ProfileImageCache.shared.getProfileImageURL(for: post.userId) { profilePicURL in
+            if let profilePicURL = profilePicURL, let url = URL(string: profilePicURL) {
+                cell.profileButton.sd_setImage(with: url, for: .normal, placeholderImage: resizedPlaceholder, options: [], completed: { image, _, _, _ in
+                    if let image = image, let resized = self.resizedImage(image, to: CGSize(width: 32, height: 32)) {
+                        cell.profileButton.setImage(resized, for: .normal)
+                    }
+                })
+            } else {
+                cell.profileButton.setImage(resizedPlaceholder, for: .normal)
+            }
+        }
+        
         let isDark = traitCollection.userInterfaceStyle == .dark
         let placeholderName = isDark ? "dark-placeholder" : "placeholder-square"
         let placeholderImage = UIImage(named: placeholderName)
@@ -286,6 +300,15 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return posts.count
+    }
+    
+    func resizedImage(_ image: UIImage?, to size: CGSize) -> UIImage? {
+        guard let image = image else { return nil }
+        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+        image.draw(in: CGRect(origin: .zero, size: size))
+        let resized = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return resized
     }
 
     @IBAction func didTapCommentButton(_ sender: UIButton) {
