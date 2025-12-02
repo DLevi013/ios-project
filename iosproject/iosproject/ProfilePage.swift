@@ -50,12 +50,19 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
     var selectedPostImage: UIImage?
     var selectedPostIndex: Int = 0
     
-    @IBOutlet weak var editProfileButton: UIButton!
+    
+    @IBOutlet weak var newEditProfileButton: UIButton!
     
     var refreshControl: UIRefreshControl!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        newEditProfileButton.layer.shadowColor = UIColor.black.cgColor
+        newEditProfileButton.layer.shadowRadius = 5.0
+        newEditProfileButton.layer.shadowOpacity = 0.4
+        newEditProfileButton.layer.shadowOffset = CGSize(width: 2, height: 4)
         
         profilePicture.layer.cornerRadius = profilePicture.bounds.width / 2.0
         profilePicture.clipsToBounds = true
@@ -314,10 +321,10 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
                 gridOfPosts.isHidden = true
         }
     }
+
     
-    @IBAction func editProfilePressed(_ sender: Any) {
+    @IBAction func newEditProfilePressed(_ sender: Any) {
         performSegue(withIdentifier: "profileToEditProfile", sender: self)
-        
     }
     
     func loadAnnotations(locationIds: [String: FeedPost]) {
