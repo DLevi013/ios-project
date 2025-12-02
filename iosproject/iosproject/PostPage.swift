@@ -11,6 +11,8 @@ import FirebaseAuth
 import SDWebImage
 
 class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
+   
+    
  
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var profilePicture: UIButton!
@@ -21,6 +23,11 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var captionLabel: UILabel!
     @IBOutlet weak var commentTextLabel: UILabel!
     @IBOutlet weak var commentTextField: UITextField!
+    
+    @IBOutlet weak var heartButton: UIButton!
+    
+    
+    
 
     var comments: [Comment] = []
 
@@ -111,6 +118,20 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
         UIGraphicsEndImageContext()
         return rounded
     }
+    
+    
+    @IBAction func heartButtonPressed(_ sender: Any) {
+        
+        print("skibidy testing")
+        
+    }
+    
+
+    
+    
+    
+    
+    
 
     @IBAction func sendCommentTapped(_ sender: Any) {
         guard let commentText = commentTextField.text, !commentText.isEmpty else {

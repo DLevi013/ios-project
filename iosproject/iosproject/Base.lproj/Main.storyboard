@@ -986,6 +986,16 @@
                                     <action selector="sendCommentTapped:" destination="diZ-9n-Pv5" eventType="touchUpInside" id="oha-hv-1yW"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wXr-0U-6nA">
+                                <rect key="frame" x="37" y="532" width="51" height="38"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="heart" catalog="system"/>
+                                <connections>
+                                    <action selector="heartButtonPressed:" destination="diZ-9n-Pv5" eventType="touchUpInside" id="dux-sN-Utk"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="9W0-xK-Rbp"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -1017,6 +1027,7 @@
                         <outlet property="commentTextField" destination="yOa-eP-OPl" id="2Ll-sd-n1S"/>
                         <outlet property="commentTextLabel" destination="AIA-QZ-r6W" id="UQt-OD-N4C"/>
                         <outlet property="dateLabel" destination="jJ2-El-cFn" id="aNM-v9-JVG"/>
+                        <outlet property="heartButton" destination="wXr-0U-6nA" id="Pl0-M6-ElR"/>
                         <outlet property="likeLabel" destination="nO8-TQ-2Kf" id="Mc6-2g-25Z"/>
                         <outlet property="postImages" destination="t08-au-MtJ" id="IZx-p0-VdG"/>
                         <outlet property="profilePicture" destination="FH1-wm-fWf" id="ww3-gM-pQa"/>
@@ -1569,8 +1580,8 @@
         <segue reference="b39-WX-GwF"/>
         <segue reference="xCa-pO-K31"/>
         <segue reference="98C-et-lhs"/>
-        <segue reference="OW5-HH-Bqh"/>
-        <segue reference="Bic-WB-kOL"/>
+        <segue reference="Wcn-2n-62O"/>
+        <segue reference="xv7-d8-adJ"/>
         <segue reference="s7M-p6-3ga"/>
     </inferredMetricsTieBreakers>
     <resources>
