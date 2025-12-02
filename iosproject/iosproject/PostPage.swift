@@ -12,6 +12,8 @@ import SDWebImage
 
 class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
  
+    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var profilePicture: UIButton!
     @IBOutlet weak var postImages: UIImageView!
     @IBOutlet weak var commentTableView: UITableView!
     @IBOutlet weak var userIDField: UILabel!
@@ -44,6 +46,26 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
 
         print("\(post.caption)")
         userIDField.text = post.username
+        
+        dateLabel.text = formattedPostDate(timestamp: post.timestamp)
+        
+        let basePlaceholder = UIImage(named: "default_profile_pic.jpg")
+        let resizedPlaceholder = resizedImage(basePlaceholder, to: CGSize(width: 32, height: 32))
+        let circularPlaceholder = circularImage(resizedPlaceholder)
+        profilePicture.setImage(circularPlaceholder, for: .normal)
+        
+        ProfileImageCache.shared.getProfileImageURL(for: post.userId) { url in
+            if let url = url, let imageURL = URL(string: url) {
+                SDWebImageManager.shared.loadImage(with: imageURL, options: [], progress: nil) { image, _, _, _, _, _ in
+                    let resized = self.resizedImage(image, to: CGSize(width: 32, height: 32))
+                    let circular = self.circularImage(resized)
+                    self.profilePicture.setImage(circular ?? circularPlaceholder, for: .normal)
+                }
+            } else {
+                self.profilePicture.setImage(circularPlaceholder, for: .normal)
+            }
+        }
+
         captionLabel.text = post.caption
         likeLabel.text = post.likeCount.description
         commentLabel.text = post.comments.count.description
@@ -62,9 +84,28 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
                 }
             }
             self.comments = loadedComments
-            print("Loaded Comments: \(self.comments)")
-            self.commentTableView.reloadData()
+            let userIds = Set(self.comments.map { $0.userId })
+            UsernameCache.shared.getUsernames(for: Array(userIds)) { usernames in
+                for idx in self.comments.indices {
+                    self.comments[idx].username = usernames[self.comments[idx].userId]
+                }
+                print("Loaded Comments with usernames: \(self.comments)")
+                self.commentTableView.reloadData()
+            }
         }
+    }
+
+    private func circularImage(_ image: UIImage?) -> UIImage? {
+        guard let image = image else { return nil }
+        let minDimension = min(image.size.width, image.size.height)
+        let size = CGSize(width: minDimension, height: minDimension)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+        let rect = CGRect(origin: .zero, size: size)
+        UIBezierPath(ovalIn: rect).addClip()
+        image.draw(in: rect)
+        let rounded = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return rounded
     }
 
     @IBAction func sendCommentTapped(_ sender: Any) {
@@ -103,6 +144,44 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
+    
+    private func formattedPostDate(timestamp: Int) -> String {
+        let postDate = Date(timeIntervalSince1970: TimeInterval(timestamp))
+        let now = Date()
+        let calendar = Calendar.current
+        
+        let secondsAgo = Int(now.timeIntervalSince(postDate))
+        if secondsAgo < 60 {
+            return "Just now"
+        }
+        let minutesAgo = secondsAgo / 60
+        if minutesAgo < 60 {
+            return "\(minutesAgo) min ago"
+        }
+        let hoursAgo = minutesAgo / 60
+        if hoursAgo < 24 && calendar.isDate(postDate, equalTo: now, toGranularity: .day) {
+            return "\(hoursAgo) hr ago"
+        }
+        if calendar.isDateInYesterday(postDate) {
+            return "Yesterday"
+        }
+        if let daysAgo = calendar.dateComponents([.day], from: postDate, to: now).day, daysAgo < 7 {
+            return "\(daysAgo) days ago"
+        }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        return dateFormatter.string(from: postDate)
+    }
+    
+    private func resizedImage(_ image: UIImage?, to size: CGSize) -> UIImage? {
+        guard let image = image else { return nil }
+        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+        image.draw(in: CGRect(origin: .zero, size: size))
+        let resized = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return resized
+    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return comments.count
@@ -115,10 +194,25 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
         let comment = comments[indexPath.row]
         cell.usernameLabel.text = comment.username
         cell.commentLabel.text = comment.text
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .short
-        cell.dateLabel.text = formatter.string(from: comment.timestamp)
+        cell.dateLabel.text = formattedPostDate(timestamp: Int(comment.timestamp.timeIntervalSince1970))
+        
+        let basePlaceholder = UIImage(named: "default_profile_pic.jpg")
+        let resizedPlaceholder = resizedImage(basePlaceholder, to: CGSize(width: 32, height: 32))
+        let circularPlaceholder = circularImage(resizedPlaceholder)
+        cell.profilePicture.setImage(circularPlaceholder, for: .normal)
+        
+        ProfileImageCache.shared.getProfileImageURL(for: comment.userId) { url in
+            if let url = url, let imageURL = URL(string: url) {
+                SDWebImageManager.shared.loadImage(with: imageURL, options: [], progress: nil) { image, _, _, _, _, _ in
+                    let resized = self.resizedImage(image, to: CGSize(width: 32, height: 32))
+                    let circular = self.circularImage(resized)
+                    cell.profilePicture.setImage(circular ?? circularPlaceholder, for: .normal)
+                }
+            } else {
+                cell.profilePicture.setImage(circularPlaceholder, for: .normal)
+            }
+        }
+        
         return cell
     }
 
@@ -148,3 +242,4 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
         }
     }
 }
+

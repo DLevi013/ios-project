@@ -99,10 +99,13 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
         guard let curUser = Auth.auth().currentUser?.uid else { return }
         let userRef = Database.database().reference().child("users").child(curUser)
         
-        // Load user info: username, bio, profile picture
+        var currentUsername: String = ""
+        
+        // load user info: username, bio, profile picture
         userRef.observeSingleEvent(of: .value) { snapshot in
             if let username = snapshot.childSnapshot(forPath: "username").value as? String {
                 self.userNameField.text = username
+                currentUsername = username
             }
             if let bio = snapshot.childSnapshot(forPath: "bio").value as? String {
                 self.bioField.text = bio
@@ -112,49 +115,49 @@ class ProfilePage: ModeViewController, UICollectionViewDataSource, UICollectionV
             } else {
                 self.profilePicture.image = UIImage(named: "default_profile_pic.jpg")
             }
-        }
-        
-        // Load posts for current user
-        let postsRef = Database.database().reference().child("posts")
-        postsRef.observeSingleEvent(of: .value) { snapshot in
-            var feedPosts: [FeedPost] = []
-            var locationPins: [String : FeedPost] = [:]
+            
+            let postsRef = Database.database().reference().child("posts")
+            postsRef.observeSingleEvent(of: .value) { snapshot in
+                var feedPosts: [FeedPost] = []
+                var locationPins: [String : FeedPost] = [:]
 
-            for child in snapshot.children {
-                if let childSnapshot = child as? DataSnapshot,
-                   let dict = childSnapshot.value as? [String: Any],
-                   let postUserId = dict["userId"] as? String,
-                   postUserId == curUser {
-                    let postId = dict["postId"] as? String ?? childSnapshot.key
-                    let imageUrl = dict["image"] as? String ?? ""
-                    let timestamp = dict["timestamp"] as? Double ?? 0
-                    let likeCount = (dict["likes"] as? [String])?.count ?? 0
+                for child in snapshot.children {
+                    if let childSnapshot = child as? DataSnapshot,
+                       let dict = childSnapshot.value as? [String: Any],
+                       let postUserId = dict["userId"] as? String,
+                       postUserId == curUser {
+                        let postId = dict["postId"] as? String ?? childSnapshot.key
+                        let imageUrl = dict["image"] as? String ?? ""
+                        let timestamp = dict["timestamp"] as? Double ?? 0
+                        let likeCount = (dict["likes"] as? [String])?.count ?? 0
 
-                    let commentsArray = dict["comments"] as? [[String: Any]] ?? []
-                    let commentObjs = commentsArray.compactMap { Comment.from(dict: $0) }
+                        let commentsArray = dict["comments"] as? [[String: Any]] ?? []
+                        let commentObjs = commentsArray.compactMap { Comment.from(dict: $0) }
 
-                    let location = dict["locationId"] as? String ?? ""
-                    let caption = dict["caption"] as? String ?? ""
-                    
-                    let post = FeedPost(
-                        postId: postId,
-                        userId: postUserId,
-                        imageUrl: imageUrl,
-                        timestamp: Int(timestamp),
-                        likeCount: likeCount,
-                        comments: commentObjs,
-                        location: location,
-                        caption: caption
-                    )
-                    feedPosts.append(post)
-                    locationPins[location] = post
+                        let location = dict["locationId"] as? String ?? ""
+                        let caption = dict["caption"] as? String ?? ""
+                        
+                        let post = FeedPost(
+                            postId: postId,
+                            userId: postUserId,
+                            username: currentUsername,
+                            imageUrl: imageUrl,
+                            timestamp: Int(timestamp),
+                            likeCount: likeCount,
+                            comments: commentObjs,
+                            location: location,
+                            caption: caption
+                        )
+                        feedPosts.append(post)
+                        locationPins[location] = post
+                    }
                 }
-            }
 
-            DispatchQueue.main.async {
-                self.posts = feedPosts
-                self.gridOfPosts.reloadData()
-                self.loadAnnotations(locationIds: locationPins)
+                DispatchQueue.main.async {
+                    self.posts = feedPosts
+                    self.gridOfPosts.reloadData()
+                    self.loadAnnotations(locationIds: locationPins)
+                }
             }
         }
         
