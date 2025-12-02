@@ -900,11 +900,11 @@
                                     <constraint firstAttribute="height" constant="281" id="g6x-nw-XTc"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="commentCell" rowHeight="80" id="uUY-S8-d4h" customClass="CommentTableViewCell" customModule="iosproject" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="50" width="440" height="80"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="commentCell" rowHeight="63" id="uUY-S8-d4h" customClass="CommentTableViewCell" customModule="iosproject" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="50" width="440" height="63"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="uUY-S8-d4h" id="sSP-FQ-DoL">
-                                            <rect key="frame" x="0.0" y="0.0" width="440" height="80"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="440" height="63"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OxA-gZ-nnX">
@@ -916,8 +916,11 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Comment Text" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AmJ-VI-wBb">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Comment Text" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AmJ-VI-wBb">
                                                     <rect key="frame" x="60" y="35" width="360" height="18"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="360" id="p7a-Ed-aKL"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -951,11 +954,11 @@
                                                 <constraint firstItem="yZq-MS-FvL" firstAttribute="top" secondItem="sSP-FQ-DoL" secondAttribute="top" constant="20" symbolic="YES" id="Har-MD-Nj0"/>
                                                 <constraint firstItem="OxA-gZ-nnX" firstAttribute="leading" secondItem="yZq-MS-FvL" secondAttribute="trailing" constant="7" id="Jun-qZ-bNw"/>
                                                 <constraint firstItem="rA5-zg-vwS" firstAttribute="top" secondItem="sSP-FQ-DoL" secondAttribute="topMargin" constant="5" id="KxF-UY-m0N"/>
-                                                <constraint firstItem="AmJ-VI-wBb" firstAttribute="top" secondItem="OxA-gZ-nnX" secondAttribute="bottom" constant="0.6666666666666643" id="LpZ-hQ-KDa"/>
                                                 <constraint firstItem="rA5-zg-vwS" firstAttribute="trailing" secondItem="sSP-FQ-DoL" secondAttribute="trailingMargin" id="XIG-Mr-gg5"/>
                                                 <constraint firstItem="AmJ-VI-wBb" firstAttribute="trailing" secondItem="sSP-FQ-DoL" secondAttribute="trailingMargin" id="cVy-it-TJP"/>
                                                 <constraint firstItem="AmJ-VI-wBb" firstAttribute="top" secondItem="OxA-gZ-nnX" secondAttribute="bottom" constant="0.6666666666666643" id="eBQ-1t-KpJ"/>
                                                 <constraint firstItem="AmJ-VI-wBb" firstAttribute="leading" secondItem="yZq-MS-FvL" secondAttribute="trailing" constant="7" id="kC5-Jv-tVO"/>
+                                                <constraint firstAttribute="bottom" secondItem="AmJ-VI-wBb" secondAttribute="bottom" constant="10" id="nag-3H-UQr"/>
                                                 <constraint firstItem="yZq-MS-FvL" firstAttribute="leading" secondItem="sSP-FQ-DoL" secondAttribute="leading" constant="21" id="tfi-ND-NPO"/>
                                                 <constraint firstItem="OxA-gZ-nnX" firstAttribute="top" secondItem="sSP-FQ-DoL" secondAttribute="topMargin" constant="5" id="ySy-Mu-wda"/>
                                             </constraints>

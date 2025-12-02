@@ -72,6 +72,8 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
 
         commentTableView.dataSource = self
         commentTableView.delegate = self
+        commentTableView.estimatedRowHeight = 60.0
+        commentTableView.rowHeight = UITableView.automaticDimension
 
         let postRef = ref.child(post.postId).child("comments")
         postRef.observe(.value) { snapshot in
