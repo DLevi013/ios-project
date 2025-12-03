@@ -759,6 +759,17 @@
                                         <rect key="frame" x="65" y="12" width="186" height="116"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m7j-WD-o0R">
+                                        <rect key="frame" x="456" y="53" width="48" height="35"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
+                                        <color key="tintColor" systemColor="systemRedColor"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="trash.fill" catalog="system"/>
+                                        <connections>
+                                            <action selector="pressedEditButton:" destination="diZ-9n-Pv5" eventType="touchUpInside" id="D16-fO-uim"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </view>
@@ -924,6 +935,7 @@
                         <outlet property="commentTextField" destination="yOa-eP-OPl" id="2Ll-sd-n1S"/>
                         <outlet property="commentTextLabel" destination="AIA-QZ-r6W" id="UQt-OD-N4C"/>
                         <outlet property="dateLabel" destination="jJ2-El-cFn" id="aNM-v9-JVG"/>
+                        <outlet property="deletePostButton" destination="m7j-WD-o0R" id="nEC-Ev-xpU"/>
                         <outlet property="heartButton" destination="Lfq-FF-jJI" id="WPo-dU-iyU"/>
                         <outlet property="likeLabel" destination="nO8-TQ-2Kf" id="Mc6-2g-25Z"/>
                         <outlet property="postImages" destination="t08-au-MtJ" id="IZx-p0-VdG"/>
@@ -1477,8 +1489,8 @@
         <segue reference="b39-WX-GwF"/>
         <segue reference="xCa-pO-K31"/>
         <segue reference="98C-et-lhs"/>
-        <segue reference="Wcn-2n-62O"/>
-        <segue reference="xv7-d8-adJ"/>
+        <segue reference="OW5-HH-Bqh"/>
+        <segue reference="Bic-WB-kOL"/>
         <segue reference="s7M-p6-3ga"/>
     </inferredMetricsTieBreakers>
     <resources>
@@ -1490,12 +1502,19 @@
         <image name="message" catalog="system" width="128" height="106"/>
         <image name="person" catalog="system" width="128" height="121"/>
         <image name="plus" catalog="system" width="128" height="113"/>
+        <image name="trash.fill" catalog="system" width="117" height="128"/>
         <image name="white_logo_text" width="1536" height="1024"/>
         <namedColor name="WidgetBackground">
             <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="opaqueSeparatorColor">
+            <color red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

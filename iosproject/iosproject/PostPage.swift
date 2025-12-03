@@ -27,6 +27,7 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var heartButton: UIButton!
     
     
+    @IBOutlet weak var deletePostButton: UIButton!
     
 
     var comments: [Comment] = []
@@ -44,6 +45,21 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        deletePostButton.layer.shadowColor = UIColor.black.cgColor
+        deletePostButton.layer.shadowRadius = 5.0
+        deletePostButton.layer.shadowOpacity = 0.4
+        deletePostButton.layer.shadowOffset = CGSize(width: 2, height: 4)
+        
+        
+        let posterId = post?.userId
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        if(posterId != userId){
+            deletePostButton.isHidden = true
+        } else {
+            deletePostButton.isHidden = false
+        }
+        
+        
         getUserName()
         guard let post = post else { return }
 
@@ -164,8 +180,42 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
     }
     
     
+    @IBAction func pressedEditButton(_ sender: Any) {
+        print("Delete post button pressed")
+        let alert = UIAlertController(
+                title: "Delete Post?",
+                message: "Are you sure you want to delete this post?",
+                preferredStyle: .actionSheet
+            )
 
-    
+            let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { _ in
+                let ref = Database.database().reference()
+                    .child("posts")
+                    .child(self.post!.postId)
+
+                ref.removeValue { error, _ in
+                    if let error = error {
+                        print("Error deleting post: \(error.localizedDescription)")
+                        return
+                    }
+
+                    DispatchQueue.main.async {
+                        self.dismiss(animated: true)
+                    }
+                }
+            }
+
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+
+            alert.addAction(deleteAction)
+            alert.addAction(cancelAction)
+            
+            present(alert, animated: true)
+
+            
+        
+        
+    }
     
     
     
