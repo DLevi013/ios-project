@@ -783,6 +783,9 @@
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="heart" catalog="system"/>
+                                        <connections>
+                                            <action selector="heartButtonPressed:" destination="diZ-9n-Pv5" eventType="touchUpInside" id="Pqc-2D-sp3"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4ls-K5-zSo">
                                         <rect key="frame" x="392" y="342" width="48" height="35"/>
@@ -921,6 +924,7 @@
                         <outlet property="commentTextField" destination="yOa-eP-OPl" id="2Ll-sd-n1S"/>
                         <outlet property="commentTextLabel" destination="AIA-QZ-r6W" id="UQt-OD-N4C"/>
                         <outlet property="dateLabel" destination="jJ2-El-cFn" id="aNM-v9-JVG"/>
+                        <outlet property="heartButton" destination="Lfq-FF-jJI" id="WPo-dU-iyU"/>
                         <outlet property="likeLabel" destination="nO8-TQ-2Kf" id="Mc6-2g-25Z"/>
                         <outlet property="postImages" destination="t08-au-MtJ" id="IZx-p0-VdG"/>
                         <outlet property="profilePicture" destination="FH1-wm-fWf" id="ww3-gM-pQa"/>

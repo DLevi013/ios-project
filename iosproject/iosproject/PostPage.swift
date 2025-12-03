@@ -118,13 +118,51 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
         UIGraphicsEndImageContext()
         return rounded
     }
-    
+
     
     @IBAction func heartButtonPressed(_ sender: Any) {
-        
-        print("skibidy testing")
-        
+        // 1. Guard and setup references
+            guard var post = post else { return } // Use 'var' to allow modification
+            let likeRef = Database.database().reference()
+            let postRef = likeRef.child("posts").child(post.postId).child("likes")
+            guard let userId = Auth.auth().currentUser?.uid else { return }
+
+            // 2. Perform Firebase Read operation
+        postRef.observeSingleEvent(of: .value, with: { snapshot in
+           
+            var likes = snapshot.value as? [String] ?? []
+                    let isCurrentlyLiked = likes.contains(userId)
+
+                    if isCurrentlyLiked {
+                        // Unlike
+                        likes.removeAll { $0 == userId }
+                        print("this stucks")
+                    } else {
+                        // Like
+                        likes.append(userId)
+                    }
+
+                    // 3. Update Firebase WRITE operation
+                    postRef.setValue(likes) { error, _ in
+                        if let error = error {
+                            print("Firebase update failed: \(error.localizedDescription)")
+                            return
+                        }
+                        
+                        post.likeCount = likes.count
+                        self.post = post
+                        
+                        // Update the UI elements on the main thread
+                        DispatchQueue.main.async {
+                            let newLikeCount = likes.count
+                            let isNowLiked = likes.contains(userId)
+                            self.likeLabel.text = "\(newLikeCount)"
+                        }
+                    }
+        })
+
     }
+    
     
 
     
