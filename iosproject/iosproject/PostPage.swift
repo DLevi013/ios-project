@@ -171,7 +171,6 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
                         // Update the UI elements on the main thread
                         DispatchQueue.main.async {
                             let newLikeCount = likes.count
-                            let isNowLiked = likes.contains(userId)
                             self.likeLabel.text = "\(newLikeCount)"
                         }
                     }
@@ -206,14 +205,9 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
             }
 
             let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-
             alert.addAction(deleteAction)
             alert.addAction(cancelAction)
-            
             present(alert, animated: true)
-
-            
-        
         
     }
     
