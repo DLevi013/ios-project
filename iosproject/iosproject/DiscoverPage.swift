@@ -10,28 +10,6 @@ import MapKit
 import CoreLocation
 import FirebaseDatabase
 
-//class LocationAnnotation: NSObject, MKAnnotation {
-//    var coordinate: CLLocationCoordinate2D
-//    var title: String?
-//    var subtitle: String? // same as address
-//    
-//    var address: String?
-//    var locationId: String?
-//    
-//    init(coordinate: CLLocationCoordinate2D,
-//         title: String?,
-//         subtitle: String?,
-//         address: String?,
-//         locationId: String?) {
-//        self.coordinate = coordinate
-//        self.title = title
-//        self.subtitle = subtitle
-//        self.address = address
-//        self.locationId = locationId
-//       
-//    }
-//}
-
 
 class DiscoverPin: NSObject, MKAnnotation {
     var coordinate: CLLocationCoordinate2D
@@ -59,7 +37,7 @@ class DiscoverPin: NSObject, MKAnnotation {
 }
 
 
-class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
+class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -82,7 +60,9 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     var currentView: MKAnnotationView?
         
     let ref = Database.database().reference()
-    //@IBOutlet weak var moreInfoButton: UIButton!
+    
+    fileprivate let locationManager: CLLocationManager = CLLocationManager()
+    var currentCLLCordinate2d: CLLocationCoordinate2D?
     
     override func viewDidLoad(){
         super.viewDidLoad()
@@ -99,10 +79,22 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         } else {
             confirmLocationButton.isHidden = true
         }
-        // moreInfoButton.isEnabled = false
-        //        loadLocations()
         
         loadPins()
+        
+        switch locationManager.authorizationStatus {
+            case CLAuthorizationStatus.notDetermined:
+                locationManager.requestWhenInUseAuthorization()
+                locationManager.startUpdatingLocation()
+            case CLAuthorizationStatus.denied:
+                locationManager.requestWhenInUseAuthorization()
+                locationManager.startUpdatingLocation()
+        default :
+            if self.currentCLLCordinate2d == nil {
+                self.currentCLLCordinate2d =  CLLocationCoordinate2D(latitude: 40.7128, longitude: 74.0060)
+            }
+        }
+        locationManager.delegate = self
     }
     
     func searchBar(_ searchField: UISearchBar, textDidChange text: String) {
@@ -119,22 +111,27 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         }
     }
     
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager){
+        let currentCLLocation = locationManager.location
+        var targetCLLCoordinate2D: CLLocationCoordinate2D?
+        
+        if currentCLLocation != nil {
+            targetCLLCoordinate2D = CLLocationCoordinate2D(latitude: (currentCLLocation?.coordinate.longitude)!, longitude: (currentCLLocation?.coordinate.latitude)!)
+        } else {
+            targetCLLCoordinate2D = CLLocationCoordinate2D(latitude: 40.7128, longitude: 74.0060)
+        }
+        
+        self.currentCLLCordinate2d = targetCLLCoordinate2D
+    }
+    
     func getSearchResults(addressString: String) async {
-        var targetRegion = MKCoordinateRegion(
-            center: CLLocationCoordinate2D(latitude: 97.7394, longitude: 97.7394),
+        self.searchFieldLocations = []
+        
+        let targetRegion = MKCoordinateRegion(
+            center: self.currentCLLCordinate2d!,
             latitudinalMeters: self.viewSize,
             longitudinalMeters: self.viewSize
         )
-        self.searchFieldLocations = []
-        if let userLocation = mapView.userLocation.location {
-            targetRegion = MKCoordinateRegion(
-                center: userLocation.coordinate,
-                latitudinalMeters: self.viewSize,
-                longitudinalMeters: self.viewSize
-            )
-        } else {
-            print("User location not available")
-        }
         
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = addressString
@@ -192,34 +189,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         )
         mapView.setRegion(region, animated: true)
         searchResults.isHidden = true
-        //moreInfoButton.isEnabled = true
-        //view.bringSubviewToFront(moreInfoButton)
     }
-    
-//    func loadLocations() {
-//        ref.child("locations").observeSingleEvent(of: .value) { snapshot in
-//            for child in snapshot.children {
-//                if let childSnapshot = child as? DataSnapshot,
-//                   let dict = childSnapshot.value as? [String: Any] {
-//                    
-//                    self.locationId = childSnapshot.key
-//                    let name = dict["name"] as? String ?? ""
-//                    let address = dict["address"] as? String ?? ""
-//                    if let coords = dict["coordinates"] as? [String: Any],
-//                       let lat = coords["latitude"] as? Double,
-//                       let lon = coords["longitude"] as? Double {
-//                        let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-//                        
-//                                             
-//                        let locationAnnot = DiscoverPin(coordinate: coordinate, title: name, subtitle: address, address: address, locationId: self.locationId, PostId: "NoPostAssociated")
-//                       
-//                        
-//                        self.mapView.addAnnotation(locationAnnot)
-//                    }
-//                }
-//            }
-//        }
-//    }
     
     private func mapView(_ mapView: MKMapView, didSelect view: DiscoverPin) {
         selectedAnnot = view
@@ -232,7 +202,6 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             longitudinalMeters: self.viewSize
         )
         mapView.setRegion(region, animated: true)
-        //self.moreInfoButton.isEnabled = true
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
