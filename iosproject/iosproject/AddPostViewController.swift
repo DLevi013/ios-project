@@ -228,6 +228,10 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
                 } else {
                     print("Post successfully added!")
                     alertMessage = "Post added!"
+                    if (isNotif) {
+                        self.checkPostMilestone()
+                    }
+
                 }
                 let controller = UIAlertController(title: "Add Post", message: alertMessage, preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "OK", style: .default)
@@ -237,7 +241,19 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
             }
     }
     
-    
+    private func checkPostMilestone() {
+        let ref = Database.database().reference()
+            // Count total posts by current user
+            ref.child("posts").queryOrdered(byChild: "userId").queryEqual(toValue: curUser).observeSingleEvent(of: .value) { snapshot in
+                let postCount = Int(snapshot.childrenCount)
+                print("User has \(postCount) total posts")
+                
+                // Send milestone notification if applicable
+                if [1, 5, 10, 25, 50, 100].contains(postCount) {
+                    PostReminderManager.shared.sendMotivationalReminder(postsCount: postCount)
+                }
+            }
+    }
 
     
     
