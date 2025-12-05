@@ -11,9 +11,7 @@ import FirebaseAuth
 import SDWebImage
 
 class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
-   
     
- 
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var profilePicture: UIButton!
     @IBOutlet weak var postImages: UIImageView!
@@ -210,10 +208,6 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
             present(alert, animated: true)
         
     }
-    
-    
-    
-    
 
     @IBAction func sendCommentTapped(_ sender: Any) {
         guard let commentText = commentTextField.text, !commentText.isEmpty else {
@@ -293,6 +287,40 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return comments.count
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+
+        let selectedItem = comments[indexPath.row]
+        // If current user is the one that selected comment, give alert to let them delete comment
+        if selectedItem.userId == Auth.auth().currentUser?.uid {
+            let alertController = UIAlertController(title: "Delete Comment", message: "Would you like to delete this comment?", preferredStyle: .alert)
+            
+            let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { _ in
+                self.comments.remove(at: indexPath.row)
+                
+                guard let postId = self.post?.postId else { return }
+                let ref = Database.database().reference().child("posts").child(postId).child("comments")
+                let commentDicts = self.comments.map { $0.toDict() }
+                
+                ref.setValue(commentDicts) { error, _ in
+                    if let error = error {
+                        self.showError(title: "Error", message: "Failed to delete comment: \(error.localizedDescription)")
+                    } else {
+                        self.commentTableView.reloadData()
+                        self.showError(title: "Success", message: "Comment deleted!")
+                    }
+                }
+            }
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+            
+            alertController.addAction(deleteAction)
+            alertController.addAction(cancelAction)
+            
+            present(alertController, animated: true, completion: nil)
+        }
+    }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "commentCell", for: indexPath) as? CommentTableViewCell else {
@@ -330,6 +358,10 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
         performSegue(withIdentifier: "postToLocation", sender: self)
     }
 
+    @IBAction func profilePicturePressed(_ sender: Any) {
+        performSegue(withIdentifier: "profilePictureToOtherProfile", sender: self)
+    }
+    
     func getUserName() {
         guard let currentUserID = Auth.auth().currentUser?.uid else { return }
 
@@ -361,6 +393,12 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
         if segue.identifier == "commentToOtherProfile",
            let destination = segue.destination as? OtherProfilePage,
            let userId = selectedCommentUserId {
+            destination.otherUserID = userId
+        }
+        
+        if segue.identifier == "profilePictureToOtherProfile",
+           let destination = segue.destination as? OtherProfilePage,
+           let userId = self.post?.userId {
             destination.otherUserID = userId
         }
     }
