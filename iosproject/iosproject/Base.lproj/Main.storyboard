@@ -1098,7 +1098,7 @@
             <objects>
                 <viewController id="T3A-jt-ad7" customClass="EditProfileViewController" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cY0-8W-NNX">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="884"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="701"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Edit Profile Below:" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4c4-Np-7KS">
@@ -1585,6 +1585,7 @@
                         </connections>
                     </tableView>
                     <connections>
+                        <outlet property="notificationSwitch" destination="gE5-va-7Tc" id="SSi-VP-2Yp"/>
                         <outlet property="privateSwitch" destination="Lru-HK-PbQ" id="WlZ-zN-hUX"/>
                     </connections>
                 </tableViewController>
@@ -1596,7 +1597,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="R97-3n-0RC"/>
         <segue reference="hdK-xT-G1A"/>
-        <segue reference="xCa-pO-K31"/>
+        <segue reference="m82-vQ-OZr"/>
         <segue reference="98C-et-lhs"/>
         <segue reference="jRi-NH-rLi"/>
         <segue reference="Bic-WB-kOL"/>

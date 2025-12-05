@@ -9,13 +9,18 @@ import UIKit
 import FirebaseAuth
 import FirebaseDatabase
 
+// hopefully allows notification check to be easier
+var isNotif: Bool = false
+
 class ModeTableViewController: UITableViewController {
 
     var isPrivate: Bool = false
     var isDark: Bool = false
-    var isNotif: Bool = false
+    // var isNotif: Bool = false
     @IBOutlet weak var privateSwitch: UISwitch!
-
+    
+    @IBOutlet weak var notificationSwitch: UISwitch!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         applyTheme()
@@ -38,6 +43,19 @@ class ModeTableViewController: UITableViewController {
                 }
             } else {
                 self.privateSwitch.isOn = false
+            }
+        }
+        
+        // Load notification setting
+        ref.child("users").child(uid).child("notificationsEnabled").observeSingleEvent(of: .value) { (snapshot: DataSnapshot, _: String?)  in
+            if let notificationsEnabled = snapshot.value as? Bool {
+                DispatchQueue.main.async {
+                    self.notificationSwitch.isOn = notificationsEnabled
+                    isNotif = notificationsEnabled
+                }
+            } else {
+                self.notificationSwitch.isOn = true
+                isNotif = true
             }
         }
     }
@@ -87,7 +105,72 @@ class ModeTableViewController: UITableViewController {
     @IBAction func notificationSwitch(_ sender: UISwitch) {
         isNotif = sender.isOn
         print("Notification: \(isNotif)")
+        let ref = Database.database().reference()
+        guard let uid = Auth.auth().currentUser?.uid else {
+            self.showError(title: "Bad User", message: "Invalid Session")
+            return
+        }
+        
+        if isNotif {
+            // User wants to enable notifications; request permission
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+                DispatchQueue.main.async {
+                    if granted {
+                        // Permission granted; schedule reminders
+                        PostReminderManager.shared.scheduleDailyReminders()
+                        
+                        // Save to Firebase
+                        ref.child("users").child(uid).child("notificationsEnabled").setValue(true)
+                        
+                        let alert = UIAlertController(
+                            title: "Reminders Enabled! 🎉",
+                            message: "We'll send you friendly reminders to post throughout the day.",
+                            preferredStyle: .alert
+                        )
+                        alert.addAction(UIAlertAction(title: "OK", style: .default))
+                        self.present(alert, animated: true)
+                        
+                    } else {
+                        // Permission denied
+                        isNotif = false
+                        self.notificationSwitch.isOn = false
+                        ref.child("users").child(uid).child("notificationsEnabled").setValue(false)
+                        
+                        self.showNotificationPermissionAlert()
+                    }
+                }
+            }
+        } else {
+            // User wants to disable notifications
+            PostReminderManager.shared.cancelAllReminders()
+            ref.child("users").child(uid).child("notificationsEnabled").setValue(false)
+            
+            let alert = UIAlertController(
+                title: "Reminders Disabled",
+                message: "We won't send you post reminders anymore.",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+        }
     }
+    private func showNotificationPermissionAlert() {
+            let alert = UIAlertController(
+                title: "Notification Permission Required",
+                message: "Please enable notifications in Settings to receive post reminders.",
+                preferredStyle: .alert
+            )
+            
+            alert.addAction(UIAlertAction(title: "Open Settings", style: .default) { _ in
+                if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(settingsUrl)
+                }
+            })
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            
+            present(alert, animated: true)
+        }
 
     @IBAction func privateSwitch(_ sender: UISwitch) {
         isPrivate = sender.isOn
