@@ -219,14 +219,13 @@ class ModeTableViewController: UITableViewController {
             let storage = Storage.storage()
 
             func extractStoragePath(from urlString: String) -> String? {
-                guard let url = URL(string: urlString),
-                      let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems else {
-                    return nil
-                }
-                for item in queryItems {
-                    if item.name == "o", let value = item.value?.removingPercentEncoding {
-                        return value
-                    }
+                guard let url = URL(string: urlString) else { return nil }
+                guard URLComponents(url: url, resolvingAgainstBaseURL: false) != nil else { return nil }
+
+                // find the "/o/" part in the path and extract the encoded path after it
+                if let range = url.path.range(of: "/o/") {
+                    let encodedPath = String(url.path[range.upperBound...])
+                    return encodedPath.removingPercentEncoding
                 }
                 return nil
             }
@@ -328,3 +327,4 @@ class ModeTableViewController: UITableViewController {
         present(alertController, animated: true)
     }
 }
+
