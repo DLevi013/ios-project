@@ -65,6 +65,10 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     fileprivate let locationManager: CLLocationManager = CLLocationManager()
     var currentCLLCordinate2d: CLLocationCoordinate2D?
     
+    
+    var delegate: UIViewController?
+    var fromAddPost = false
+    
     override func viewDidLoad(){
         super.viewDidLoad()
         mapView.delegate = self
@@ -86,6 +90,9 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         }
         
         loadPins()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleMapTap(_:)))
+        mapView.addGestureRecognizer(tapGesture)
+
         
         switch locationManager.authorizationStatus {
             case CLAuthorizationStatus.notDetermined:
@@ -314,6 +321,43 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         
         
     }
+    
+    @objc func handleMapTap(_ gesture: UITapGestureRecognizer) {
+        if(fromAddPost){
+            let point = gesture.location(in: mapView)
+                let coordinate = mapView.convert(point, toCoordinateFrom: mapView)
+            
+                if let prev = selectedAnnot {
+                    mapView.removeAnnotation(prev)
+                }
+                
+                let alert = UIAlertController(title: "Name this location",
+                                              message: nil,
+                                              preferredStyle: .alert)
+                alert.addTextField { textField in
+                    textField.placeholder = "Location name"
+                }
+
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+                alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+                    let name = alert.textFields?.first?.text ?? "Custom Location"
+                    let pin = DiscoverPin(
+                        coordinate: coordinate,
+                        title: name,
+                        subtitle: "",
+                        address: "",
+                        locationId: self.makeLocationId(lat: coordinate.latitude, lon: coordinate.longitude, name: name),
+                        PostId: "NoPostAssociated"
+                    )
+                    self.selectedAnnot = pin
+                    self.mapView.addAnnotation(pin)
+                })
+                self.present(alert, animated: true)
+        }else {
+            print("hi")
+        }
+    }
+
     
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {

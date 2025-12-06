@@ -135,9 +135,6 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
         }
     }
     
-    
-
-    
     @IBAction func addLocationPressed(_ sender: Any) {
         print("Old BUtton Pressed")
     }
@@ -263,6 +260,12 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
                 discoverVC.isSelectingLocation = true
                 discoverVC.discoverDelegate = self
             }
+        }
+        
+        if segue.identifier == "postToDiscoverSegue",
+           let vc = segue.destination as? DiscoverPage {
+            vc.delegate = self
+            vc.fromAddPost = true
         }
     }
 }
