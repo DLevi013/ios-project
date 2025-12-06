@@ -93,6 +93,10 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleMapTap(_:)))
         mapView.addGestureRecognizer(tapGesture)
 
+        let hideTap = UITapGestureRecognizer(target: self, action: #selector(hideSearchResults))
+        hideTap.cancelsTouchesInView = false
+        view.addGestureRecognizer(hideTap)
+
         
         switch locationManager.authorizationStatus {
             case CLAuthorizationStatus.notDetermined:
@@ -122,15 +126,21 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             await getSearchResults(addressString: searchBar.text ?? "")
         }
     }
+
+    @objc func hideSearchResults() {
+        searchResults.isHidden = true
+    }
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager){
         let currentCLLocation = locationManager.location
         var targetCLLCoordinate2D: CLLocationCoordinate2D?
         
         if currentCLLocation != nil {
-            targetCLLCoordinate2D = CLLocationCoordinate2D(latitude: (currentCLLocation?.coordinate.longitude)!, longitude: (currentCLLocation?.coordinate.latitude)!)
+            targetCLLCoordinate2D = CLLocationCoordinate2D(
+                latitude: currentCLLocation!.coordinate.latitude,
+                longitude: currentCLLocation!.coordinate.longitude)
         } else {
-            targetCLLCoordinate2D = CLLocationCoordinate2D(latitude: 40.7128, longitude: 74.0060)
+            targetCLLCoordinate2D = CLLocationCoordinate2D(latitude: 30.2862, longitude: -97.7394)
         }
         
         self.currentCLLCordinate2d = targetCLLCoordinate2D
