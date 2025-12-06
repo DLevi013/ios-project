@@ -428,7 +428,7 @@
             <objects>
                 <viewController storyboardIdentifier="OtherProfilePage" id="gBh-e3-1bW" customClass="OtherProfilePage" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nvO-A0-pAE">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="894"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="884"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="bio" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0gp-cj-XmZ">
@@ -1042,15 +1042,6 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YBo-Wn-bjR">
-                                <rect key="frame" x="98" y="716" width="240" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Confirm Location"/>
-                                <connections>
-                                    <action selector="confirmLocationPressed:" destination="Mf7-pK-mys" eventType="touchUpInside" id="nga-lC-n0P"/>
-                                </connections>
-                            </button>
                             <searchBar contentMode="redraw" text="" id="qM8-S4-pDV">
                                 <rect key="frame" x="40" y="124" width="362" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1076,10 +1067,21 @@
                                 <sections/>
                             </tableView>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="Dz1-5P-aEG">
-                                <rect key="frame" x="21" y="288" width="400" height="420"/>
+                                <rect key="frame" x="0.0" y="268" width="440" height="472"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <standardMapConfiguration key="preferredConfiguration"/>
                             </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Nq-No-g3R">
+                                <rect key="frame" x="101" y="775" width="240" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Confirm Location"/>
+                                <connections>
+                                    <action selector="confirmPressedNew:" destination="Mf7-pK-mys" eventType="touchUpInside" id="TBP-hl-sap"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Of2-Vs-gAE"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -1087,8 +1089,8 @@
                     <tabBarItem key="tabBarItem" title="" image="mappin.and.ellipse" catalog="system" selectedImage="mappin.and.ellipse" id="2YT-eQ-ls5"/>
                     <navigationItem key="navigationItem" id="Jfs-Ss-3sk"/>
                     <connections>
-                        <outlet property="confirmLocationButton" destination="YBo-Wn-bjR" id="mFo-yC-PEG"/>
                         <outlet property="mapView" destination="Dz1-5P-aEG" id="1E8-pW-v5n"/>
+                        <outlet property="newConfirmLocationButton" destination="3Nq-No-g3R" id="ebh-ay-8wJ"/>
                         <outlet property="searchField" destination="qM8-S4-pDV" id="EMT-Ga-795"/>
                         <outlet property="searchResults" destination="hop-4v-nCa" id="Ifa-rM-aEG"/>
                         <segue destination="Fo0-96-Aug" kind="presentation" identifier="discoverToLocation" id="hdK-xT-G1A"/>
@@ -1096,7 +1098,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qzs-Da-XVi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1844" y="1654"/>
+            <point key="canvasLocation" x="1843.6363636363637" y="1653.7656903765692"/>
         </scene>
         <!--Edit Profile View Controller-->
         <scene sceneID="RLt-SB-sG2">
@@ -1201,7 +1203,7 @@
             <objects>
                 <viewController id="Fo0-96-Aug" customClass="FoodLocationViewController" customModule="iosproject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3Gk-JI-RhM">
-                        <rect key="frame" x="0.0" y="0.0" width="440" height="894"/>
+                        <rect key="frame" x="0.0" y="0.0" width="440" height="884"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view tag="100" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bD9-Cb-o7N">
@@ -1216,14 +1218,14 @@
                                 <color key="backgroundColor" red="0.71351481959999996" green="0.43405312639999999" blue="0.19799111220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </view>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1t5-W1-F7z">
-                                <rect key="frame" x="20" y="222" width="400" height="400"/>
+                                <rect key="frame" x="0.0" y="222" width="440" height="405"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <standardMapConfiguration key="preferredConfiguration"/>
                             </mapView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QyW-kk-IxQ">
-                                <rect key="frame" x="20" y="169" width="400" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QyW-kk-IxQ">
+                                <rect key="frame" x="20" y="144" width="400" height="38"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -1622,11 +1624,10 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="R97-3n-0RC"/>
-        <segue reference="b39-WX-GwF"/>
         <segue reference="hdK-xT-G1A"/>
         <segue reference="m82-vQ-OZr"/>
         <segue reference="98C-et-lhs"/>
-        <segue reference="CrI-Dp-VLO"/>
+        <segue reference="jRi-NH-rLi"/>
         <segue reference="9AO-IF-uco"/>
         <segue reference="s7M-p6-3ga"/>
     </inferredMetricsTieBreakers>
@@ -1645,13 +1646,13 @@
             <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="opaqueSeparatorColor">
-            <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.2196078431372549" blue="0.23529411764705882" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

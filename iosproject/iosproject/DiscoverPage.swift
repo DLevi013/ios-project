@@ -53,8 +53,9 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     var selectedAnnot: DiscoverPin?
 
     var locationId: String?
-    @IBOutlet weak var confirmLocationButton: UIButton!
 
+    @IBOutlet weak var newConfirmLocationButton: UIButton!
+    
     var locations:[DiscoverPin] = []
     var viewSize:Double = 500
     var currentView: MKAnnotationView?
@@ -73,11 +74,15 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         searchResults.rowHeight = UITableView.automaticDimension
         searchResults.isHidden = true
         
+        newConfirmLocationButton.layer.shadowColor = UIColor.black.cgColor
+        newConfirmLocationButton.layer.shadowRadius = 5.0
+        newConfirmLocationButton.layer.shadowOpacity = 0.4
+        newConfirmLocationButton.layer.shadowOffset = CGSize(width: 2, height: 4)
         
         if self.isSelectingLocation {
-            confirmLocationButton.isHidden = false
+            newConfirmLocationButton.isHidden = false
         } else {
-            confirmLocationButton.isHidden = true
+            newConfirmLocationButton.isHidden = true
         }
         
         loadPins()
@@ -223,7 +228,9 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         performSegue(withIdentifier: "discoverToLocation", sender: self)
     }
     
-    @IBAction func confirmLocationPressed(_ sender: Any) {
+                    
+    
+    @IBAction func confirmPressedNew(_ sender: Any) {
         guard let coordinate = selectedAnnot?.coordinate else {
             let alert = UIAlertController(title: "No Location",
                                                     message: "Please select location on the map",
@@ -236,6 +243,8 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
 
         dismiss(animated: true)
     }
+    
+    
     
     func loadPins() {
         var publicUsers: [String] = []
