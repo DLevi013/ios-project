@@ -195,22 +195,30 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let annotation = MKPointAnnotation()
-        let LocationAnnot = searchFieldLocations[indexPath.row]
-        annotation.coordinate = LocationAnnot.coordinate
-        annotation.title = LocationAnnot.title
-        annotation.subtitle = LocationAnnot.subtitle
-        
-        selectedAnnot = LocationAnnot
-        
-        mapView.addAnnotation(annotation)
-        let region = MKCoordinateRegion(
-            center: LocationAnnot.coordinate,
-            latitudinalMeters: self.viewSize,
-            longitudinalMeters: self.viewSize
-        )
-        mapView.setRegion(region, animated: true)
-        searchResults.isHidden = true
+        let result = searchFieldLocations[indexPath.row]
+            if let prev = selectedAnnot {
+                mapView.removeAnnotation(prev)
+            }
+
+            
+            let pin = DiscoverPin(
+                coordinate: result.coordinate,
+                title: result.title,
+                subtitle: result.subtitle,
+                address: result.address,
+                locationId: result.locationId,
+                PostId: "NoPostAssociated"
+            )
+
+            selectedAnnot = pin
+            mapView.addAnnotation(pin)
+            let region = MKCoordinateRegion(
+                center: result.coordinate,
+                latitudinalMeters: self.viewSize,
+                longitudinalMeters: self.viewSize
+            )
+            mapView.setRegion(region, animated: true)
+            searchResults.isHidden = true
     }
     
     private func mapView(_ mapView: MKMapView, didSelect view: DiscoverPin) {
