@@ -267,20 +267,31 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
         // Check if user already liked
         postRef.observeSingleEvent(of: .value) { snapshot,error  in
                     var likes = snapshot.value as? [String] ?? []
-                    if likes.contains(userId) {
-                        // Unlike
-                        likes.removeAll { $0 == userId }
-                    } else {
-                        // Like
+            
+
+            
+                    if !likes.contains(userId) {
+                        // like
                         likes.append(userId)
+                        
+                    } else {
+                        // unLike
+                        likes.removeAll { $0 == userId }
                     }
 
                     // Update Firebase
                     postRef.setValue(likes)
-                    self.posts[indexPath.row].likeCount = likes.count
-                    self.tableView.reloadRows(at: [indexPath], with: .none)
-                    let heartImage = likes.contains(userId) ? UIImage(systemName: "heart.fill") : UIImage(systemName: "heart")
-                    cell.likeButton.setImage(heartImage, for: .normal)
+                    DispatchQueue.main.async {
+                        self.posts[indexPath.row].likeCount = likes.count
+                        self.tableView.reloadRows(at: [indexPath], with: .none)
+                        let heartImage = !likes.contains(userId) ? UIImage(systemName: "heart.fill") : UIImage(systemName: "heart")
+                        cell.likeButton.setImage(heartImage, for: .normal)
+                        
+                    }
+//                    self.posts[indexPath.row].likeCount = likes.count
+//                    self.tableView.reloadRows(at: [indexPath], with: .none)
+//                    let heartImage = likes.contains(userId) ? UIImage(systemName: "heart.fill") : UIImage(systemName: "heart")
+//                    cell.likeButton.setImage(heartImage, for: .normal)
         
                 }
         }
