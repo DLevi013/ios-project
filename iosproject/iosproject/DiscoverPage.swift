@@ -89,6 +89,15 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             newConfirmLocationButton.isHidden = true
         }
         
+        let UTAustin = CLLocationCoordinate2D(latitude: 30.2862, longitude: -97.7394)
+        let area = MKCoordinateRegion(
+            center: UTAustin,
+            latitudinalMeters: viewSize,
+            longitudinalMeters: viewSize
+        )
+        
+        mapView.setRegion(area, animated: false)
+        
         loadPins()
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleMapTap(_:)))
         mapView.addGestureRecognizer(tapGesture)
@@ -111,6 +120,16 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             }
         }
         locationManager.delegate = self
+        
+        
+        
+        
+        
+    }
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        loadPins()
     }
     
     func searchBar(_ searchField: UISearchBar, textDidChange text: String) {
