@@ -278,6 +278,11 @@ class OtherProfilePage: ModeViewController, UICollectionViewDelegate, UICollecti
         addFriendButton.isHidden = false
         let db = Database.database().reference()
         let currentUserID = Auth.auth().currentUser!.uid
+        if currentUserID == otherUserID {
+            self.addFriendButton.isEnabled = false
+            self.addFriendButton.isHidden = true
+            return
+        }
         let friendsRef = db.child("users").child(currentUserID).child("friends")
         friendsRef.observeSingleEvent(of: .value) { snapshot in
             var isFriend = false
