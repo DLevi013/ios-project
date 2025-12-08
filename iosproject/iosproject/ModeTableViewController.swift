@@ -223,13 +223,10 @@ class ModeTableViewController: UITableViewController, CLLocationManagerDelegate 
             }
         case .denied:
             self.locationManager.requestWhenInUseAuthorization()
-            print("denied")
         case .notDetermined:
             self.locationManager.requestWhenInUseAuthorization()
-            print("no determined")
         default:
             self.locationManager.requestWhenInUseAuthorization()
-            print("other")
         }
         updateLocationLabel()
     }

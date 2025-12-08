@@ -89,15 +89,6 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             newConfirmLocationButton.isHidden = true
         }
         
-        let UTAustin = CLLocationCoordinate2D(latitude: 30.2862, longitude: -97.7394)
-        let area = MKCoordinateRegion(
-            center: UTAustin,
-            latitudinalMeters: viewSize,
-            longitudinalMeters: viewSize
-        )
-        
-        mapView.setRegion(area, animated: false)
-        
         loadPins()
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleMapTap(_:)))
         mapView.addGestureRecognizer(tapGesture)
@@ -116,13 +107,17 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
                 locationManager.startUpdatingLocation()
         default :
             if self.currentCLLCordinate2d == nil {
-                self.currentCLLCordinate2d =  CLLocationCoordinate2D(latitude: 40.7128, longitude: 74.0060)
+                self.currentCLLCordinate2d = CLLocationCoordinate2D(latitude: 30.2862, longitude: -97.7394)
             }
         }
-        
         locationManager.delegate = self
         locationManager.startUpdatingLocation()
-        
+        let targetRegion = MKCoordinateRegion(
+            center: self.currentCLLCordinate2d!,
+            latitudinalMeters: self.viewSize,
+            longitudinalMeters: self.viewSize
+        )
+        mapView.setRegion(targetRegion, animated: true)
     
     }
     
@@ -159,9 +154,22 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             targetCLLCoordinate2D = CLLocationCoordinate2D(
                 latitude: currentCLLocation!.coordinate.latitude,
                 longitude: currentCLLocation!.coordinate.longitude)
+            
+            let targetRegion = MKCoordinateRegion(
+                center: targetCLLCoordinate2D!,
+                latitudinalMeters: self.viewSize,
+                longitudinalMeters: self.viewSize
+            )
+            mapView.setRegion(targetRegion, animated: true)
         default:
             manager.stopUpdatingLocation()
             targetCLLCoordinate2D = CLLocationCoordinate2D(latitude: 30.2862, longitude: -97.7394)
+            let defaultRegion = MKCoordinateRegion(
+                center: targetCLLCoordinate2D!,
+                latitudinalMeters: self.viewSize,
+                longitudinalMeters: self.viewSize
+            )
+            mapView.setRegion(defaultRegion, animated: true)
         }
         
         self.currentCLLCordinate2d = targetCLLCoordinate2D
