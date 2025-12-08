@@ -44,6 +44,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     @IBOutlet weak var searchField: UISearchBar!
     @IBOutlet weak var searchResults: UITableView!
     var searchText:String = ""
+    var tableViewHeightConstraint: NSLayoutConstraint?
     
     // stores search results, may be empty
     var searchFieldLocations: [DiscoverPin] = []
@@ -76,8 +77,18 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         searchResults.delegate = self
         searchResults.dataSource = self
         searchResults.rowHeight = UITableView.automaticDimension
+        searchResults.estimatedRowHeight = 44
         searchResults.isHidden = true
-        
+        searchResults.layer.cornerRadius = 10.0
+        searchResults.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            searchResults.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            searchResults.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            searchResults.topAnchor.constraint(equalTo: self.searchField.bottomAnchor, constant: 8)
+        ])
+        tableViewHeightConstraint = searchResults.heightAnchor.constraint(equalToConstant: 0)
+        tableViewHeightConstraint?.isActive = true
+    
         newConfirmLocationButton.layer.shadowColor = UIColor.black.cgColor
         newConfirmLocationButton.layer.shadowRadius = 5.0
         newConfirmLocationButton.layer.shadowOpacity = 0.4
@@ -181,6 +192,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             location.title?.contains(addressString) ?? false
         }
         self.searchResults.reloadData()
+        updateTableViewHeight()
         
         let targetRegion = MKCoordinateRegion(
             center: self.currentCLLCordinate2d!,
@@ -201,8 +213,6 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             .winery
         ])
         
-        
-        
         let search = MKLocalSearch(request: request)
         do {
             let response = try await search.start()
@@ -216,6 +226,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
             }
             DispatchQueue.main.async {
                 self.searchResults.reloadData()
+                self.updateTableViewHeight()
             }
         } catch {
             print("serach failed")
@@ -225,7 +236,27 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchFieldLocations.count
+        let count = searchFieldLocations.count
+            DispatchQueue.main.async {
+                self.updateTableViewHeight()
+            }
+        return count
+    }
+    
+    func updateTableViewHeight() {
+        let rowCount = self.searchFieldLocations.count
+        let maxVisibleRows = 5
+        let visibleRows = min(rowCount, maxVisibleRows)
+        
+        let rowHeight: CGFloat = 44
+        let newHeight = CGFloat(visibleRows) * rowHeight
+        
+        searchResults.isScrollEnabled = rowCount > maxVisibleRows
+        tableViewHeightConstraint?.constant = newHeight
+        
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
