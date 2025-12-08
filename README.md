@@ -38,7 +38,7 @@ Open the project in Xcode and run using:
 | Likes / Comments | Likes and comments buttons are clickable, and clicking on comments shows all the comments. Users can add their own comments. | Beta | Beta | None | Daniel 30%, Isaac 70% |
 | Friends / Follower System | Users each have their own list of users that they are friends with. | Beta | Alpha | *Was scheduled for the Beta Release, but we implemented this in the Alpha release. Added the ability to remove friend in Beta Release.* | Daniel 50%, Isaac 50% |
 | Display Restaurant / Location | Button on post that will segue into another view to see restaurant location and associated posts. | Beta | Final | None | Austin 100% |
-| Time-based Notifications | Sends time-based notifications. | Final | Final | None | Ian 100% |
+| Time-based Notifications | Users get notifications at certain times to post and also when they hit certain milestones. | Final | Final | None | Ian 100% |
 | Filters for Location | Search restaurants by filters | Final | Final | *Unable to sort by cuisine or distance, instead search by user location. (Map is focused on users location when they open the app, so the map “filters” based on where the user is located)* | Daniel 20%, Austin 80% |
 
 ## **Extra Notes**
