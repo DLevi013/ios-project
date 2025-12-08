@@ -74,7 +74,7 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
         betterPostButton.isEnabled = false
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    func placeholderImage(){
         let isDarkMode = UserDefaults.standard.bool(forKey: "mode")
         if isDarkMode {
             imageView.image = UIImage(named: "dark_placeholder")
@@ -82,6 +82,10 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
             imageView.image = UIImage(named: "placeholder-square")
         }
         imageLink = ""
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        placeholderImage()
     }
     
     @IBAction func recognizeTapGesture(recognizer: UITapGestureRecognizer){
@@ -228,6 +232,12 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
                     if (isNotif) {
                         self.checkPostMilestone()
                     }
+                    self.captionTextField.text = ""
+                    self.placeholderImage()
+                    self.locationName = ""
+                    self.address = ""
+                    self.latitude = nil
+                    self.longitude = nil
 
                 }
                 let controller = UIAlertController(title: "Add Post", message: alertMessage, preferredStyle: .alert)
