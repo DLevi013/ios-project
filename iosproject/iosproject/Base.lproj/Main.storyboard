@@ -408,11 +408,16 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6PI-gq-Z1x">
+                                <rect key="frame" x="0.0" y="102" width="440" height="771"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Vub-5H-Idz"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="house" catalog="system" selectedImage="house" id="gMI-0k-OnV"/>
                     <connections>
+                        <outlet property="noPostsImageView" destination="6PI-gq-Z1x" id="lwQ-Md-zSp"/>
                         <outlet property="tableView" destination="hgs-4F-nUN" id="ksX-sy-aqG"/>
                         <segue destination="gBh-e3-1bW" kind="show" identifier="feedToProfile" id="xv7-d8-adJ"/>
                         <segue destination="diZ-9n-Pv5" kind="presentation" identifier="feedToPost" id="Wcn-2n-62O"/>
@@ -1673,11 +1678,11 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="R97-3n-0RC"/>
-        <segue reference="hdK-xT-G1A"/>
+        <segue reference="cXD-TO-S7o"/>
         <segue reference="m82-vQ-OZr"/>
         <segue reference="98C-et-lhs"/>
         <segue reference="Wcn-2n-62O"/>
-        <segue reference="9AO-IF-uco"/>
+        <segue reference="xv7-d8-adJ"/>
         <segue reference="s7M-p6-3ga"/>
     </inferredMetricsTieBreakers>
     <resources>

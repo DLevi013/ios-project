@@ -13,6 +13,7 @@ import SDWebImage
 class FeedViewController: ModeViewController, UITableViewDataSource, UITableViewDelegate, PostTableViewCellDelegate {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var noPostsImageView: UIImageView!
     
     var selectedLocationId:String?
     
@@ -23,6 +24,8 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        noPostsImageView.isHidden = true
+        noPostsImageView.image = UIImage(named: "goodFeedPlaceholder.png")
         setupTableView()
         setupRefreshControl()
         fetchPosts()
@@ -134,6 +137,11 @@ class FeedViewController: ModeViewController, UITableViewDataSource, UITableView
                 dispatchGroup.notify(queue: .main) {
                     // Sort by timestamp most recent on top
                     self.posts = tempPosts.sorted { $0.timestamp > $1.timestamp }
+                    if self.posts.count == 0 {
+                        self.noPostsImageView.isHidden = false
+                    }else {
+                        self.noPostsImageView.isHidden = true
+                    }
                     self.tableView.reloadData()
                     self.tableView.refreshControl?.endRefreshing()
                 }
