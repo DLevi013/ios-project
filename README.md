@@ -44,5 +44,5 @@ Open the project in Xcode and run using:
 ## **Extra Notes**
 Search filters cannot sort by cuisine or distance; instead, the map focuses on the user’s current location.  
 
-## ** Summary**
+## **Summary**
 Foocation provides a social and location-based way to document food experiences, discover restaurants, and see what friends are eating around them. The goal is to create a personal, authentic alternative to Yelp/Google Reviews.
