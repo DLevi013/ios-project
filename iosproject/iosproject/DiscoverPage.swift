@@ -37,7 +37,7 @@ class DiscoverPin: NSObject, MKAnnotation {
 }
 
 
-class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate {
+class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -107,6 +107,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         let hideTap = UITapGestureRecognizer(target: self, action: #selector(hideSearchResults))
         hideTap.cancelsTouchesInView = false
         view.addGestureRecognizer(hideTap)
+        hideTap.delegate = self
 
         
         switch locationManager.authorizationStatus {
@@ -147,13 +148,33 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
+        searchBar.setShowsCancelButton(false, animated: true)
         Task {
             await getSearchResults(addressString: searchBar.text ?? "")
         }
     }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        searchBar.setShowsCancelButton(false, animated: true)
+        searchResults.isHidden = true
+    }
 
     @objc func hideSearchResults() {
         searchResults.isHidden = true
+        view.endEditing(true)
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        let view = touch.view
+        if let view = view, (view is UITableViewCell || view.superview is UITableViewCell || view is UISearchBar) {
+            return false
+        }
+        return true
     }
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager){
@@ -507,5 +528,4 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         }
     }
 }
-
 
