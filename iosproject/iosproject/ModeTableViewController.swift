@@ -12,7 +12,7 @@ import FirebaseStorage
 import CoreLocation
 
 // hopefully allows notification check to be easier
-var isNotif: Bool = false
+var isNotif: Bool = true
 
 class ModeTableViewController: UITableViewController, CLLocationManagerDelegate {
 

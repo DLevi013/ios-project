@@ -229,7 +229,9 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
                 } else {
                     print("Post successfully added!")
                     alertMessage = "Post added!"
+                    print("isNotif: \(isNotif)")
                     if (isNotif) {
+                        print("checking post notification")
                         self.checkPostMilestone()
                     }
                     self.captionTextField.text = ""
