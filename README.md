@@ -10,6 +10,7 @@
 - Ian Tran
 
 ## **Instructions for running the code:**
+Only supports iPhone 17 Pro Max
 
 Here’s users you can use to look at existing functionality for feeds and friend system
 
