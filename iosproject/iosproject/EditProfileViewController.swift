@@ -12,7 +12,7 @@ import FirebaseDatabase
 import FirebaseStorage
 import SDWebImage
 
-class EditProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class EditProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
     @IBOutlet weak var userIDTextField: UITextField!
     @IBOutlet weak var bioTextField: UITextField!
@@ -43,7 +43,21 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         newSaveChangesButton.layer.shadowOffset = CGSize(width: 2, height: 4)
         // Do any additional setup after loading the view.
         
+        userIDTextField.delegate = self
+        bioTextField.delegate = self
+        oldUserIDField.delegate = self
+        oldBioField.delegate = self
+    }
+    
+    func textFieldShouldReturn(_ textField:UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
         
+    // Called when the user clicks on the view outside of the UITextField
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
     
 //    override func viewWillAppear(_ animated: Bool) {

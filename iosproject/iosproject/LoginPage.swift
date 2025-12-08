@@ -8,13 +8,16 @@
 import UIKit
 import FirebaseAuth
 
-class LoginPage: UIViewController {
+class LoginPage: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var userIDTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        userIDTextField.delegate = self
+        passwordTextField.delegate = self
+        
         print("START")
         Auth.auth().addStateDidChangeListener() {
             (auth, user) in
@@ -26,6 +29,17 @@ class LoginPage: UIViewController {
             }
         }
         // Do any additional setup after loading the view.
+    }
+    
+    func textFieldShouldReturn(_ textField:UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+        
+    // Called when the user clicks on the view outside of the UITextField
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
     
     @IBAction func loginPressed(_ sender: Any) {

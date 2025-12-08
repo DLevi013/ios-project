@@ -10,7 +10,7 @@ import FirebaseDatabase
 import FirebaseAuth
 import SDWebImage
 
-class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
+class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate {
     
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var profilePicture: UIButton!
@@ -43,6 +43,10 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        commentTextField.delegate = self
+        
+        
         deletePostButton.layer.shadowColor = UIColor.black.cgColor
         deletePostButton.layer.shadowRadius = 5.0
         deletePostButton.layer.shadowOpacity = 0.4
@@ -131,6 +135,17 @@ class PostPage: ModeViewController, UITableViewDataSource, UITableViewDelegate {
         let rounded = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return rounded
+    }
+    
+    func textFieldShouldReturn(_ textField:UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+        
+    // Called when the user clicks on the view outside of the UITextField
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
 
     

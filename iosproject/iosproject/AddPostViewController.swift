@@ -14,7 +14,7 @@ import Vision
 
 var idCounter = 4
 
-class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LocationSelectionDelegate{
+class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LocationSelectionDelegate, UITextFieldDelegate{
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var captionTextField: UITextField!
@@ -37,6 +37,8 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        captionTextField.delegate = self
         
         betterLocationButton.layer.shadowColor = UIColor.black.cgColor
         betterLocationButton.layer.shadowRadius = 5.0
@@ -73,6 +75,18 @@ class AddPostViewController: ModeViewController, UIImagePickerControllerDelegate
         }
         betterPostButton.isEnabled = false
     }
+    
+    func textFieldShouldReturn(_ textField:UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+        
+    // Called when the user clicks on the view outside of the UITextField
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+
     
     func placeholderImage(){
         let isDarkMode = UserDefaults.standard.bool(forKey: "mode")

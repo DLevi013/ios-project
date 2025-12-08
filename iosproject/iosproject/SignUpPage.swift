@@ -9,7 +9,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseDatabase
 
-class SignUpPage: UIViewController {
+class SignUpPage: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var userIDField: UITextField!
     @IBOutlet weak var userNameField: UITextField!
@@ -21,6 +21,22 @@ class SignUpPage: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        userIDField.delegate = self
+        userNameField.delegate = self
+        passwordField.delegate = self
+        passwordConfirmField.delegate = self
+    }
+    
+    func textFieldShouldReturn(_ textField:UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+        
+    // Called when the user clicks on the view outside of the UITextField
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
 
     @IBAction func signupPressed(_ sender: Any) {
