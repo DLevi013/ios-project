@@ -2,19 +2,19 @@
 
 A social iOS application for sharing food and restaurant experiences. Users can post photos of meals, explore restaurants, and see food from people they follow — similar to Instagram/BeReal, but focused on food discovery.
 
-## ** Team & Project Info**
+## **Team & Project Info**
 **Group Number:** 7  
 **Team Members:** Isaac Thomas, Ian Tran, Austin Nguyen, Daniel Levi  
 **Project Name:** Foocation  
 
-## ** Frameworks Used**
+## **Frameworks Used**
 FirebaseAuth, FirebaseCode, FirebaseDatabase, FirebaseFirestore, Firebase Storage, SDWebImage, SDWebImageMapKit  
 
-## ** Dependencies**
+## **Dependencies**
 - Xcode 16  
 - iOS 16 deployment target  
 
-## ** How to Run**
+## **How to Run**
 Open the project in Xcode and run using:  
 
 **Device:** iPhone 17 Pro Max  
@@ -25,7 +25,7 @@ Open the project in Xcode and run using:
 | daniellevi@daniel.com | 12341234 |
 | isaac@isaac.com | 12341234 |
 
-## ** Feature Overview and Release Tracking**
+## **Feature Overview and Release Tracking**
 
 | Feature | Planned Release | Actual Release | Deviations (original text) | Who / % Worked |
 |---|---|---|---|---|
@@ -41,7 +41,7 @@ Open the project in Xcode and run using:
 | Time-based Notifications | Final | Final | None | Ian 100% |
 | Filters for Location | Final | Final | *Unable to sort by cuisine or distance, instead search by user location. (Map is focused on users location when they open the app, so the map “filters” based on where the user is located)* | Daniel 20%, Austin 80% |
 
-## ** Extra Notes**
+## **Extra Notes**
 Search filters cannot sort by cuisine or distance; instead, the map focuses on the user’s current location.  
 
 ## ** Summary**
