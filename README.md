@@ -1,6 +1,6 @@
 # **Foocation**
 
-A social iOS application for sharing food and restaurant experiences. Users can post photos of meals, explore restaurants, and see food from people they follow — similar to Instagram/BeReal, but focused on food discovery.
+A social iOS application for sharing food and restaurant experiences. Users can post photos of meals, explore restaurants, and see food from people they follow. Similar to Instagram/BeReal, but focused on food discovery.
 
 ## **Team & Project Info**
 **Group Number:** 7  
