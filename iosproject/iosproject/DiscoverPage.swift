@@ -99,13 +99,14 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
 
         
         switch locationManager.authorizationStatus {
-            case CLAuthorizationStatus.notDetermined:
-                locationManager.requestWhenInUseAuthorization()
-                locationManager.startUpdatingLocation()
-            case CLAuthorizationStatus.denied:
-                locationManager.requestWhenInUseAuthorization()
-                locationManager.startUpdatingLocation()
-        default :
+        case .authorizedAlways, .authorizedWhenInUse:
+            let currentCLLocation = self.locationManager.location
+            var targetCLLCoordinate2D: CLLocationCoordinate2D?
+            targetCLLCoordinate2D = CLLocationCoordinate2D(
+                latitude: currentCLLocation!.coordinate.latitude,
+                longitude: currentCLLocation!.coordinate.longitude)
+            self.currentCLLCordinate2d = targetCLLCoordinate2D
+        default:
             if self.currentCLLCordinate2d == nil {
                 self.currentCLLCordinate2d = CLLocationCoordinate2D(latitude: 30.2862, longitude: -97.7394)
             }
@@ -176,7 +177,10 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     }
     
     func getSearchResults(addressString: String) async {
-        self.searchFieldLocations = []
+        self.searchFieldLocations = self.locations.filter { location in
+            location.title?.contains(addressString) ?? false
+        }
+        self.searchResults.reloadData()
         
         let targetRegion = MKCoordinateRegion(
             center: self.currentCLLCordinate2d!,
@@ -187,7 +191,17 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = addressString
         request.region = targetRegion
-        request.resultTypes = .pointOfInterest
+        request.pointOfInterestFilter = MKPointOfInterestFilter(including: [
+            .bakery,
+            .brewery,
+            .cafe,
+            .distillery,
+            .foodMarket,
+            .restaurant,
+            .winery
+        ])
+        
+        
         
         let search = MKLocalSearch(request: request)
         do {
@@ -198,7 +212,6 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
                 let coordinate = item.location.coordinate
                 let locationId = makeLocationId(lat: coordinate.latitude, lon: coordinate.longitude, name: name)
                 let result = DiscoverPin(coordinate: item.location.coordinate, title: name, subtitle: item.address?.fullAddress, address: item.address?.fullAddress, locationId: locationId, PostId: "NoPostAssociated")
-               
                 self.searchFieldLocations.append(result)
             }
             DispatchQueue.main.async {
@@ -207,6 +220,8 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         } catch {
             print("serach failed")
         }
+        
+        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -225,29 +240,38 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let result = searchFieldLocations[indexPath.row]
-            if let prev = selectedAnnot {
-                mapView.removeAnnotation(prev)
-            }
 
-            
-            let pin = DiscoverPin(
-                coordinate: result.coordinate,
-                title: result.title,
-                subtitle: result.subtitle,
-                address: result.address,
-                locationId: result.locationId,
-                PostId: "NoPostAssociated"
-            )
-
-            selectedAnnot = pin
-            mapView.addAnnotation(pin)
+        if let existingPin = self.locations.first(where: { $0.locationId == result.locationId }) {
             let region = MKCoordinateRegion(
-                center: result.coordinate,
-                latitudinalMeters: self.viewSize,
-                longitudinalMeters: self.viewSize
+                center: existingPin.coordinate,
+                latitudinalMeters: viewSize,
+                longitudinalMeters: viewSize
             )
             mapView.setRegion(region, animated: true)
+            
             searchResults.isHidden = true
+            selectedAnnot = existingPin
+            return
+        }
+
+        let tempPin = DiscoverPin(
+            coordinate: result.coordinate,
+            title: result.title,
+            subtitle: result.subtitle,
+            address: result.address,
+            locationId: result.locationId,
+            PostId: "NoPostAssociated"
+        )
+        mapView.addAnnotation(tempPin)
+
+        let region = MKCoordinateRegion(
+            center: result.coordinate,
+            latitudinalMeters: viewSize,
+            longitudinalMeters: viewSize
+        )
+        mapView.setRegion(region, animated: true)
+        searchResults.isHidden = true
+        selectedAnnot = tempPin
     }
     
     private func mapView(_ mapView: MKMapView, didSelect view: DiscoverPin) {
@@ -277,12 +301,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         mapView.setRegion(region, animated: true)
         //self.moreInfoButton.isEnabled = true
     }
-    
-    @IBAction func moreInfoPressed(_ sender: Any) {
-        performSegue(withIdentifier: "discoverToLocation", sender: self)
-    }
-    
-                    
+
     
     @IBAction func confirmPressedNew(_ sender: Any) {
         guard let coordinate = selectedAnnot?.coordinate else {
@@ -391,7 +410,7 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
                     let pin = DiscoverPin(
                         coordinate: coordinate,
                         title: name,
-                        subtitle: "",
+                        subtitle: "Custom User Pin",
                         address: "",
                         locationId: self.makeLocationId(lat: coordinate.latitude, lon: coordinate.longitude, name: name),
                         PostId: "NoPostAssociated"
