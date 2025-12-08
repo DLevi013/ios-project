@@ -12,7 +12,7 @@ FirebaseAuth, FirebaseCode, FirebaseDatabase, FirebaseFirestore, Firebase Storag
 
 ## **Dependencies**
 - Xcode 16  
-- iOS 16 deployment target  
+- iOS 26 deployment target  
 
 ## **How to Run**
 Open the project in Xcode and run using:  
