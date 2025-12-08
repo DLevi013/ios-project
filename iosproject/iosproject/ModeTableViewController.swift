@@ -9,11 +9,12 @@ import UIKit
 import FirebaseAuth
 import FirebaseDatabase
 import FirebaseStorage
+import CoreLocation
 
 // hopefully allows notification check to be easier
 var isNotif: Bool = false
 
-class ModeTableViewController: UITableViewController {
+class ModeTableViewController: UITableViewController, CLLocationManagerDelegate {
 
     var isPrivate: Bool = false
     var isDark: Bool = false
@@ -21,6 +22,10 @@ class ModeTableViewController: UITableViewController {
     @IBOutlet weak var privateSwitch: UISwitch!
     
     @IBOutlet weak var notificationSwitch: UISwitch!
+    
+    fileprivate let locationManager: CLLocationManager = CLLocationManager()
+    @IBOutlet weak var locationStatus: UILabel!
+    @IBOutlet weak var locationButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,6 +64,10 @@ class ModeTableViewController: UITableViewController {
                 isNotif = true
             }
         }
+        
+        locationManager.delegate = self
+        locationButton.tintColor = .systemBlue
+        updateLocationLabel()
     }
     
     @objc func applyTheme() {
@@ -172,6 +181,62 @@ class ModeTableViewController: UITableViewController {
             
             present(alert, animated: true)
         }
+    
+    func updateLocationLabel() {
+        let status = self.locationManager.authorizationStatus
+        
+        switch status {
+        case .authorizedWhenInUse:
+            locationStatus.text = "Allowed when in use"
+            locationButton.isUserInteractionEnabled = true
+            locationButton.setTitleColor(.systemBlue, for: .normal)
+            locationButton.tintColor = .systemBlue
+        case .authorizedAlways:
+            locationStatus.text = "Allowed always"
+            locationButton.isUserInteractionEnabled = true
+            locationButton.setTitleColor(.systemBlue, for: .normal)
+            locationButton.tintColor = .systemBlue
+        case .denied:
+            locationStatus.text = "Never"
+            locationButton.isUserInteractionEnabled = true
+            locationButton.setTitleColor(.systemGray, for: .normal)
+            locationButton.tintColor = .systemGray
+        default:
+            locationStatus.text = "Not allowed"
+            locationButton.isUserInteractionEnabled = true
+            locationButton.setTitleColor(.systemGray, for: .normal)
+            locationButton.tintColor = .systemGray
+        }
+    }
+
+    @IBAction func locationPressed(_ sender: Any) {
+        
+        let status = self.locationManager.authorizationStatus
+        switch status {
+        case .authorizedWhenInUse:
+            if let url = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(url)
+            }
+        case .authorizedAlways:
+            if let url = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(url)
+            }
+        case .denied:
+            self.locationManager.requestWhenInUseAuthorization()
+            print("denied")
+        case .notDetermined:
+            self.locationManager.requestWhenInUseAuthorization()
+            print("no determined")
+        default:
+            self.locationManager.requestWhenInUseAuthorization()
+            print("other")
+        }
+        updateLocationLabel()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+            updateLocationLabel()
+    }
 
     @IBAction func privateSwitch(_ sender: UISwitch) {
         isPrivate = sender.isOn

@@ -119,12 +119,11 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
                 self.currentCLLCordinate2d =  CLLocationCoordinate2D(latitude: 40.7128, longitude: 74.0060)
             }
         }
+        
         locationManager.delegate = self
+        locationManager.startUpdatingLocation()
         
-        
-        
-        
-        
+    
     }
     
     
@@ -154,11 +153,14 @@ class DiscoverPage : ModeViewController, MKMapViewDelegate, UISearchBarDelegate,
         let currentCLLocation = locationManager.location
         var targetCLLCoordinate2D: CLLocationCoordinate2D?
         
-        if currentCLLocation != nil {
+        switch self.locationManager.authorizationStatus {
+        case .authorizedWhenInUse, .authorizedAlways:
+            manager.startUpdatingLocation()
             targetCLLCoordinate2D = CLLocationCoordinate2D(
                 latitude: currentCLLocation!.coordinate.latitude,
                 longitude: currentCLLocation!.coordinate.longitude)
-        } else {
+        default:
+            manager.stopUpdatingLocation()
             targetCLLCoordinate2D = CLLocationCoordinate2D(latitude: 30.2862, longitude: -97.7394)
         }
         
