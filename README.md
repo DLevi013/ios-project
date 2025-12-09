@@ -22,7 +22,7 @@ Open the project in Xcode and run using:
 ### Test Accounts (already populated)
 | Email | Password |
 |---|---|
-| daniellevi@daniel.com | 12341234 |
+| daniel@daniel.com | 12341234 |
 | isaac@isaac.com | 12341234 |
 
 ## **Feature Overview and Release Tracking**
